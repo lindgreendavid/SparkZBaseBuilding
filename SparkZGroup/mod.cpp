@@ -1,0 +1,10 @@
+name = "SparkZGroup";
+picture = "SparkZGroup\\gui\\branding\\SZLogoo.paa";
+logo = "SparkZGroup\\gui\\branding\\SZLogoo.paa";
+logoSmall = "SparkZGroup\\gui\\branding\\SZLogoo.paa";
+logoOver = "SparkZGroup\\gui\\branding\\SZLogoo.paa";
+tooltip = "SparkZGroup";
+overview = "Player-facing SparkZ tactical group, marker, ping, and map module. Stage 8.24 keeps chat integration external and focuses on tactical UI stability.";
+action = "";
+author = "SparkZ";
+version = "0.8.24";

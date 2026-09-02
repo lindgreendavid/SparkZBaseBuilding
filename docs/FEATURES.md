@@ -1,13 +1,22 @@
 # Features
 
-## What this mod is not
+> **This file describes the old BBP-hooked prototype in `SparkZBase/`.**
+> The project has pivoted to a standalone construction system (no BBP
+> dependency) — see `docs/BRIEF.md`. Everything under "Current" below is
+> prototype behavior kept as design reference (per `docs/BRIEF.md`'s
+> "what's being carried over" section), not a description of what exists
+> in the new system, which hasn't been built yet. Once part/placement code
+> exists, this file should be rewritten around it and the roadmap section
+> below should move into `docs/BRIEF.md`'s open-questions process.
 
-It is not a construction system. **BaseBuildingPlus (BBP)** provides the
-parts, walls, doors, and the actual building/dismantling tool actions. This
-mod never reimplements or copies that — it hooks into BBP's actions to add
-rules BBP doesn't have: squad ownership, permissions, and upkeep.
+## What the old prototype is (for reference)
 
-## Current (implemented, live-tested)
+It is not a construction system. **BaseBuildingPlus (BBP)** provided the
+parts, walls, doors, and the actual building/dismantling tool actions. The
+prototype never reimplemented or copied that — it hooked into BBP's actions
+to add rules BBP doesn't have: squad ownership, permissions, and upkeep.
+
+## Current (prototype, implemented and live-tested — reference only)
 
 - **Squad claims**: a squad Leader or Base Manager claims a flagpole area
   (`SparkZBaseTerritoryFlag`) for their `SparkZGroup` squad; one active base

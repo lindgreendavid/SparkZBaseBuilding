@@ -53,10 +53,43 @@ the same feature is sometimes split across tiers:
 | `4_World` | `SparkZBaseManagerServer` (the core), `SparkZBaseConfig`, `SparkZBaseRecord`, action hooks (BBP/CodeLock/Storage), `SparkZBaseTerritoryFlag`, `SparkZBaseTime`, player-base hooks | Server-authoritative logic. `BBP_BASE`, `Fence`, `ActionBuildPart`, etc. are `4_World` classes, so anything hooking them must be too. |
 | `5_Mission` | `MissionServer`/`MissionGameplay` bootstrap, `SparkZBaseNetworkClient`, the property menu UI | Mission-scope: server startup wiring and all client-side UI/RPC-receiving code. |
 
+## The two dependency mods, and what SparkZBase actually uses from them
+
+`SparkZGroup/` and `SparkZCore/` are full mods in their own right with much
+larger scope than base building (squad markers, pings, tactical menu UI,
+event notifications, ...). They're included here so this repo compiles and
+so collaborators can trace a permission check all the way down, not because
+base-building work should routinely touch their internals. The pieces
+`SparkZBase` actually calls:
+
+**From `SparkZGroup`** (`SparkZGroup/scripts/4_World/SparkZGroup/Server/SparkZGroupServerGroupManager.c`):
+- `GetGroupIdForMember(playerId)` / `GetGroupForIdentity(identity)` — which
+  squad a player belongs to
+- `HasBaseManager(playerId)` / `HasBaseAccess(playerId)` — the two
+  permission checks every base-building hook is built on
+- `HasMemberRoleFlag(playerId, roleFlag)` — used for the leader-check
+  redundancy in `BuildQuoteForRecord` (see Give Up Base leader fix)
+- Role/permission bit values live in
+  `SparkZGroup/scripts/3_Game/SparkZGroup/Constants/SparkZGroupConstants.c`
+  (`SQUAD_ROLE_LEADER`, `SQUAD_PERMISSION_BASE_ACCESS`,
+  `SQUAD_PERMISSION_BASE_MANAGER`, ...) — Base Manager always implies Base
+  Access server-side (`NormalizeBaseRoleFlags`), which the squad-menu UI has
+  to mirror or a partial-revoke looks broken client-side.
+
+**From `SparkZCore`**: `SparkZCoreRPCId` (RPC type enum) and
+`SparkZCoreRPCGuard.ValidateClientToServer` (spam/identity validation on
+every incoming RPC) — both under
+`SparkZCore/scripts/{3_Game,4_World}/SparkZCore/RPC/`.
+
+Everything else in these two folders (marker persistence, quick pings, the
+tactical menu, event notification HUD, etc.) belongs to the squad/UI system
+generally and is out of scope for base-building feature work — see
+"Cross-repo sync" in `docs/CONTRIBUTING.md` before changing it.
+
 ## Core class: `SparkZBaseManagerServer`
 
 Singleton (`SparkZBaseManagerServer.Get()`), server-only, in
-`scripts/4_World/SparkZBase/Server/SparkZBaseManagerServer.c`. Owns the
+`SparkZBase/scripts/4_World/SparkZBase/Server/SparkZBaseManagerServer.c`. Owns the
 in-memory list of `SparkZBaseRecord` (one per claimed base) and is the single
 source of truth every hook file calls into. Key entry points other files use:
 

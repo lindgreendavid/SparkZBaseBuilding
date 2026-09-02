@@ -1,0 +1,54 @@
+FrameWidgetClass root {
+ visible 0
+ ignorepointer 1
+ position 0 0
+ size 120 40
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  ImageWidgetClass SparkZMarker3DIcon {
+   ignorepointer 1
+   position 52 0
+   size 16 16
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   mode blend
+   "src alpha" 1
+   "stretch mode" stretch_w_h
+  }
+  TextWidgetClass SparkZMarker3DName {
+   ignorepointer 1
+   position 0 17
+   size 120 14
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text ""
+   "text color" 1 0.83 0.25 1
+   "text halign" center
+   "text valign" center
+   "size to text h" 0
+   "size to text v" 0
+  }
+  TextWidgetClass SparkZMarker3DDistance {
+   ignorepointer 1
+   position 0 30
+   size 120 11
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "0m"
+   "text color" 1 0.83 0.25 1
+   "text halign" center
+   "text valign" center
+   "size to text h" 0
+   "size to text v" 0
+  }
+ }
+}

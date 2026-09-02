@@ -28,15 +28,48 @@ not both mid-edit on the same file:
 
 | Lane | Files |
 |---|---|
-| Server logic / permissions | `scripts/4_World/SparkZBase/Server/`, `scripts/4_World/SparkZBase/Data/` |
-| BBP / CodeLock / Storage hooks | `scripts/4_World/SparkZBase/BBP/`, `.../CodeLock/`, `.../Storage/` |
-| UI / client | `scripts/5_Mission/SparkZBase/UI/`, `gui/` |
-| Networking / RPC payloads | `scripts/3_Game/SparkZBase/Network/`, `scripts/3_Game/SparkZBase/Data/` |
-| Config / manifest | `config.cpp`, `mod.cpp`, `docs/`, `CHANGELOG.md` |
+| Server logic / permissions | `SparkZBase/scripts/4_World/SparkZBase/Server/`, `SparkZBase/scripts/4_World/SparkZBase/Data/` |
+| BBP / CodeLock / Storage hooks | `SparkZBase/scripts/4_World/SparkZBase/BBP/`, `.../CodeLock/`, `.../Storage/` |
+| UI / client | `SparkZBase/scripts/5_Mission/SparkZBase/UI/`, `SparkZBase/gui/` |
+| Networking / RPC payloads | `SparkZBase/scripts/3_Game/SparkZBase/Network/`, `SparkZBase/scripts/3_Game/SparkZBase/Data/` |
+| Config / manifest | `SparkZBase/config.cpp`, `SparkZBase/mod.cpp`, `docs/`, `CHANGELOG.md` |
+| Squad/permission system | `SparkZGroup/` — see "Cross-repo sync" below, this is not a normal editing lane |
+| Shared RPC/infra | `SparkZCore/` — same as above |
 
 If a change genuinely spans lanes (e.g. a new permission needs a new RPC
 field), whoever starts it says so up front and the other person avoids that
 file until it's merged.
+
+## Cross-repo sync — `SparkZGroup/` and `SparkZCore/`
+
+These two folders are a **snapshot**, not this repo's own project. Their
+real source of truth is the main SparkZ modpack, where they're also used by
+mods outside this project (SparkZKOTH, SparkZAirdrop, etc.). That means two
+different rules depending on which direction a change goes:
+
+**If SparkZGroup or SparkZCore change in the main modpack** (a permission
+flag added, a bug fixed, a new RPC type, anything): that change **must** be
+pulled into this repo too, or this repo's `SparkZBase` code will silently
+drift against a squad/RPC system it no longer matches. To do this:
+
+1. Run `tools/sync-dependencies.ps1 -ModpackRoot <path to the main modpack>`.
+2. Review `git diff` for `SparkZGroup/` and `SparkZCore/` — confirm you
+   understand what changed before committing it blind.
+3. Add a dated entry to `CHANGELOG.md` under a "Dependency sync" heading
+   describing what changed in the dependency and why it matters to
+   base-building code (e.g. "added `SQUAD_PERMISSION_BASE_BUILD` flag —
+   `SparkZBaseManagerServer.CanBuildAtPosition` should migrate to it").
+4. If the change affects a class or method `SparkZBase` actually calls,
+   update the "what SparkZBase actually uses from them" section in
+   `docs/ARCHITECTURE.md` to match.
+5. Commit the sync and the doc updates together, then push.
+
+**If base-building work needs a change *inside* `SparkZGroup/` or
+`SparkZCore/`** (e.g. a new permission flag base-building needs that doesn't
+exist yet): make it here, but flag it loudly (commit message + chat message
+to the other person) — it needs to be **manually ported back** to the main
+modpack's copy of that mod, since there's no automatic link in that
+direction. Don't let the two copies diverge silently in either direction.
 
 ## Versioning
 

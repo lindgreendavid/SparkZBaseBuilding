@@ -1,0 +1,2329 @@
+FrameWidgetClass root {
+ position 0 0
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ {
+  PanelWidgetClass SparkZBackdrop {
+   color 0.0667 0.0745 0.0824 1
+   position 0 0
+   size 1 1
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   style DayZDefaultPanel
+   {
+
+     PanelWidgetClass SparkZTopBar {
+     color 0.098 0.1098 0.1176 1
+     position 0 0
+     size 1 82
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style DayZDefaultPanel
+     {
+
+      ImageWidgetClass SparkZBrandLogo {
+       ignorepointer 1
+       position 18 20
+       size 42 42
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZTitle {
+       position 72 24
+       size 130 26
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SPARKZ"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      TextWidgetClass SparkZStatus {
+       position 198 28
+       size 220 20
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "/ TACTICAL MAP"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      ButtonWidgetClass SparkZTabMap {
+       position 480 24
+       size 110 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "MAP"
+      }
+      PanelWidgetClass SparkZTabMapUnderline {
+       ignorepointer 1
+       visible 0
+       color 0.847 0.604 0.141 1
+       position 480 63
+       size 110 2
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      ButtonWidgetClass SparkZTabMarkers {
+       position 610 24
+       size 110 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "PINGS"
+      }
+      PanelWidgetClass SparkZTabMarkersUnderline {
+       ignorepointer 1
+       visible 0
+       color 0.847 0.604 0.141 1
+       position 610 63
+       size 110 2
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      ButtonWidgetClass SparkZTabGroup {
+       position 740 24
+       size 110 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SQUAD"
+      }
+      PanelWidgetClass SparkZTabGroupUnderline {
+       ignorepointer 1
+       visible 0
+       color 0.847 0.604 0.141 1
+       position 740 63
+       size 110 2
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      ButtonWidgetClass SparkZTabInfo {
+       position 870 24
+       size 150 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SETTINGS"
+      }
+      PanelWidgetClass SparkZTabInfoUnderline {
+       ignorepointer 1
+       visible 0
+       color 0.847 0.604 0.141 1
+       position 870 63
+       size 150 2
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      ButtonWidgetClass SparkZCloseButton {
+       position 20 23
+       size 36 36
+       halign right_ref
+       valign top_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "X"
+      }
+      PanelWidgetClass SparkZTopBarBottomBorder {
+       ignorepointer 1
+       color 0.2039 0.2196 0.2314 1
+       position 0 0
+       size 1 1
+       halign left_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+     }
+    }
+    PanelWidgetClass SparkZSidebar {
+     clipchildren 1
+     color 0.098 0.1098 0.1176 1
+     position 0 82
+     size 340 0.95
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     style DayZDefaultPanel
+     {
+
+      PanelWidgetClass SparkZSidebarRightBorder {
+       ignorepointer 1
+       color 0.2039 0.2196 0.2314 1
+       position 0 0
+       size 1 1
+       halign right_ref
+       valign top_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       style DayZDefaultPanel
+      }
+
+      TextWidgetClass SparkZPageTitle {
+       position 20 24
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "MAP"
+       font "gui/fonts/sdf_MetronLight24"
+       "text color" 0.898 0.898 0.878 1
+      }
+      TextWidgetClass SparkZPageSubtitle {
+       position 20 58
+       size 292 18
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      TextWidgetClass SparkZPageBody {
+       position 20 92
+       size 292 110
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      PanelWidgetClass SparkZDividerA {
+       ignorepointer 1
+       color 0.2039 0.2196 0.2314 1
+       position 20 210
+       size 292 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      TextWidgetClass SparkZSidebarStatus {
+       position 20 228
+       size 292 72
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "PINS / SQUAD / EVENTS"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      PanelWidgetClass SparkZDividerB {
+       ignorepointer 1
+       color 0.2039 0.2196 0.2314 1
+       position 20 310
+       size 292 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      TextWidgetClass SparkZFooter {
+       position 20 328
+       size 292 96
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "CORE LINK READY / UI CHANNEL READY / SYNC CHANNEL STANDBY"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      PanelWidgetClass SparkZDividerBottom {
+       ignorepointer 1
+       color 0.2039 0.2196 0.2314 1
+       position 20 58
+       size 292 1
+       halign left_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      TextWidgetClass SparkZCoordinateReadout {
+       position 20 24
+       size 292 24
+       halign left_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "POS -- / --"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      TextWidgetClass SparkZMapPrivateHeader {
+       visible 0
+       position 20 474
+       size 292 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "PRIVATE"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      ButtonWidgetClass SparkZMapPrivateRow0 {
+       visible 0
+       position 20 498
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapPrivateRow0Icon {
+       ignorepointer 1
+       visible 0
+       position 24 501
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapPrivateRow0Text {
+       ignorepointer 1
+       visible 0
+       position 54 502
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapPrivateRow1 {
+       visible 0
+       position 20 528
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapPrivateRow1Icon {
+       ignorepointer 1
+       visible 0
+       position 24 531
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapPrivateRow1Text {
+       ignorepointer 1
+       visible 0
+       position 54 532
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapPrivateRow2 {
+       visible 0
+       position 20 558
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapPrivateRow2Icon {
+       ignorepointer 1
+       visible 0
+       position 24 561
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapPrivateRow2Text {
+       ignorepointer 1
+       visible 0
+       position 54 562
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapPrivateRow3 {
+       visible 0
+       position 20 588
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapPrivateRow3Icon {
+       ignorepointer 1
+       visible 0
+       position 24 591
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapPrivateRow3Text {
+       ignorepointer 1
+       visible 0
+       position 54 592
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapPrivateRow4 {
+       visible 0
+       position 20 618
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapPrivateRow4Icon {
+       ignorepointer 1
+       visible 0
+       position 24 621
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapPrivateRow4Text {
+       ignorepointer 1
+       visible 0
+       position 54 622
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      TextWidgetClass SparkZMapGroupHeader {
+       visible 0
+       position 20 284
+       size 292 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SQUAD"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      ButtonWidgetClass SparkZMapGroupRow0 {
+       visible 0
+       position 20 308
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapGroupRow0Icon {
+       ignorepointer 1
+       visible 0
+       position 24 311
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapGroupRow0Text {
+       ignorepointer 1
+       visible 0
+       position 54 312
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapGroupRow1 {
+       visible 0
+       position 20 338
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapGroupRow1Icon {
+       ignorepointer 1
+       visible 0
+       position 24 341
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapGroupRow1Text {
+       ignorepointer 1
+       visible 0
+       position 54 342
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapGroupRow2 {
+       visible 0
+       position 20 368
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapGroupRow2Icon {
+       ignorepointer 1
+       visible 0
+       position 24 371
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapGroupRow2Text {
+       ignorepointer 1
+       visible 0
+       position 54 372
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapGroupRow3 {
+       visible 0
+       position 20 398
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapGroupRow3Icon {
+       ignorepointer 1
+       visible 0
+       position 24 401
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapGroupRow3Text {
+       ignorepointer 1
+       visible 0
+       position 54 402
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapGroupRow4 {
+       visible 0
+       position 20 428
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapGroupRow4Icon {
+       ignorepointer 1
+       visible 0
+       position 24 431
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapGroupRow4Text {
+       ignorepointer 1
+       visible 0
+       position 54 432
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      TextWidgetClass SparkZMapServerHeader {
+       visible 0
+       position 20 66
+       size 292 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "FIXED POIS"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      ButtonWidgetClass SparkZMapServerRow0 {
+       visible 0
+       position 20 90
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapServerRow0Icon {
+       ignorepointer 1
+       visible 0
+       position 24 93
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapServerRow0Text {
+       ignorepointer 1
+       visible 0
+       position 54 94
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapServerRow1 {
+       visible 0
+       position 20 120
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapServerRow1Icon {
+       ignorepointer 1
+       visible 0
+       position 24 123
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapServerRow1Text {
+       ignorepointer 1
+       visible 0
+       position 54 124
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapServerRow2 {
+       visible 0
+       position 20 150
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapServerRow2Icon {
+       ignorepointer 1
+       visible 0
+       position 24 153
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapServerRow2Text {
+       ignorepointer 1
+       visible 0
+       position 54 154
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapServerRow3 {
+       visible 0
+       position 20 180
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapServerRow3Icon {
+       ignorepointer 1
+       visible 0
+       position 24 183
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapServerRow3Text {
+       ignorepointer 1
+       visible 0
+       position 54 184
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapServerRow4 {
+       visible 0
+       position 20 210
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapServerRow4Icon {
+       ignorepointer 1
+       visible 0
+       position 24 213
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapServerRow4Text {
+       ignorepointer 1
+       visible 0
+       position 54 214
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapServerRow5 {
+       visible 0
+       position 20 240
+       size 292 28
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+      }
+      ImageWidgetClass SparkZMapServerRow5Icon {
+       ignorepointer 1
+       visible 0
+       position 24 243
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZMapServerRow5Text {
+       ignorepointer 1
+       visible 0
+       position 54 244
+       size 254 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      ButtonWidgetClass SparkZMapMarkerEditButton {
+       visible 0
+       position 20 696
+       size 136 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "EDIT"
+      }
+      ButtonWidgetClass SparkZMapMarkerDeleteButton {
+       visible 0
+       position 176 696
+       size 136 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "DELETE"
+      }
+     }
+    }
+    PanelWidgetClass SparkZMainPanel {
+     clipchildren 1
+     color 0.0667 0.0745 0.0824 1
+     position 340 82
+     size 0.823 0.95
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style DayZDefaultPanel
+     {
+
+      TextWidgetClass SparkZMainTitle {
+       position 28 12
+       size 620 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "TACTICAL MAP"
+       font "gui/fonts/sdf_MetronLight24"
+       "text color" 0.898 0.898 0.878 1
+      }
+      PanelWidgetClass SparkZMapLayer {
+       clipchildren 1
+       color 0.006 0.008 0.01 0.12
+       position 28 54
+       size 0.965 0.885
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       {
+        MapWidgetClass SparkZMapWidget {
+         visible 1
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+        }
+        ImageWidgetClass SparkZMapVignette {
+         ignorepointer 1
+         color 0.006 0.008 0.01 0.14
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+        TextWidgetClass SparkZMapStatus {
+         ignorepointer 1
+         position 18 16
+         size 300 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CHERNARUS+ LIVE"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 0.9
+        }
+        ImageWidgetClass SparkZMapBorderTop {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 0.7
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+        ImageWidgetClass SparkZMapBorderLeft {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 0.7
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+        ImageWidgetClass SparkZMapBorderRight {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 0.5
+         position 0 0
+         size 1 1
+         halign right_ref
+         valign top_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+        ImageWidgetClass SparkZMapBorderBottom {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 0.5
+         position 0 0
+         size 1 1
+         halign left_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+       }
+      }
+      PanelWidgetClass SparkZMarkersLayer {
+       visible 0
+       clipchildren 1
+       color 0 0 0 0
+       position 28 54
+       size 0.965 0.885
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+      {
+        PanelWidgetClass SparkZPingsListPanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 20 18
+         size 550 640
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZPingsListPanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 548 638
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        PanelWidgetClass SparkZPingsEditorPanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 582 18
+         size 640 640
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZPingsEditorPanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 638 638
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        TextWidgetClass SparkZMarkersEmpty {
+         position 40 34
+         size 520 90
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "PINS, SQUAD PINGS, AND SERVER EVENTS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZPrivateMarkerHeader {
+         position 40 118
+         size 520 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "PRIVATE PINS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextListboxWidgetClass SparkZMarkerList {
+         position 40 146
+         size 520 145
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "title visible" 0
+         colums ""
+         lines 5
+        }
+        TextWidgetClass SparkZGroupMarkerHeader {
+         position 40 310
+         size 520 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SQUAD PINGS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextListboxWidgetClass SparkZGroupMarkerList {
+         position 40 338
+         size 520 118
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "title visible" 0
+         colums ""
+         lines 4
+        }
+        TextWidgetClass SparkZServerMarkerHeader {
+         position 40 475
+         size 520 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "FIXED SERVER POIS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextListboxWidgetClass SparkZServerMarkerList {
+         position 40 503
+         size 520 118
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "title visible" 0
+         colums ""
+         lines 4
+        }
+        TextWidgetClass SparkZMarkerDetail {
+         position 618 448
+         size 420 90
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SELECT A PRIVATE MARKER"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZMarkerCenterButton {
+         position 618 560
+         size 160 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CENTER"
+        }
+        ButtonWidgetClass SparkZMarkerDeleteButton {
+         position 788 560
+         size 160 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "DELETE"
+        }
+        ButtonWidgetClass SparkZMarker3DButton {
+         position 958 560
+         size 120 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "3D / 2D"
+        }
+        ButtonWidgetClass SparkZMarkerClearButton {
+         position 618 612
+         size 330 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CLEAR ALL LOCAL"
+        }
+        TextWidgetClass SparkZMarkerChannelLabel {
+         position 618 136
+         size 330 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CHANNEL"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZMarkerChannelPrivateButton {
+         position 618 164
+         size 100 34
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "PRIVATE"
+        }
+        ButtonWidgetClass SparkZMarkerChannelGroupButton {
+         position 728 164
+         size 100 34
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SQUAD"
+        }
+        ButtonWidgetClass SparkZMarkerChannelServerButton {
+         position 838 164
+         size 100 34
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SERVER"
+        }
+        TextWidgetClass SparkZMarkerNameLabel {
+         position 618 56
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "NAME"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        EditBoxWidgetClass SparkZMarkerNameEdit {
+         position 618 86
+         size 300 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        ButtonWidgetClass SparkZMarkerNameApplyButton {
+         position 936 86
+         size 120 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "APPLY"
+        }
+        TextWidgetClass SparkZMarkerColorLabel {
+         position 618 214
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "COLOR"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZMarkerRedSlider {
+         color 1 0 0 1
+         position 618 246
+         size 250 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 255
+         "fill in" 1
+        }
+        TextWidgetClass SparkZMarkerRedValue {
+         position 880 242
+         size 48 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "R 255"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZMarkerGreenSlider {
+         color 0 1 0 1
+         position 618 282
+         size 250 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 216
+         "fill in" 1
+        }
+        TextWidgetClass SparkZMarkerGreenValue {
+         position 880 278
+         size 48 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "G 216"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZMarkerBlueSlider {
+         color 0 0 1 1
+         position 618 318
+         size 250 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 64
+         "fill in" 1
+        }
+        TextWidgetClass SparkZMarkerBlueValue {
+         position 880 314
+         size 48 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "B 64"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        PanelWidgetClass SparkZMarkerColorPreview {
+         color 1 0.85 0.25 1
+         position 978 258
+         size 56 56
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        TextWidgetClass SparkZMarkerIconLabel {
+         position 618 368
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "ICON"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZMarkerIconPrevButton {
+         position 618 400
+         size 48 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "<"
+        }
+        ImageWidgetClass SparkZMarkerIconPreview {
+         ignorepointer 1
+         position 690 388
+         size 64 64
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+        TextWidgetClass SparkZMarkerIconName {
+         visible 0
+         position 774 408
+         size 150 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "marker.paa"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZMarkerIconNextButton {
+         position 778 400
+         size 48 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text ">"
+        }
+       }
+      }
+      PanelWidgetClass SparkZGroupLayer {
+       visible 0
+       clipchildren 1
+       color 0 0 0 0
+       position 28 54
+       size 0.965 0.885
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+      vexactsize 0
+      {
+        PanelWidgetClass SparkZSquadIdentityPanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 20 18
+         size 1431 140
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZSquadIdentityPanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 1429 138
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        PanelWidgetClass SparkZSquadRosterPanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 20 174
+         size 860 640
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZSquadRosterPanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 858 638
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        PanelWidgetClass SparkZSquadInvitePanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 900 174
+         size 551 640
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZSquadInvitePanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 549 638
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        TextWidgetClass SparkZGroupCreateTitle {
+         position 44 34
+         size 300 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CREATE SQUAD"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZGroupNameLabel {
+         position 44 66
+         size 260 20
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SQUAD NAME"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        EditBoxWidgetClass SparkZGroupNameEdit {
+         position 44 92
+         size 280 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        TextWidgetClass SparkZGroupTagLabel {
+         position 344 66
+         size 120 20
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CLAN TAG"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        EditBoxWidgetClass SparkZGroupTagEdit {
+         position 344 92
+         size 90 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        ButtonWidgetClass SparkZGroupCreateButton {
+         position 454 92
+         size 130 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "CREATE"
+        }
+        ButtonWidgetClass SparkZGroupIdentityApplyButton {
+         position 454 92
+         size 118 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SAVE"
+        }
+        ButtonWidgetClass SparkZGroupLeaveButton {
+         position 604 92
+         size 118 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "LEAVE"
+        }
+        TextWidgetClass SparkZGroupCreateHint {
+         position 44 132
+         size 1370 20
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "NAME AND TAG LOCK WHILE SQUAD IS ACTIVE."
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZGroupRosterTitle {
+         position 44 190
+         size 300 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "ROSTER"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZGroupEmpty {
+         position 44 234
+         size 800 72
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "NO ACTIVE SQUAD."
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextListboxWidgetClass SparkZGroupRosterList {
+         position 44 325
+         size 800 468
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZGroupInvitationsTitle {
+         position 924 190
+         size 300 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "INVITATIONS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZGroupInviteLabel {
+         position 924 234
+         size 300 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "INVITE PLAYER"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        EditBoxWidgetClass SparkZGroupInviteNameEdit {
+         position 924 266
+         size 300 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        ButtonWidgetClass SparkZGroupInviteButton {
+         position 1234 266
+         size 120 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "INVITE"
+        }
+        ButtonWidgetClass SparkZGroupPromoteButton {
+         position 924 318
+         size 140 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "PROMOTE"
+        }
+        ButtonWidgetClass SparkZGroupKickButton {
+         position 1074 318
+         size 140 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "KICK"
+        }
+        TextWidgetClass SparkZGroupSelectedMemberText {
+         position 924 370
+         size 492 58
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SELECT A ROSTER MEMBER TO MANAGE."
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZGroupPermStatusText {
+         position 924 442
+         size 492 54
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "BASE AREA PERMISSIONS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZGroupPermBuildButton {
+         position 924 510
+         size 158 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "BASE ACCESS"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        ButtonWidgetClass SparkZGroupPermDoorButton {
+         position 1090 510
+         size 172 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "BASE MANAGER"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        ButtonWidgetClass SparkZGroupPermStorageButton {
+         position 1270 510
+         size 110 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "LEADER"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        ButtonWidgetClass SparkZGroupPermApplyButton {
+         position 924 560
+         size 180 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SAVE PERMS"
+        }
+        TextWidgetClass SparkZGroupInvitePendingText {
+         position 924 622
+         size 492 74
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "NO PENDING INVITE"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZGroupInviteAcceptButton {
+         position 924 708
+         size 140 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "ACCEPT"
+        }
+        ButtonWidgetClass SparkZGroupInviteDeclineButton {
+         position 1074 708
+         size 140 36
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "DECLINE"
+        }
+       }
+      }
+      PanelWidgetClass SparkZInfoLayer {
+       visible 0
+       clipchildren 1
+       color 0 0 0 0
+       position 28 54
+       size 0.965 0.885
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+      vexactsize 0
+      {
+        PanelWidgetClass SparkZSettingsPingPanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 20 18
+         size 560 390
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZSettingsPingPanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 558 388
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        PanelWidgetClass SparkZSettingsHudPanel {
+         ignorepointer 1
+         color 0.2039 0.2196 0.2314 1
+         position 610 18
+         size 560 510
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZDefaultPanel
+         {
+          PanelWidgetClass SparkZSettingsHudPanelFill {
+           ignorepointer 1
+           color 0.098 0.1098 0.1176 1
+           position 1 1
+           size 558 508
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style DayZDefaultPanel
+          }
+         }
+        }
+
+        TextWidgetClass SparkZQuickPingTitle {
+         position 50 46
+         size 520 34
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "PING STYLE"
+         font "gui/fonts/sdf_MetronLight24"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZQuickPingProfileText {
+         position 50 94
+         size 520 78
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SQUAD PING STYLE"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZQuickPingColorLabel {
+         position 50 174
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "COLOR"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZQuickPingRedSlider {
+         color 1 0 0 1
+         position 50 206
+         size 260 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 255
+         "fill in" 1
+        }
+        TextWidgetClass SparkZQuickPingRedValue {
+         position 322 202
+         size 64 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "R 255"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZQuickPingGreenSlider {
+         color 0 1 0 1
+         position 50 242
+         size 260 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 211
+         "fill in" 1
+        }
+        TextWidgetClass SparkZQuickPingGreenValue {
+         position 322 238
+         size 64 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "G 211"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZQuickPingBlueSlider {
+         color 0 0 1 1
+         position 50 278
+         size 260 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 64
+         "fill in" 1
+        }
+        TextWidgetClass SparkZQuickPingBlueValue {
+         position 322 274
+         size 64 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "B 64"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        PanelWidgetClass SparkZQuickPingColorPreview {
+         color 1 0.83 0.25 1
+         position 414 224
+         size 54 54
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        TextWidgetClass SparkZQuickPingIconLabel {
+         position 50 318
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "ICON"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        ButtonWidgetClass SparkZQuickPingIconPrevButton {
+         position 50 350
+         size 48 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "<"
+        }
+        ImageWidgetClass SparkZQuickPingIconPreview {
+         ignorepointer 1
+         position 122 338
+         size 64 64
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         mode blend
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+        }
+        ButtonWidgetClass SparkZQuickPingIconNextButton {
+         position 206 350
+         size 48 38
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text ">"
+        }
+        TextWidgetClass SparkZQuickPingIconName {
+         position 284 358
+         size 220 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Signal"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZGroupHudTitle {
+         position 640 46
+         size 520 34
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SQUAD HUD"
+         font "gui/fonts/sdf_MetronLight24"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZGroupHudProfileText {
+         position 640 94
+         size 560 92
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "LOCAL NAME TAG COLOR"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZGroupHudColorLabel {
+         position 640 184
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "NAME TAG COLOR"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZGroupHudRedSlider {
+         color 1 0 0 1
+         position 640 216
+         size 260 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 155
+         "fill in" 1
+        }
+        TextWidgetClass SparkZGroupHudRedValue {
+         position 912 212
+         size 64 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "R 155"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZGroupHudGreenSlider {
+         color 0 1 0 1
+         position 640 252
+         size 260 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 225
+         "fill in" 1
+        }
+        TextWidgetClass SparkZGroupHudGreenValue {
+         position 912 248
+         size 64 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "G 225"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        SliderWidgetClass SparkZGroupHudBlueSlider {
+         color 0 0 1 1
+         position 640 288
+         size 260 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 255
+         current 255
+         "fill in" 1
+        }
+        TextWidgetClass SparkZGroupHudBlueValue {
+         position 912 284
+         size 64 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "B 255"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        PanelWidgetClass SparkZGroupHudColorPreview {
+         color 1 0.61 0.88 1
+         position 1004 234
+         size 54 54
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        TextWidgetClass SparkZGroupHudPreviewLabel {
+         position 640 360
+         size 330 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SQUAD LIST PREVIEW"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        PanelWidgetClass SparkZGroupHudPreviewRow0 {
+         color 0.02 0.025 0.028 0.92
+         position 640 392
+         size 250 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          TextWidgetClass SparkZGroupHudPreviewName0 {
+           position 6 2
+           size 164 20
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "FoXdaVe"
+           font "gui/fonts/sdf_MetronBook14"
+           "text color" 0.61 0.88 1 1
+          }
+          TextWidgetClass SparkZGroupHudPreviewDistance0 {
+           position 174 2
+           size 70 20
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "11m"
+           font "gui/fonts/sdf_MetronBook14"
+           "text color" 0.631 0.647 0.647 1
+          }
+         }
+        }
+        PanelWidgetClass SparkZGroupHudPreviewRow1 {
+         color 0.02 0.025 0.028 0.92
+         position 640 424
+         size 250 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          TextWidgetClass SparkZGroupHudPreviewName1 {
+           position 6 2
+           size 164 20
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "Grape"
+           font "gui/fonts/sdf_MetronBook14"
+           "text color" 0.61 0.88 1 1
+          }
+          TextWidgetClass SparkZGroupHudPreviewDistance1 {
+           position 174 2
+           size 70 20
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "27m"
+           font "gui/fonts/sdf_MetronBook14"
+           "text color" 0.631 0.647 0.647 1
+          }
+         }
+        }
+        PanelWidgetClass SparkZGroupHudPreviewRow2 {
+         color 0.02 0.025 0.028 0.92
+         position 640 456
+         size 250 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          TextWidgetClass SparkZGroupHudPreviewName2 {
+           position 6 2
+           size 164 20
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "Peach"
+           font "gui/fonts/sdf_MetronBook14"
+           "text color" 0.61 0.88 1 1
+          }
+          TextWidgetClass SparkZGroupHudPreviewDistance2 {
+           position 174 2
+           size 70 20
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "104m"
+           font "gui/fonts/sdf_MetronBook14"
+           "text color" 0.631 0.647 0.647 1
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass SparkZStatusBar {
+     ignorepointer 1
+     color 0.098 0.1098 0.1176 1
+     position 0 0
+     size 1 28
+     halign left_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style DayZDefaultPanel
+     {
+
+      PanelWidgetClass SparkZStatusBarTopBorder {
+       ignorepointer 1
+       color 0.2039 0.2196 0.2314 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style DayZDefaultPanel
+      }
+
+      TextWidgetClass SparkZStatusBarLeft {
+       position 20 6
+       size 400 18
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      TextWidgetClass SparkZStatusBarRight {
+       position 20 6
+       size 420 18
+       halign right_ref
+       valign top_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SPARKZ / TACTICAL MAP"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.847 0.604 0.141 1
+      }
+     }
+    }
+   }
+  }
+ }
+}

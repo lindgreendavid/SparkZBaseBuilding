@@ -1,8 +1,11 @@
 # Compiled/binary mod outputs - rebuilt from source, don't diff usefully
-addons/*.pbo
+**/addons/*.pbo
 *.bikey
 *.biprivatekey
 *.bisign
+
+# Claude Code internal state - not part of mod source
+.claude/
 
 # OS/editor noise
 Thumbs.db

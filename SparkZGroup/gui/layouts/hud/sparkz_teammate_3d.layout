@@ -1,0 +1,52 @@
+FrameWidgetClass root {
+ visible 0
+ ignorepointer 1
+ position 0 0
+ size 130 38
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  ImageWidgetClass SparkZTeammate3DIcon {
+   ignorepointer 1
+   position 59 0
+   size 12 12
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   mode blend
+   "src alpha" 1
+   "stretch mode" stretch_w_h
+  }
+  TextWidgetClass SparkZTeammate3DName {
+   ignorepointer 1
+   position 0 13
+   size 130 14
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text ""
+   font "gui/fonts/sdf_MetronBook14"
+   "text color" 0.61 0.88 1 1
+   "text halign" center
+   "text valign" center
+  }
+  TextWidgetClass SparkZTeammate3DDistance {
+   ignorepointer 1
+   position 0 26
+   size 130 12
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text ""
+   font "gui/fonts/sdf_MetronBook14"
+   "text color" 0.92 0.94 0.92 1
+   "text halign" center
+   "text valign" center
+  }
+ }
+}

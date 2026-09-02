@@ -1,0 +1,39 @@
+FrameWidgetClass root {
+ visible 0
+ ignorepointer 1
+ position 0 0
+ size 54 34
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  ImageWidgetClass SparkZQuickPingIcon {
+   ignorepointer 1
+   position 18 0
+   size 18 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   mode blend
+   "src alpha" 1
+   "stretch mode" stretch_w_h
+  }
+  TextWidgetClass SparkZQuickPingDistance {
+   ignorepointer 1
+   position 0 19
+   size 54 14
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "0m"
+   "text color" 1 0.83 0.25 1
+   "text halign" center
+   "text valign" center
+   "size to text h" 0
+   "size to text v" 0
+  }
+ }
+}

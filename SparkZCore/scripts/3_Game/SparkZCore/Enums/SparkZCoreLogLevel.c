@@ -1,0 +1,9 @@
+enum SparkZCoreLogLevel
+{
+    SPARKZ_LOG_FATAL = 0,
+    SPARKZ_LOG_ERROR = 1,
+    SPARKZ_LOG_WARN = 2,
+    SPARKZ_LOG_INFO = 3,
+    SPARKZ_LOG_DEBUG = 4,
+    SPARKZ_LOG_VERBOSE = 5
+}

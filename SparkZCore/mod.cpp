@@ -1,0 +1,10 @@
+name = "SparkZCore";
+picture = "SparkZCore\\gui\\branding\\loading\\SZLoading5.paa";
+logo = "SparkZCore\\gui\\branding\\loading\\SZLoading5.paa";
+logoSmall = "SparkZCore\\gui\\branding\\loading\\SZLoading5.paa";
+logoOver = "SparkZCore\\gui\\branding\\loading\\SZLoading5.paa";
+tooltip = "SparkZCore";
+overview = "Shared foundation for SparkZ mods. Stage 8.21 keeps shared UI assets/scripts resolvable without a loading screen override.";
+action = "";
+author = "SparkZ";
+version = "0.4.8";

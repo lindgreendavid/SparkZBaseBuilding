@@ -1,0 +1,281 @@
+FrameWidgetClass root {
+ visible 0
+ ignorepointer 1
+ position 18 92
+ size 235 154
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  PanelWidgetClass SparkZSquadHudBackplate {
+   ignorepointer 1
+   position 0 0
+   size 235 154
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style DayZDefaultPanel
+   color 0 0 0 0
+  }
+  TextWidgetClass SparkZSquadHudTitle {
+   ignorepointer 1
+   position 0 0
+   size 220 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "SQUAD"
+   font "gui/fonts/sdf_MetronBook14"
+   "text color" 0.97 0.98 0.94 1
+  }
+  PanelWidgetClass SparkZSquadHudRow0 {
+   ignorepointer 1
+   position 0 22
+   size 220 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style DayZDefaultPanel
+   color 0 0 0 0
+   {
+        ImageWidgetClass SparkZSquadHudHealth0 {
+     ignorepointer 1
+     position 5 17
+     size 210 5
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.961 0.961 0.941 1
+    }
+TextWidgetClass SparkZSquadHudName0 {
+     ignorepointer 1
+     position 5 2
+     size 145 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.61 0.88 1 1
+    }
+    TextWidgetClass SparkZSquadHudDistance0 {
+     ignorepointer 1
+     position 152 2
+     size 62 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.92 0.94 0.92 1
+     "text halign" right
+    }
+   }
+  }
+  PanelWidgetClass SparkZSquadHudRow1 {
+   ignorepointer 1
+   position 0 48
+   size 220 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style DayZDefaultPanel
+   color 0 0 0 0
+   {
+        ImageWidgetClass SparkZSquadHudHealth1 {
+     ignorepointer 1
+     position 5 17
+     size 210 5
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.961 0.961 0.941 1
+    }
+TextWidgetClass SparkZSquadHudName1 {
+     ignorepointer 1
+     position 5 2
+     size 145 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.61 0.88 1 1
+    }
+    TextWidgetClass SparkZSquadHudDistance1 {
+     ignorepointer 1
+     position 152 2
+     size 62 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.92 0.94 0.92 1
+     "text halign" right
+    }
+   }
+  }
+  PanelWidgetClass SparkZSquadHudRow2 {
+   ignorepointer 1
+   position 0 74
+   size 220 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style DayZDefaultPanel
+   color 0 0 0 0
+   {
+        ImageWidgetClass SparkZSquadHudHealth2 {
+     ignorepointer 1
+     position 5 17
+     size 210 5
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.961 0.961 0.941 1
+    }
+TextWidgetClass SparkZSquadHudName2 {
+     ignorepointer 1
+     position 5 2
+     size 145 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.61 0.88 1 1
+    }
+    TextWidgetClass SparkZSquadHudDistance2 {
+     ignorepointer 1
+     position 152 2
+     size 62 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.92 0.94 0.92 1
+     "text halign" right
+    }
+   }
+  }
+  PanelWidgetClass SparkZSquadHudRow3 {
+   ignorepointer 1
+   position 0 100
+   size 220 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style DayZDefaultPanel
+   color 0 0 0 0
+   {
+        ImageWidgetClass SparkZSquadHudHealth3 {
+     ignorepointer 1
+     position 5 17
+     size 210 5
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.961 0.961 0.941 1
+    }
+TextWidgetClass SparkZSquadHudName3 {
+     ignorepointer 1
+     position 5 2
+     size 145 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.61 0.88 1 1
+    }
+    TextWidgetClass SparkZSquadHudDistance3 {
+     ignorepointer 1
+     position 152 2
+     size 62 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.92 0.94 0.92 1
+     "text halign" right
+    }
+   }
+  }
+  PanelWidgetClass SparkZSquadHudRow4 {
+   ignorepointer 1
+   position 0 126
+   size 220 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style DayZDefaultPanel
+   color 0 0 0 0
+   {
+        ImageWidgetClass SparkZSquadHudHealth4 {
+     ignorepointer 1
+     position 5 17
+     size 210 5
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.961 0.961 0.941 1
+    }
+TextWidgetClass SparkZSquadHudName4 {
+     ignorepointer 1
+     position 5 2
+     size 145 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.61 0.88 1 1
+    }
+    TextWidgetClass SparkZSquadHudDistance4 {
+     ignorepointer 1
+     position 152 2
+     size 62 17
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/sdf_MetronBook14"
+     "text color" 0.92 0.94 0.92 1
+     "text halign" right
+    }
+   }
+  }
+ }
+}
+

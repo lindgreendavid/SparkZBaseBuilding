@@ -1,0 +1,61 @@
+FrameWidgetClass SparkZEventNotifyRoot {
+ visible 0
+ ignorepointer 1
+ position 0.37 0.075
+ size 0.34 0.088
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ {
+  PanelWidgetClass SparkZEventNotifyBack {
+   ignorepointer 1
+   position 0 0
+   size 1 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   color 0.06 0.07 0.08 0.72
+  }
+  ImageWidgetClass SparkZEventNotifyIcon {
+   ignorepointer 1
+   position 0.035 0.18
+   size 0.075 0.55
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   image0 ""
+   mode blend
+   "src alpha" 1
+   color 1 0.88 0.24 1
+  }
+  TextWidgetClass SparkZEventNotifyTitle {
+   ignorepointer 1
+   position 0.13 0.14
+   size 0.82 0.28
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text ""
+   font "gui/fonts/sdf_MetronBook14"
+   "text color" 1 1 1 1
+   "exact text" 1
+  }
+  TextWidgetClass SparkZEventNotifyMessage {
+   ignorepointer 1
+   position 0.13 0.47
+   size 0.82 0.36
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text ""
+   font "gui/fonts/sdf_MetronBook14"
+   "text color" 0.88 0.91 0.92 1
+   "exact text" 1
+  }
+ }
+}
