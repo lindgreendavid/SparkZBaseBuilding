@@ -166,11 +166,26 @@ ignore ordinary damage, including:
 - ordinary explosives
 - incidental impact and environmental damage
 
+Indestructibility applies to damage state, not projectile collision. Every
+solid construction model must include an appropriate bullet-blocking
+Fire Geometry LOD and the required material/component configuration so
+bullets cannot pass through walls, floors, stairs, closed windows, closed
+doors, or closed garage doors. Visual geometry alone is not sufficient.
+
+Animated ballistic geometry must follow the moving selection. A closed door
+or garage door must stop projectiles; once opened, its ballistic obstruction
+must move with the panel so the doorway itself is genuinely clear. Window
+behaviour must follow the same rule for whichever portion is designed to
+open. Geometry, View Geometry, Fire Geometry, roadway/walkable surfaces,
+and ordinary collision must be validated separately because success in one
+LOD does not prove the others are correct.
+
 Raiding will later be implemented through a purpose-built C4 system specific
 to SparkZBaseBuilding. The construction design should therefore reserve an
 explicit raid/breach path that future C4 can invoke while keeping ordinary
-damage ineffective. No third-party breaching schema or class names will be
-guessed.
+damage ineffective. Future C4 is intended to breach doors and garage doors,
+not make ordinary bullets or grenades effective. No third-party breaching
+schema or class names will be guessed.
 
 ## Door and window interaction
 
