@@ -8,6 +8,25 @@ real safety net, git as the backstop.
 
 ## Git workflow
 
+**Hard rule, no exceptions: `git fetch` and check for upstream changes
+before you (or your AI session) read code to plan work, before every
+commit, and before every push.** The whole point of two people/AI sessions
+working on this at once is that the other person's changes can land at any
+moment — starting work, committing, or pushing against a stale view of
+`main` is exactly how the "both edited the same file" and "my change
+silently undoes theirs" problems happen. Concretely, before any of those
+three actions:
+
+```
+git fetch origin
+git log HEAD..origin/main --oneline   # anything listed here, you haven't seen yet
+```
+
+If that shows commits you haven't reviewed, **read them** (`git show` /
+`git diff`) before proceeding — especially anything touching
+`docs/`, `CHANGELOG.md`, or a file adjacent to what you're about to change.
+Merge/rebase them in before you commit or push your own work on top.
+
 - `main` is the integration branch. Nobody commits straight to `main`.
 - Each person/session works on their own branch:
   `git checkout -b <yourname>/<short-feature-name>`.
