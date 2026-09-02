@@ -41,6 +41,30 @@ set is considered final. Wood and other materials may visually use suitable
 DayZ assets where permitted, but no third-party workshop mod assets or code
 will be copied.
 
+### Modular dimension rules
+
+Compatible parts share a common horizontal module span, but they do not
+share every dimension. In particular:
+
+- a full wall, a half-height wall, and one edge of a full floor use the same
+  horizontal span
+- a floor snapped to the bottom socket of a wall fits that wall exactly
+  across its width
+- a half wall retains the full horizontal span and reduces the wall height;
+  a separate half-width part, if added later, must be named and dimensioned
+  separately
+- full wall height is deliberately greater than the edge length of a floor
+- rotating a floor upright therefore does not make it a functional
+  substitute for a wall: it leaves a deliberate shortfall at the top when
+  aligned with the normal wall/floor module
+- model pivots and snap sockets, rather than visible mesh bounds alone,
+  define the exact connection plane
+
+The final numeric dimensions remain unresolved until the common module
+specification is approved. Whichever values are chosen must preserve these
+relationships mathematically so repeated floors and walls remain aligned
+without cumulative gaps.
+
 ## Kit and placement flow
 
 Each structure is deployed from a corresponding kit held by the player.
