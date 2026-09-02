@@ -1,0 +1,10 @@
+name = "SparkZBase";
+picture = "";
+logo = "";
+logoSmall = "";
+logoOver = "";
+tooltip = "SparkZBase";
+overview = "SparkZ squad base permissions and upkeep.";
+action = "";
+author = "SparkZ";
+version = "0.1.0";

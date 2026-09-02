@@ -1,0 +1,10 @@
+# Compiled/binary mod outputs - rebuilt from source, don't diff usefully
+addons/*.pbo
+*.bikey
+*.biprivatekey
+*.bisign
+
+# OS/editor noise
+Thumbs.db
+.DS_Store
+*.tmp

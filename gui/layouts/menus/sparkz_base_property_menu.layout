@@ -1,0 +1,347 @@
+FrameWidgetClass root {
+ visible 0
+ position 0 0
+ size 1 1
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ {
+  PanelWidgetClass SparkZBaseBackdrop {
+   position 0 0
+   size 1 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style DayZDefaultPanel
+   color 0.0667 0.0745 0.0824 1
+   {
+    PanelWidgetClass SparkZBaseTopBar {
+     position 0 0
+     size 1 82
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.098 0.1098 0.1176 1
+     {
+      ImageWidgetClass SparkZBaseBrandLogo {
+       ignorepointer 1
+       position 28 20
+       size 42 42
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+      }
+      TextWidgetClass SparkZBaseBrand {
+       ignorepointer 1
+       position 84 24
+       size 160 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SPARKZ"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+      }
+      TextWidgetClass SparkZBaseBrandSub {
+       ignorepointer 1
+       position 84 46
+       size 260 20
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "/ BASE"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+      ButtonWidgetClass SparkZBaseMenuClose {
+       position 20 23
+       size 36 36
+       halign right_ref
+       valign top_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "X"
+      }
+      PanelWidgetClass SparkZBaseTopBarBottomBorder {
+       ignorepointer 1
+       position 0 0
+       size 1 1
+       halign left_ref
+       valign bottom_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style DayZDefaultPanel
+       color 0.2039 0.2196 0.2314 1
+      }
+     }
+    }
+
+    PanelWidgetClass SparkZBaseMain {
+     position 360 122
+     size 1200 780
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     color 0.078 0.0878 0.0941 1
+     {
+      TextWidgetClass SparkZBaseMenuTitle {
+       position 30 22
+       size 780 46
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "SPARKZ BASE"
+       font "gui/fonts/sdf_MetronLight24"
+       "text color" 0.898 0.898 0.878 1
+      }
+      TextWidgetClass SparkZBaseMenuStatus {
+       position 30 70
+       size 760 34
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Checking property..."
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+
+      PanelWidgetClass SparkZBaseStatusCard {
+       position 30 118
+       size 720 150
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+       color 0.2039 0.2196 0.2314 1
+       {
+        TextWidgetClass SparkZBaseMenuTime {
+         position 24 16
+         size 672 34
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "LOADING"
+         font "gui/fonts/sdf_MetronBook24"
+         "text color" 0.847 0.604 0.141 1
+        }
+        TextWidgetClass SparkZBaseMenuTimeDetail {
+         position 24 54
+         size 672 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text ""
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseMenuTotal {
+         position 24 86
+         size 672 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "DAILY PAYMENT: -"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.898 0.898 0.878 1
+        }
+        TextWidgetClass SparkZBaseMenuNotes {
+         position 24 114
+         size 672 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "SPARKZ NOTES: -"
+         font "gui/fonts/sdf_MetronBook14"
+         "text color" 0.631 0.647 0.647 1
+        }
+       }
+      }
+
+      PanelWidgetClass SparkZBaseBreakdownPanel {
+       position 30 284
+       size 720 424
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style DayZDefaultPanel
+       color 0.2039 0.2196 0.2314 1
+       {
+        TextWidgetClass SparkZBaseRowRadiusLabel {
+         position 24 20 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "CLAIM RADIUS" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowRadiusValue {
+         position 424 20 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDivider0 {
+         ignorepointer 1 position 24 56 size 672 1 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.098 0.1098 0.1176 1
+        }
+
+        TextWidgetClass SparkZBaseRowBaseFeeLabel {
+         position 24 68 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "BASE FEE" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowBaseFeeValue {
+         position 424 68 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDivider1 {
+         ignorepointer 1 position 24 104 size 672 1 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.098 0.1098 0.1176 1
+        }
+
+        TextWidgetClass SparkZBaseRowBBPLabel {
+         position 24 116 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "BBP PARTS" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowBBPValue {
+         position 424 116 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDivider2 {
+         ignorepointer 1 position 24 152 size 672 1 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.098 0.1098 0.1176 1
+        }
+
+        TextWidgetClass SparkZBaseRowDoorsLabel {
+         position 24 164 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "DOORS / GATES / WINDOWS" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowDoorsValue {
+         position 424 164 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDivider3 {
+         ignorepointer 1 position 24 200 size 672 1 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.098 0.1098 0.1176 1
+        }
+
+        TextWidgetClass SparkZBaseRowStorageLabel {
+         position 24 212 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "STORAGE" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowStorageValue {
+         position 424 212 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDivider4 {
+         ignorepointer 1 position 24 248 size 672 1 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.847 0.604 0.141 0.4
+        }
+
+        TextWidgetClass SparkZBaseRowDaysOwedLabel {
+         position 24 260 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "DAYS OWED" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowDaysOwedValue {
+         position 424 260 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDivider5 {
+         ignorepointer 1 position 24 296 size 672 1 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.098 0.1098 0.1176 1
+        }
+
+        TextWidgetClass SparkZBaseRowGraceLabel {
+         position 24 308 size 400 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "DAYS UNPAID BEFORE ABANDONED" font "gui/fonts/sdf_MetronBook14" "text color" 0.631 0.647 0.647 1
+        }
+        TextWidgetClass SparkZBaseRowGraceValue {
+         position 424 308 size 272 30 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook14" "text color" 0.898 0.898 0.878 1 "text halign" right
+        }
+        PanelWidgetClass SparkZBaseDividerTotal {
+         ignorepointer 1 position 24 350 size 672 2 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         style DayZDefaultPanel color 0.847 0.604 0.141 1
+        }
+
+        TextWidgetClass SparkZBaseRowTotalLabel {
+         position 24 366 size 400 40 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "TOTAL DUE NOW" font "gui/fonts/sdf_MetronBook24" "text color" 0.847 0.604 0.141 1
+        }
+        TextWidgetClass SparkZBaseRowTotalValue {
+         position 424 366 size 272 40 hexactpos 1 vexactpos 1 hexactsize 1 vexactsize 1
+         text "-" font "gui/fonts/sdf_MetronBook24" "text color" 0.847 0.604 0.141 1 "text halign" right
+        }
+       }
+      }
+
+      ButtonWidgetClass SparkZBaseMenuPayNow {
+       position 820 284
+       size 190 42
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "PAY NOW"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+       style Default
+      }
+      ButtonWidgetClass SparkZBaseMenuRefresh {
+       position 820 336
+       size 190 42
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "REFRESH"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.898 0.898 0.878 1
+       style Default
+      }
+      ButtonWidgetClass SparkZBaseMenuGiveUp {
+       position 820 388
+       size 190 42
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "GIVE UP BASE"
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.831 0.416 0.361 1
+       style Default
+      }
+      TextWidgetClass SparkZBaseMenuHint {
+       position 820 452
+       size 300 120
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text ""
+       font "gui/fonts/sdf_MetronBook14"
+       "text color" 0.631 0.647 0.647 1
+      }
+     }
+    }
+   }
+  }
+ }
+}
