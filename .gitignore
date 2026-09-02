@@ -13,3 +13,4 @@ _build_output_*/
 Thumbs.db
 .DS_Store
 *.tmp
+*.blend1

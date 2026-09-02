@@ -3,6 +3,17 @@
 Dated entries, newest first. Bump `SparkZBaseConstants.MOD_VERSION` alongside
 any entry that ships to the test server (see `docs/CONTRIBUTING.md`).
 
+## 2026-09-02 — First standalone model prototype
+
+- Added the editable Blender prototype for the standalone wooden door wall,
+  using a provisional 4.00 m × 4.25 m square module envelope.
+- Built the visible wall and animated door from separate UV-mapped wooden
+  boards with a generated clean wood texture.
+- Added preliminary Geometry, Fire Geometry, View Geometry, hinge-axis, and
+  snap-point source collections plus closed/open preview renders.
+- Added a repeatable Blender generator and structural validator. This is not
+  yet a DayZ P3D or an in-game object, so no runtime version was bumped.
+
 ## 2026-09-02 — Pivot: standalone construction system, no BaseBuildingPlus dependency
 
 **This supersedes the "hooks into BaseBuildingPlus" framing used everywhere

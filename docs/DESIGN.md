@@ -24,6 +24,24 @@ and behaviour must not be copied blindly into the new system.
 
 ## Initial construction set
 
+### First model prototype
+
+The first asset under active development is the wooden wall with an animated
+door. Its editable source lives under `Source/Models/WoodDoorWall/`.
+
+The initial Blender prototype uses a 4.00 m-wide × 4.25 m-tall outer wall,
+with a 1.20 m-wide × 2.45 m-tall clear doorway target. These measurements
+are provisional review values, not yet the approved common module standard.
+They must be checked visually and against real DayZ player and vehicle
+collision envelopes before the remaining model family inherits them.
+
+The prototype is made from individually modelled, UV-mapped boards with a
+clean square timber frame. Its animated `door` hierarchy, hinge-axis memory
+points, preliminary snap markers, and simplified Geometry, Fire Geometry,
+and View Geometry proxies are authored in the Blender source. P3D export,
+`model.cfg`, config registration, runtime actions, persistence, and in-game
+collision/ballistics validation remain separate implementation work.
+
 The first model set is expected to include:
 
 - full and half wood walls

@@ -1,0 +1,39 @@
+{
+  "asset": "SPKZ_WoodDoorWall",
+  "status": "PASS",
+  "prototype_dimensions_m": {
+    "wall_width": 4.0,
+    "wall_height": 4.25,
+    "door_opening_width": 1.2,
+    "door_opening_height": 2.45
+  },
+  "collections": {
+    "1.000 - Resolution": 31,
+    "Geometry": 4,
+    "Fire Geometry": 4,
+    "View Geometry": 4,
+    "Memory": 6
+  },
+  "visual_mesh_count": 30,
+  "visual_vertices": 240,
+  "visual_triangles": 360,
+  "all_visual_meshes_uv_mapped": true,
+  "texture_uses_relative_path": true,
+  "texture_path": "//textures\\spkz_clean_wood_d.png",
+  "missing_uv_meshes": [],
+  "door_selection_mesh_count": 10,
+  "door_animation": {
+    "root": "door_hinge",
+    "action": "Door_Open_0_to_1",
+    "closed_frame": 1,
+    "closed_angle_radians": 0.0,
+    "open_frame": 30,
+    "open_angle_radians": -1.832596
+  },
+  "missing_memory_points": [],
+  "notes": [
+    "This validates the editable Blender source, not an exported DayZ P3D.",
+    "P3D named selections, LOD properties, model.cfg parsing, bullet blocking, collision, and in-game animation still require validation after export.",
+    "Prototype dimensions require visual and in-game approval before they become the shared module standard."
+  ]
+}
