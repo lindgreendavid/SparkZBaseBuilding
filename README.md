@@ -101,3 +101,35 @@ Each mod folder follows the same internal layout:
 `config.cpp` / `mod.cpp` (addon manifest), `scripts/3_Game/` (shared data,
 client+server), `scripts/4_World/` (server-authoritative logic), `scripts/5_Mission/`
 (client-side mission code, UI), `gui/` (layouts, branding, icons).
+
+## Building a loadable mod (turning source into `@ModName` folders)
+
+This repo is source code, not something DayZ can load directly. Every mod
+folder at the repo root that contains a `mod.cpp` gets packed into a signed
+`@ModName/addons/ModName.pbo` — the standard DayZ mod structure — by:
+
+```
+./tools/Build-SparkZBaseBuilding.ps1 `
+    -PrivateKeyPath "<path to your .biprivatekey>" `
+    -PublicKeyPath "<path to your matching .bikey>"
+```
+
+Requires [DayZ Tools](https://store.steampowered.com/app/799880/DayZ_Tools/)
+installed via Steam, and a signing key pair (generate your own once with
+DayZ Tools' `DSCreateKey.exe` if you don't have one — **never commit the
+`.biprivatekey` to this repo**; share it with your collaborator over a
+private channel, not git, since you both need the same key for the server
+to trust builds from either of you).
+
+Output is a timestamped `_build_output_<date>/` folder (gitignored)
+containing one `@ModName` folder per mod — copy those directly into a DayZ
+client's or server's install, or reference them via a `-mod=` launch
+parameter. Load order: `@SparkZCore;@SparkZGroup;@SparkZBase` (and whatever
+the new construction mod ends up named, once it exists — see
+`docs/BRIEF.md`/`docs/DESIGN.md`).
+
+**Today this only packages the old BBP-hooked prototype** (plus its
+`SparkZGroup`/`SparkZCore` dependencies) — there is no standalone
+construction addon yet, only its design spec in `docs/DESIGN.md`. Once that
+code exists as its own mod folder here, this same script picks it up
+automatically with no changes needed.

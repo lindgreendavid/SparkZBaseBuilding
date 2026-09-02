@@ -3,6 +3,8 @@
 *.bikey
 *.biprivatekey
 *.bisign
+_build_output_*/
+@*/
 
 # Claude Code internal state - not part of mod source
 .claude/
