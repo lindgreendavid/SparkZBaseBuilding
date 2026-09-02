@@ -65,6 +65,31 @@ specification is approved. Whichever values are chosen must preserve these
 relationships mathematically so repeated floors and walls remain aligned
 without cumulative gaps.
 
+### Wall and opening clearance
+
+Every full-height wall variant shares the same approved structural height.
+That includes plain walls, door walls, window walls, and garage-door walls.
+The wall height must be comfortably greater than a standing player's height,
+not merely equal to the character envelope.
+
+Ordinary door openings must provide enough clear width and height for a
+player to walk through naturally without crouching, clipping the frame, or
+catching on hidden collision. The visible opening and every relevant
+collision LOD must agree on that clearance.
+
+A garage-door wall uses the same vertical wall height but may span multiple
+standard horizontal modules. Its fully open doorway must be wide and tall
+enough for the largest supported truck to pass through with practical
+clearance for mirrors, bodywork, suspension movement, steering error, and
+the driver's imperfect alignment. The garage wall must still terminate on
+the standard snap grid so ordinary walls and floors connect cleanly at both
+sides and above it.
+
+Exact doorway and garage-opening measurements will be chosen only after
+checking the real player collision envelope and the bounding/collision
+dimensions of the intended supported DayZ vehicles. Visual model dimensions
+alone are not sufficient acceptance criteria.
+
 ## Kit and placement flow
 
 Each structure is deployed from a corresponding kit held by the player.
