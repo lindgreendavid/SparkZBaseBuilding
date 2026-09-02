@@ -77,13 +77,19 @@ player to walk through naturally without crouching, clipping the frame, or
 catching on hidden collision. The visible opening and every relevant
 collision LOD must agree on that clearance.
 
-A garage-door wall uses the same vertical wall height but may span multiple
-standard horizontal modules. Its fully open doorway must be wide and tall
-enough for the largest supported truck to pass through with practical
+A garage-door wall has exactly the same outer width and height as every
+other standard full wall. It is one standard module, not a multi-module or
+double-width exception. The animated garage-door panel and its opening sit
+inside that common wall envelope.
+
+The fully open doorway must still be wide and tall enough for the largest
+supported vehicle, including a truck, to pass through with practical
 clearance for mirrors, bodywork, suspension movement, steering error, and
-the driver's imperfect alignment. The garage wall must still terminate on
-the standard snap grid so ordinary walls and floors connect cleanly at both
-sides and above it.
+the driver's imperfect alignment. Consequently, the common wall and floor
+module span must be chosen wide enough to contain that vehicle opening plus
+the garage frame's side posts. Ordinary walls, door walls, window walls,
+garage walls, and the matching floor edge all retain that same horizontal
+span and snap footprint.
 
 Exact doorway and garage-opening measurements will be chosen only after
 checking the real player collision envelope and the bounding/collision
