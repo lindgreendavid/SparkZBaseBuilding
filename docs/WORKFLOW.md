@@ -99,8 +99,46 @@ Ground-following floor preview starts 22 cm up; wall-bottom snaps intentionally
 remain at the wall datum, with manual lift available.
 
 Only the placer can dismantle using a screwdriver. Ordinary open/close actions
-are not owner-restricted. Plot poles, squad permissions, crafting/workbench,
+are not owner-restricted - the workbench's access action follows that same
+rule (anyone can open the build menu; only the placer can dismantle it, and
+only once it has no materials left inside). Plot poles, squad permissions,
 payment enforcement and C4 integration are NOT implemented in this addon yet.
+
+## Workbench crafting
+
+`SPKZ_WorkbenchKit` deploys `SPKZ_Workbench`: a 20x25 (500-cell) cargo
+container using a temporary real-vanilla placeholder model
+(`DZ\structures\furniture\various\workbench_dz.p3d` - borrowed for its visual
+geometry only, same approach as the other pieces' hologram classes) until a
+custom model exists. Store raw materials in its cargo, then press interact
+(whatever key you have bound - it uses the vanilla look-and-interact system,
+`SPKZ_ActionAccessWorkbench`) to open a build menu: category tabs on the left,
+recipes in the middle (red if you can't currently afford them), and a cost
+breakdown + BUILD NOW button on the right once a recipe is selected. Building
+spawns the same kit item the wall/floor/etc. pieces already use - it does not
+place anything directly.
+
+Recipes are server-admin-tunable JSON at
+`$profile:SparkZBaseBuilding/WorkbenchRecipes.json` (auto-created with
+placeholder costs on first boot - see `SPKZ_WorkbenchRecipeCatalog` in
+`scripts/3_Game/Data/SPKZ_WorkbenchRecipe.c`), sent to the client over a
+self-contained RPC pair (`scripts/3_Game/RPC/SPKZ_WorkbenchRPC.c`) - this
+addon still does not depend on SparkZGroup/SparkZCore, so these RPC ids are
+scoped entirely to `SPKZ_Workbench`'s own `OnRPC`, not a shared registry. The
+server always re-validates recipe and stock server-side before consuming
+anything or spawning a kit, regardless of what the client's menu displays.
+
+All recipe icons currently point at the same placeholder kit icon - there is
+no per-part icon art yet (see docs/BRIEF.md's open asset-source question).
+The icon widget and per-recipe `IconPath` field are already wired end to end,
+so real art drops in later with zero script changes.
+
+Not yet done: squad Base Access permission gating on the access/build actions
+(this addon has no plot-pole/squad-permission system to check against yet -
+see docs/BRIEF.md), a real workbench model, and in-game verification of the
+whole crafting flow (menu layout, RPC round-trip, cargo consumption, kit
+spawn) - this has only been statically reviewed against real DayZ script
+APIs, not yet compiled or tested in-game.
 
 ## Packing, server setup and testing
 

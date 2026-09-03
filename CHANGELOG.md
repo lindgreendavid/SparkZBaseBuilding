@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-09-03 — Workbench crafting (not yet in-game tested)
+
+- Add `SPKZ_WorkbenchKit` / `SPKZ_Workbench`: a deployable 500-cell (20x25)
+  cargo container using a temporary real-vanilla model
+  (`DZ\structures\furniture\various\workbench_dz.p3d`) as a placeholder until
+  a custom model exists.
+- Add a build menu (category tabs, recipe list with red/green affordability,
+  cost breakdown, Build Now) opened via the vanilla interact action - no new
+  keybind needed.
+- Add a server-admin-tunable JSON recipe catalog
+  (`$profile:SparkZBaseBuilding/WorkbenchRecipes.json`) with placeholder
+  costs, and a self-contained RPC pair for the open/build round trip (this
+  addon still has no SparkZGroup/SparkZCore dependency, so these RPC ids are
+  scoped to `SPKZ_Workbench`'s own `OnRPC`, not a shared registry).
+- Server independently re-validates the recipe and current cargo contents
+  before consuming any material or spawning a kit - the client's menu
+  display is never trusted.
+- Access/build is not yet squad-permission-gated (no plot-pole/squad system
+  exists in this addon yet - anyone can use any workbench, matching the
+  existing rule that ordinary interactions like opening a door aren't
+  owner-restricted either); only dismantle is owner-restricted, and only
+  once the workbench's cargo is empty.
+- Statically reviewed against the actual installed DayZ vanilla scripts
+  (extracted `scripts.pbo`/`gui.pbo` via DayZ Tools) for every new API used,
+  but **not yet compiled or tested in-game** - do not treat this as verified
+  working until that happens.
+
 ## 2026-09-03 — Standalone building kits and development handover
 
 - Add current addon, six editable models, game P3Ds, textures and materials.
