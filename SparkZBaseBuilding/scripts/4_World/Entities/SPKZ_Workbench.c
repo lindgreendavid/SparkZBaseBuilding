@@ -1,17 +1,28 @@
-// Crafting workbench: extends SPKZ_WoodWallDoor/SPKZ_WoodWallDoorKit (see
-// SPKZ_WoodWallDoor.c) purely to reuse its owner tracking, lifetime refresh,
-// save/load and dismantle-to-kit machinery - a workbench is not a wall, so
-// SPKZ_HasDoor/IsOpen/SetActions are overridden below to drop door behaviour.
+// Crafting workbench. Extends ItemBase directly, NOT SPKZ_WoodWallDoor - the
+// wall/door/window family's script class extends BuildingSuper (House),
+// which only pairs correctly with a HouseNoDestruct-rooted config ancestor
+// (simulation="house"). The workbench needs real 500-slot cargo, which
+// requires a WorldContainer_Base config ancestor (simulation="inventoryItem",
+// the same one the installed game's own Refrigerator uses to be a real-
+// world-only container - see workbench_vehicles.hpp). Config simulation and
+// script ancestor must match: pairing a Building-family script class with an
+// "inventoryItem" config silently falls back to a bare ItemBase at runtime,
+// which is why every override in an earlier version of this file (including
+// IsTakeable) never actually ran - confirmed by ActionTakeItemToHands.c,
+// which is what was showing the unwanted "Take to hands" prompt, coming from
+// ItemBase.SetActions()'s own default AddAction(ActionTakeItemToHands) call.
+// This version owns its owner-tracking/persistence/dismantle logic directly
+// instead of reusing SPKZ_WoodWallDoor's.
+//
 // Real named attachment slots (SPKZ_WB_Hacksaw, SPKZ_WB_HandSaw,
 // SPKZ_WB_Hammer, SPKZ_WB_Shovel, SPKZ_WB_Screwdriver, SPKZ_WB_Pliers,
 // SPKZ_WB_SledgeHammer, SPKZ_WB_SharpeningStone - see workbench_slots.hpp)
-// come from the real model; the earlier "scan all cargo for a tool anywhere"
-// placeholder logic is gone. Anyone can access the build menu (matching this
-// addon's existing rule that ordinary interactions - open/close doors - are
-// not owner-gated, only dismantle is; see SPKZ_ActionAccessWorkbench). Full
-// squad-role gating (Base Access holders only) is future work once this
-// addon has a plot-pole/squad-permission system to check against - see
-// docs/WORKFLOW.md's list of not-yet-implemented features and docs/BRIEF.md.
+// come from the real model. Anyone can access the build menu (matching this
+// addon's existing rule that ordinary interactions aren't owner-gated, only
+// dismantle is; see SPKZ_ActionAccessWorkbench). Full squad-role gating
+// (Base Access holders only) is future work once this addon has a plot-pole/
+// squad-permission system to check against - see docs/WORKFLOW.md's list of
+// not-yet-implemented features and docs/BRIEF.md.
 class SPKZ_WorkbenchCollision extends BuildingSuper
 {
  // Matches the model's separate invisible collision mesh - block player
@@ -20,12 +31,21 @@ class SPKZ_WorkbenchCollision extends BuildingSuper
  override bool CanObstruct() { return false; }
 }
 
-class SPKZ_Workbench extends SPKZ_WoodWallDoor
+class SPKZ_Workbench extends ItemBase
 {
  protected Object m_SPKZBenchCollision;
+ protected string m_SPKZOwnerId;
+ protected int m_SPKZOwnerHash;
  // Only set server-side and never networked to every client - each client
  // only receives the specific OPEN_RESPONSE/BUILD_RESPONSE addressed to it.
  protected ref SPKZ_WorkbenchRecipeCatalog m_SPKZCatalog;
+
+ void SPKZ_Workbench()
+ {
+  RegisterNetSyncVariableInt("m_SPKZOwnerHash");
+  SetAllowDamage(false);
+  SetCanBeDestroyed(false);
+ }
 
  override void EEInit()
  {
@@ -71,33 +91,85 @@ class SPKZ_Workbench extends SPKZ_WoodWallDoor
   super.EEDelete(parent);
  }
 
- override bool SPKZ_HasDoor() { return false; }
- override bool IsOpen() { return true; }
- override string SPKZ_ReturnKitType() { return "SPKZ_WorkbenchKit"; }
- override bool CanDisplayCargo() { return true; }
+ void SPKZ_RefreshLifetime()
+ {
+  if (!GetGame().IsServer()) return;
+  // Native CE owns persistence, matching SPKZ_WoodWallDoor's convention -
+  // refresh cleanup lifetime, never recreate a deleted workbench.
+  SetLifetimeMax(315360000);
+  SetLifetime(315360000);
+ }
 
- // Once placed, a workbench is a fixed structure, not a loose item - it
- // must never be pickable into hands or another container's cargo (only
- // dismantling it with a screwdriver, via SPKZ_Dismantle, produces a
- // portable kit again). EntityAI.CanPutIntoHands/CanPutInCargo/IsTakeable
- // all default to true regardless of the config's itemSize - the wall/door/
- // window family never needed to override these because their House-rooted
- // config ancestor made them non-pickable at the engine level already; the
- // workbench's Container_Base ancestor (needed for real cargo - see
- // workbench_vehicles.hpp) does not, so it must be blocked here explicitly,
- // matching the exact pattern the installed game's own TentBase uses to
- // stay non-pickable once deployed.
- override bool IsTakeable() { return false; }
- override bool CanPutIntoHands(EntityAI parent) { return false; }
- override bool CanPutInCargo(EntityAI parent) { return false; }
- override bool CanRemoveFromCargo(EntityAI parent) { return false; }
- override bool CanRemoveFromHands(EntityAI parent) { return false; }
+ override void OnCEUpdate()
+ {
+  super.OnCEUpdate();
+  SPKZ_RefreshLifetime();
+ }
+
+ void SPKZ_SetOwner(PlayerBase player)
+ {
+  if (!GetGame().IsServer() || !player || !player.GetIdentity()) return;
+  m_SPKZOwnerId = player.GetIdentity().GetId();
+  m_SPKZOwnerHash = m_SPKZOwnerId.Hash();
+  SPKZ_RefreshLifetime();
+  SetSynchDirty();
+ }
+
+ bool SPKZ_CanDismantle(PlayerBase player, ItemBase tool)
+ {
+  if (!player || !player.GetIdentity() || !tool) return false;
+  if (!tool.IsKindOf("Screwdriver") || tool.IsRuined()) return false;
+  string id = player.GetIdentity().GetId();
+  bool isOwner;
+  if (GetGame().IsServer())
+  {
+   isOwner = m_SPKZOwnerId != "" && m_SPKZOwnerId == id;
+  }
+  else
+  {
+   isOwner = m_SPKZOwnerHash != 0 && m_SPKZOwnerHash == id.Hash();
+  }
+  if (!isOwner) return false;
+  if (GetInventory().AttachmentCount() > 0) return false;
+  CargoBase cargo = GetInventory().GetCargo();
+  return !cargo || cargo.GetItemCount() == 0;
+ }
+
+ void SPKZ_Dismantle(PlayerBase player, ItemBase tool)
+ {
+  if (!GetGame().IsServer() || !SPKZ_CanDismantle(player, tool)) return;
+  EntityAI kit = EntityAI.Cast(GetGame().CreateObjectEx("SPKZ_WorkbenchKit", player.GetPosition(), ECE_PLACE_ON_SURFACE));
+  if (!kit) return;
+  tool.AddHealth("", "Health", -5);
+  GetGame().ObjectDelete(this);
+ }
+
+ override void OnStoreSave(ParamsWriteContext ctx)
+ {
+  super.OnStoreSave(ctx);
+  ctx.Write(m_SPKZOwnerId);
+ }
+
+ override bool OnStoreLoad(ParamsReadContext ctx, int version)
+ {
+  if (!super.OnStoreLoad(ctx, version))
+  {
+   return false;
+  }
+
+  // Workbenches saved before owner tracking existed have no stored owner.
+  // Do not assign them to a stranger.
+  if (!ctx.Read(m_SPKZOwnerId)) { m_SPKZOwnerId = ""; }
+  if (m_SPKZOwnerId != "") { m_SPKZOwnerHash = m_SPKZOwnerId.Hash(); }
+  SPKZ_RefreshLifetime();
+  return true;
+ }
+
+ override bool CanDisplayCargo() { return true; }
 
  override bool CanReceiveItemIntoCargo(EntityAI item)
  {
-  // The parent (SPKZ_WoodWallDoor) deliberately blocks cargo for walls - the
-  // bench is a storage object, so it needs to allow it.
-  if (!item || item == this || SPKZ_WoodWallDoor.Cast(item)) return false;
+  if (!item || item == this) return false;
   return true;
  }
 
@@ -115,20 +187,24 @@ class SPKZ_Workbench extends SPKZ_WoodWallDoor
   return false;
  }
 
- override bool SPKZ_CanDismantle(PlayerBase player, ItemBase tool)
- {
-  if (!super.SPKZ_CanDismantle(player, tool)) return false;
-  if (GetInventory().AttachmentCount() > 0) return false;
-  CargoBase cargo = GetInventory().GetCargo();
-  return !cargo || cargo.GetItemCount() == 0;
- }
+ // A placed workbench is a fixed structure, not a loose item - block every
+ // path that could move it into hands or another container. The config's
+ // WorldContainer_Base ancestor (inventoryCondition="false") already blocks
+ // most native paths, but ActionTakeItemToHands.ActionCondition specifically
+ // checks IsTakeable() in script, so it must be overridden here too. Not
+ // calling super.SetActions() below means the default
+ // AddAction(ActionTakeItemToHands) (and ActionTakeItem/ActionDropItem/etc.)
+ // from ItemBase.SetActions() never gets registered in the first place.
+ override bool IsTakeable() { return false; }
+ override bool CanPutIntoHands(EntityAI parent) { return false; }
+ override bool CanPutInCargo(EntityAI parent) { return false; }
+ override bool CanRemoveFromCargo(EntityAI parent) { return false; }
+ override bool CanRemoveFromHands(EntityAI parent) { return false; }
 
  override void SetActions()
  {
-  // No door actions (SPKZ_HasDoor() is false) - normal inventory interaction
-  // already exposes cargo/attachments without a dedicated action. This one
-  // custom action opens the crafting menu.
   AddAction(SPKZ_ActionAccessWorkbench);
+  AddAction(SPKZ_ActionDismantleWorkbench);
  }
 
  // Maps a recipe's tool classname to the real named attachment slot it must
@@ -426,4 +502,26 @@ class SPKZ_WorkbenchKit extends SPKZ_WoodWallDoorKit
 {
  override string SPKZ_PlacedType() { return "SPKZ_Workbench"; }
  override string SPKZ_ProjectionType() { return "SPKZ_Workbench_Hologram"; }
+
+ // Reimplements SPKZ_WoodWallDoorKit.OnPlacementComplete rather than calling
+ // super - the inherited version casts the newly placed object to
+ // SPKZ_WoodWallDoor to call SPKZ_SetOwner, but SPKZ_Workbench no longer
+ // extends that class (see SPKZ_Workbench.c), so that cast would silently
+ // fail and the workbench would never get an owner, making it permanently
+ // un-dismantleable. Calling super AND doing this ourselves would create
+ // the placed object twice (ECE_OBJECT_SWAP swaps this kit for it).
+ override void OnPlacementComplete(Man player, vector position = "0 0 0", vector orientation = "0 0 0")
+ {
+  if (!GetGame().IsServer()) return;
+
+  Object bench = GetGame().CreateObjectEx(SPKZ_PlacedType(), position, ECE_OBJECT_SWAP);
+  if (!bench) return;
+
+  SPKZ_Workbench placed = SPKZ_Workbench.Cast(bench);
+  if (placed) { placed.SPKZ_SetOwner(PlayerBase.Cast(player)); }
+  bench.SetPosition(position);
+  bench.SetOrientation(orientation);
+  // ActionPlaceObject deletes base-building kits at the end of the action -
+  // matching SPKZ_WoodWallDoorKit's own convention, never delete it here.
+ }
 }
