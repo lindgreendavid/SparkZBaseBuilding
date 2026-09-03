@@ -16,7 +16,8 @@ ButtonWidgetClass SPKZ_WorkbenchRecipeItem {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     PanelWidgetClass RecipeItemAccent {
      visible 0
@@ -28,7 +29,8 @@ ButtonWidgetClass SPKZ_WorkbenchRecipeItem {
      vexactpos 0
      hexactsize 0
      vexactsize 1
-     style Colorable
+     inheritalpha 0
+     style rover_sim_colorable
     }
     PanelWidgetClass RecipeItemPreviewFrame {
      ignorepointer 1
@@ -39,7 +41,8 @@ ButtonWidgetClass SPKZ_WorkbenchRecipeItem {
      vexactpos 0
      hexactsize 0
      vexactsize 0
-     style Colorable
+     inheritalpha 0
+     style rover_sim_colorable
      {
       ItemPreviewWidgetClass RecipeItemPreview {
        ignorepointer 1

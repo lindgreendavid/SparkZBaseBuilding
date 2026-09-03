@@ -194,6 +194,19 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   return item;
  }
 
+ // A wall/door/window piece's raw model orientation is whatever the
+ // in-world part needs, not a flattering angle to look at in a preview
+ // widget - give every preview a fixed three-quarter presentation angle
+ // instead of whatever the model's default rotation happens to be.
+ protected void SPKZ_ApplyPreview(ItemPreviewWidget preview, string className, array<EntityAI> tracker)
+ {
+  if (!preview) return;
+  EntityAI item = SPKZ_CreatePreviewItem(className, tracker);
+  if (!item) return;
+  preview.SetItem(item);
+  preview.SetModelOrientation(Vector(-15, 35, 0));
+ }
+
  protected void SPKZ_StyleTab(Widget tabWidget, bool selected)
  {
   Widget background = tabWidget.FindAnyWidget("TabBackground");
@@ -289,11 +302,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    // Preview the finished piece (e.g. the wall itself), not the generic
    // cardboard kit box every recipe's output kit shares.
    ItemPreviewWidget preview = ItemPreviewWidget.Cast(itemWidget.FindAnyWidget("RecipeItemPreview"));
-   if (preview)
-   {
-    EntityAI previewItem = SPKZ_CreatePreviewItem(recipe.PreviewClassName, m_GridPreviewItems);
-    if (previewItem) { preview.SetItem(previewItem); }
-   }
+   SPKZ_ApplyPreview(preview, recipe.PreviewClassName, m_GridPreviewItems);
   }
  }
 
@@ -313,12 +322,8 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   if (m_DetailContainer) { m_DetailContainer.Show(true); }
   if (m_DetailName) { m_DetailName.SetText(m_SelectedRecipe.DisplayName); }
 
-  if (m_DetailPreview)
-  {
-   // Preview the finished piece, not the generic cardboard kit box.
-   EntityAI mainPreviewItem = SPKZ_CreatePreviewItem(m_SelectedRecipe.PreviewClassName, m_DetailPreviewItems);
-   if (mainPreviewItem) { m_DetailPreview.SetItem(mainPreviewItem); }
-  }
+  // Preview the finished piece, not the generic cardboard kit box.
+  SPKZ_ApplyPreview(m_DetailPreview, m_SelectedRecipe.PreviewClassName, m_DetailPreviewItems);
 
   bool affordable = true;
 
@@ -340,11 +345,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    Widget materialDot = materialRow.FindAnyWidget("RequiredItemStatusDot");
    if (materialDot) { materialDot.SetColor(SPKZ_RequirementColor(enough)); }
    ItemPreviewWidget materialPreview = ItemPreviewWidget.Cast(materialRow.FindAnyWidget("RequiredItemPreview"));
-   if (materialPreview)
-   {
-    EntityAI materialPreviewItem = SPKZ_CreatePreviewItem(cost.ClassName, m_DetailPreviewItems);
-    if (materialPreviewItem) { materialPreview.SetItem(materialPreviewItem); }
-   }
+   SPKZ_ApplyPreview(materialPreview, cost.ClassName, m_DetailPreviewItems);
   }
 
   SPKZ_ClearChildren(m_ToolsGridSpacer);
@@ -367,11 +368,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    Widget toolDot = toolRow.FindAnyWidget("RequiredItemStatusDot");
    if (toolDot) { toolDot.SetColor(SPKZ_RequirementColor(present)); }
    ItemPreviewWidget toolPreview = ItemPreviewWidget.Cast(toolRow.FindAnyWidget("RequiredItemPreview"));
-   if (toolPreview)
-   {
-    EntityAI toolPreviewItem = SPKZ_CreatePreviewItem(toolReq.ClassName, m_DetailPreviewItems);
-    if (toolPreviewItem) { toolPreview.SetItem(toolPreviewItem); }
-   }
+   SPKZ_ApplyPreview(toolPreview, toolReq.ClassName, m_DetailPreviewItems);
   }
 
   if (m_BuildButton) { m_BuildButton.Enable(affordable); }

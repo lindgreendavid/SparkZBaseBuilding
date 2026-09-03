@@ -6,7 +6,8 @@ PanelWidgetClass SPKZ_WorkbenchRequiredItem {
  vexactpos 1
  hexactsize 0
  vexactsize 0
- style Colorable
+ inheritalpha 0
+ style rover_sim_colorable
  {
   PanelWidgetClass RequiredItemPreviewFrame {
    ignorepointer 1
@@ -17,7 +18,8 @@ PanelWidgetClass SPKZ_WorkbenchRequiredItem {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     ItemPreviewWidgetClass RequiredItemPreview {
      ignorepointer 1
@@ -38,7 +40,8 @@ PanelWidgetClass SPKZ_WorkbenchRequiredItem {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
   }
   TextWidgetClass RequiredItemText {
    ignorepointer 1

@@ -1,4 +1,5 @@
 FrameWidgetClass Root {
+ color 1 1 1 1
  position 0 0
  size 1 1
  hexactpos 0
@@ -15,7 +16,8 @@ FrameWidgetClass Root {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
   }
   PanelWidgetClass HeaderBar {
    ignorepointer 1
@@ -26,7 +28,8 @@ FrameWidgetClass Root {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     PanelWidgetClass HeaderAccent {
      ignorepointer 1
@@ -37,7 +40,8 @@ FrameWidgetClass Root {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     style Colorable
+     inheritalpha 0
+     style rover_sim_colorable
     }
     TextWidgetClass HeaderTitle {
      ignorepointer 1
@@ -73,7 +77,8 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       style Colorable
+       inheritalpha 0
+       style rover_sim_colorable
        {
         TextWidgetClass CloseButtonLabel {
          ignorepointer 1
@@ -105,7 +110,8 @@ FrameWidgetClass Root {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     WrapSpacerWidgetClass TabsSpacer {
      position 10 0
@@ -130,7 +136,8 @@ FrameWidgetClass Root {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     ScrollWidgetClass ItemsScroller {
      ignorepointer 1
@@ -168,7 +175,8 @@ FrameWidgetClass Root {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     TextWidgetClass NoSelectionText {
      visible 1
@@ -197,7 +205,8 @@ FrameWidgetClass Root {
      vexactpos 0
      hexactsize 0
      vexactsize 0
-     style Colorable
+     inheritalpha 0
+     style rover_sim_colorable
      {
       PanelWidgetClass DetailPreviewFrame {
        ignorepointer 1
@@ -208,7 +217,8 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       style Colorable
+       inheritalpha 0
+       style rover_sim_colorable
        {
         ItemPreviewWidgetClass DetailPreview {
          ignorepointer 1
@@ -244,7 +254,8 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 1
-       style Colorable
+       inheritalpha 0
+       style rover_sim_colorable
       }
       TextWidgetClass MaterialsHeader {
        ignorepointer 1
@@ -259,7 +270,7 @@ FrameWidgetClass Root {
        "exact text" 1
        "text color" 0.6 0.6 0.63 1
       }
-      ScrollWidgetClass MaterialsScroller {
+      GridSpacerWidgetClass MaterialsGridSpacer {
        ignorepointer 1
        position 0.05 0.44
        size 0.9 0.18
@@ -267,22 +278,11 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       "Scrollbar V" 1
-       {
-        GridSpacerWidgetClass MaterialsGridSpacer {
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         Padding 2
-         Margin 0
-         "Size To Content V" 1
-         Columns 1
-         Rows 100
-        }
-       }
+       Padding 2
+       Margin 0
+       "Size To Content V" 1
+       Columns 1
+       Rows 100
       }
       PanelWidgetClass DetailDivider2 {
        ignorepointer 1
@@ -293,7 +293,8 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 1
-       style Colorable
+       inheritalpha 0
+       style rover_sim_colorable
       }
       TextWidgetClass ToolsHeader {
        ignorepointer 1
@@ -308,7 +309,7 @@ FrameWidgetClass Root {
        "exact text" 1
        "text color" 0.6 0.6 0.63 1
       }
-      ScrollWidgetClass ToolsScroller {
+      GridSpacerWidgetClass ToolsGridSpacer {
        ignorepointer 1
        position 0.05 0.69
        size 0.9 0.14
@@ -316,22 +317,11 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       "Scrollbar V" 1
-       {
-        GridSpacerWidgetClass ToolsGridSpacer {
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         Padding 2
-         Margin 0
-         "Size To Content V" 1
-         Columns 1
-         Rows 100
-        }
-       }
+       Padding 2
+       Margin 0
+       "Size To Content V" 1
+       Columns 1
+       Rows 100
       }
       ButtonWidgetClass BuildButton {
        position 0.05 0.855
@@ -351,7 +341,8 @@ FrameWidgetClass Root {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         style Colorable
+         inheritalpha 0
+         style rover_sim_colorable
          {
           TextWidgetClass BuildButtonLabel {
            ignorepointer 1
@@ -385,7 +376,8 @@ FrameWidgetClass Root {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style Colorable
+   inheritalpha 0
+   style rover_sim_colorable
    {
     TextWidgetClass StatusText {
      ignorepointer 1
