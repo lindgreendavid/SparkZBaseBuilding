@@ -380,18 +380,18 @@ class SPKZ_Workbench extends ItemBase
 
   if (rpc_type == SPKZ_WorkbenchRPCId.OPEN_RESPONSE)
   {
-   SPKZ_WorkbenchOpenResponse response = new SPKZ_WorkbenchOpenResponse();
-   if (response.ReadFromContext(ctx))
+   SPKZ_WorkbenchOpenResponse openResponse = new SPKZ_WorkbenchOpenResponse();
+   if (openResponse.ReadFromContext(ctx))
    {
-    SPKZ_WorkbenchClientBridge.DeliverOpenResponse(this, response);
+    SPKZ_WorkbenchClientBridge.DeliverOpenResponse(this, openResponse);
    }
   }
   else if (rpc_type == SPKZ_WorkbenchRPCId.BUILD_RESPONSE)
   {
-   SPKZ_WorkbenchBuildResponse response = new SPKZ_WorkbenchBuildResponse();
-   if (response.ReadFromContext(ctx))
+   SPKZ_WorkbenchBuildResponse buildResponse = new SPKZ_WorkbenchBuildResponse();
+   if (buildResponse.ReadFromContext(ctx))
    {
-    SPKZ_WorkbenchClientBridge.DeliverBuildResponse(response);
+    SPKZ_WorkbenchClientBridge.DeliverBuildResponse(buildResponse);
    }
   }
  }

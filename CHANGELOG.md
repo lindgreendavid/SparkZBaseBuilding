@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-09-03 — Fix another duplicate-declaration compile error, audit whole codebase
+
+- Fix `Multiple declaration of variable 'response'` in `SPKZ_Workbench.OnRPC`
+  - two `if`/`else if` branches each declared a `response` local of a
+  different type. Same root cause as the earlier `cost`/`clearIndex` fixes,
+  but confirms the rule is broader than just `for` loops: **any** local
+  variable is scoped to the whole method, not the `if`/`for`/nested block
+  it's declared in. Expanded Pitfall #7 in `docs/CODING_STANDARDS.md`
+  accordingly.
+- Manually audited every method in every file added for the workbench
+  feature for the same pattern; no further instances found.
+
 ## 2026-09-03 — Fix Mission-module compile error: World/Mission can't cross-reference custom classes
 
 - Fix `Unknown type 'SPKZ_Workbench'` compiling the Mission module -

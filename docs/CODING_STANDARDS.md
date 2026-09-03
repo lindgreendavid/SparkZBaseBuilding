@@ -119,29 +119,39 @@ from live-verifying real object class names in-game (an admin's
 object is targeted — use that instead of guessing from decompiled/packed
 source).
 
-### 7. Enfusion Script's `for` loop variables are function-scoped, not block-scoped
+### 7. Enfusion Script variables are function-scoped, not block-scoped
 
 ```c
-// BROKEN - "Multiple declaration of variable 'index'" compile error:
-void DoWork()
+// BROKEN - "Multiple declaration of variable 'response'" compile error:
+void DoWork(int kind)
 {
-    for (int index = 0; index < a.Count(); index++) { ... }
-    for (int index = 0; index < b.Count(); index++) { ... }   // <- same name, same function
+    if (kind == 0)
+    {
+        SomeType response = new SomeType();   // <- declared here...
+    }
+    else if (kind == 1)
+    {
+        OtherType response = new OtherType(); // <- ...and again here: same function, error
+    }
 }
 ```
 
-Unlike C/C++, a variable declared in a `for (...)` header is **not** scoped
-to just that loop — it's scoped to the whole enclosing method. Declaring the
-same variable name in two separate `for` loops within one method is a
-compile error even though the loops never overlap at runtime, and even if
-one of them is inside an early-return branch that the other never reaches.
-Hit twice in the same session while building the workbench: once with two
-loops both named `cost` in `SPKZ_HandleBuildRequest`, once with two loops
-both named `clearIndex` in `SPKZ_RefreshDetailPanel` (one in an early-return
-branch, one at the end). **Give every loop variable within a method a
-distinct name** (`consumeIndex`, `toolCheckIndex`, `emptyRowIndex`, etc.) —
-don't reuse `index`/`i` across multiple loops in the same function just
-because they don't visually overlap.
+Unlike C/C++, a variable declared inside **any** block — a `for` header, an
+`if`/`else if` body, a nested `{ }` — is **not** scoped to that block, it's
+scoped to the whole enclosing method. Declaring the same variable name
+twice in one method is a compile error even when the two declarations are
+in branches that can never both execute, or never even overlap visually.
+Hit three times in the same session building the workbench: two `for`
+loops both named `cost` in `SPKZ_HandleBuildRequest`; two `for` loops both
+named `clearIndex` in `SPKZ_RefreshDetailPanel` (one in an early-return
+branch, one at the end); and two `if`/`else if` branches both declaring a
+`response` of different types in `SPKZ_Workbench.OnRPC`. **Every local
+variable declared anywhere inside one method needs a name distinct from
+every other local in that same method** — don't reuse `index`/`i`/`response`
+across separate loops or branches in one function just because they don't
+visually overlap. When auditing a file for this, check every method as a
+whole (all its ifs, loops, and nested blocks together), not loop headers in
+isolation.
 
 ### 8. `4_World` and `5_Mission` are sibling modules — neither sees the other's own new classes
 
