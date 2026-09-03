@@ -91,7 +91,16 @@ modded class Hologram
   if(s_SPKZRotate){return "ROTATE";}
   return "MOVE";
  }
- protected bool SPKZ_IsWallKit(){return SPKZ_WoodWallDoorKit.Cast(m_Parent)!=null;}
+ // The workbench's kit extends SPKZ_WoodWallDoorKit (for its shared kit
+ // logic - IsBasebuildingKit/deploy actions/OnPlacementComplete), but it's
+ // a standalone piece of furniture, not a wall-snapping/joining part - it
+ // should place like a plain vanilla deployable (a storage crate, a tent),
+ // not with the axis-rotate/freeze/snap control scheme built for stitching
+ // wall/door/window/floor/garage pieces together. Every method below falls
+ // through to super.X() (real vanilla Hologram behaviour) whenever this
+ // returns false, so excluding the workbench here is the single point that
+ // gives it a vanilla placement animation.
+ protected bool SPKZ_IsWallKit(){return SPKZ_WoodWallDoorKit.Cast(m_Parent)!=null && SPKZ_WorkbenchKit.Cast(m_Parent)==null;}
  protected bool SPKZ_Pressed(string name)
  {
   UAInput key=GetUApi().GetInputByName(name);

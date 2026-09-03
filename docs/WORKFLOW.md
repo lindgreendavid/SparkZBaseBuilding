@@ -168,6 +168,19 @@ hidden. All eight tools and the sharpening stone are real vanilla items
   repair amount (full offset = "keeps tools maintained for free while
   mounted"); the exact behaviour is a design decision to revisit later.
 
+The workbench kit places like a plain vanilla deployable (storage crate/
+tent-style ghost, no axis-rotate/freeze/snap controls) even though its kit
+class extends SPKZ_WoodWallDoorKit for its shared kit logic - the
+axis-rotate/freeze/snap wall-joining system in
+`scripts/4_World/Hologram/SPKZ_BuildingHologram.c` is a blanket
+`modded class Hologram` gated entirely on one helper, `SPKZ_IsWallKit()`,
+which now explicitly excludes `SPKZ_WorkbenchKit` so every gated method
+falls through to real vanilla Hologram behaviour for it.
+
+Each tool's durability loss per craft is currently: Hammer 5, Pliers 5,
+Hacksaw 8 (see `SPKZ_WorkbenchRecipe.SeedDefaults`) - fully offset if a
+Whetstone is mounted in its slot for that craft.
+
 All recipe icons currently point at the same placeholder kit icon - there is
 no per-part icon art yet (see docs/BRIEF.md's open asset-source question).
 The icon widget and per-recipe `IconPath` field are already wired end to end,

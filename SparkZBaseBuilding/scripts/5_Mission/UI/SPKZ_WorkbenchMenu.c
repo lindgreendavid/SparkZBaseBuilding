@@ -133,6 +133,16 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  {
   super.Update(timeslice);
 
+  // OnKeyPress never actually fires for the Escape key in a scripted menu -
+  // every real vanilla menu (logoutmenu.c, mapmenu.c, invitemenu.c) polls
+  // the abstracted "back" input action instead, which IS bound to Escape by
+  // default. Polling here replaces the non-working OnKeyPress override.
+  if (GetUApi().GetInputByID(UAUIBack).LocalPress())
+  {
+   Close();
+   return;
+  }
+
   if (SPKZ_WorkbenchClientBridge.s_HasNewOpenResponse && SPKZ_WorkbenchClientBridge.s_ResponseWorkbench == m_Workbench)
   {
    SPKZ_WorkbenchClientBridge.s_HasNewOpenResponse = false;
@@ -445,16 +455,6 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  {
   if (met) return ARGB(255, 140, 220, 140);
   return ARGB(255, 220, 90, 90);
- }
-
- override bool OnKeyPress(Widget w, int x, int y, int key)
- {
-  if (key == KeyCode.KC_ESCAPE)
-  {
-   Close();
-   return true;
-  }
-  return super.OnKeyPress(w, x, y, key);
  }
 
  override bool OnClick(Widget w, int x, int y, int button)
