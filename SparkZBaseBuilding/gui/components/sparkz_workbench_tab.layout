@@ -1,17 +1,17 @@
 ButtonWidgetClass SPKZ_WorkbenchTab {
  position 0 0
- size 0.16 1
+ size 130 1
  hexactpos 0
  vexactpos 0
- hexactsize 0
+ hexactsize 1
  vexactsize 0
  style Empty
  {
   PanelWidgetClass TabBackground {
    ignorepointer 1
-   color 0 0 0 0.30
-   position 0 0
-   size 1 1
+   color 0.14 0.14 0.16 1
+   position 0 0.12
+   size 1 0.76
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -27,24 +27,11 @@ ButtonWidgetClass SPKZ_WorkbenchTab {
      hexactsize 0
      vexactsize 0
      text "Category"
-     font "gui/fonts/sdf_MetronBook20"
+     font "gui/fonts/sdf_MetronBook18"
      "exact text" 1
-     "text color" 0.9 0.9 0.9 1
+     "text color" 0.85 0.85 0.85 1
      "text halign" center
      "text valign" center
-    }
-    PanelWidgetClass TabAccent {
-     visible 0
-     ignorepointer 1
-     color 0.62 0.91 0.23 1
-     position 0 0
-     size 1 0.05
-     valign bottom_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     style Colorable
     }
    }
   }

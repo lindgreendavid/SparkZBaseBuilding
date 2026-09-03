@@ -8,7 +8,7 @@ FrameWidgetClass Root {
  {
   PanelWidgetClass Background {
    ignorepointer 1
-   color 0 0 0 0.55
+   color 0 0 0 0.72
    position 0 0
    size 1 1
    hexactpos 0
@@ -19,7 +19,7 @@ FrameWidgetClass Root {
   }
   PanelWidgetClass HeaderBar {
    ignorepointer 1
-   color 0.10 0.10 0.10 0.92
+   color 0.08 0.08 0.09 0.97
    position 0.12 0.08
    size 0.76 0.06
    hexactpos 0
@@ -28,9 +28,20 @@ FrameWidgetClass Root {
    vexactsize 0
    style Colorable
    {
+    PanelWidgetClass HeaderAccent {
+     ignorepointer 1
+     color 0.95 0.62 0.15 1
+     position 0 1
+     size 1 3
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style Colorable
+    }
     TextWidgetClass HeaderTitle {
      ignorepointer 1
-     position 0.02 0
+     position 0.03 0
      size 0.6 1
      hexactpos 0
      vexactpos 0
@@ -39,33 +50,47 @@ FrameWidgetClass Root {
      text "WORKBENCH"
      font "gui/fonts/sdf_MetronBook28"
      "exact text" 1
-     "text color" 0.95 0.95 0.95 1
+     "text color" 0.97 0.97 0.97 1
      "text valign" center
     }
     ButtonWidgetClass CloseButton {
-     position 0.01 0.15
-     size 0.05 0.7
+     position 14 0
+     size 44 44
      halign right_ref
-     hexactpos 0
+     valign center_ref
+     hexactpos 1
      vexactpos 0
-     hexactsize 0
-     vexactsize 0
+     hexactsize 1
+     vexactsize 1
      style Empty
      {
-      TextWidgetClass CloseButtonLabel {
+      PanelWidgetClass CloseButtonBackground {
        ignorepointer 1
+       color 0.16 0.16 0.18 1
        position 0 0
        size 1 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       text "X"
-       font "gui/fonts/sdf_MetronBook24"
-       "exact text" 1
-       "text color" 0.9 0.9 0.9 1
-       "text halign" center
-       "text valign" center
+       style Colorable
+       {
+        TextWidgetClass CloseButtonLabel {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "X"
+         font "gui/fonts/sdf_MetronBook20"
+         "exact text" 1
+         "text color" 0.85 0.85 0.85 1
+         "text halign" center
+         "text valign" center
+        }
+       }
       }
      }
     }
@@ -73,7 +98,7 @@ FrameWidgetClass Root {
   }
   PanelWidgetClass TabBar {
    ignorepointer 1
-   color 0.10 0.10 0.10 0.85
+   color 0.08 0.08 0.09 0.94
    position 0.12 0.145
    size 0.76 0.045
    hexactpos 0
@@ -83,21 +108,22 @@ FrameWidgetClass Root {
    style Colorable
    {
     WrapSpacerWidgetClass TabsSpacer {
-     position 0 0
+     position 10 0
      size 1 1
-     hexactpos 0
+     hexactpos 1
      vexactpos 0
      hexactsize 0
      vexactsize 0
-     Padding 4
+     Padding 6
      Margin 0
      content_halign left
+     content_valign center
     }
    }
   }
   PanelWidgetClass GridPanel {
    ignorepointer 1
-   color 0.10 0.10 0.10 0.78
+   color 0.08 0.08 0.09 0.9
    position 0.12 0.20
    size 0.50 0.72
    hexactpos 0
@@ -123,8 +149,8 @@ FrameWidgetClass Root {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       Padding 6
-       Margin 4
+       Padding 10
+       Margin 6
        "Size To Content V" 1
        Columns 3
        Rows 100
@@ -135,7 +161,7 @@ FrameWidgetClass Root {
   }
   PanelWidgetClass InfoPanel {
    ignorepointer 1
-   color 0.10 0.10 0.10 0.85
+   color 0.08 0.08 0.09 0.94
    position 0.635 0.20
    size 0.245 0.72
    hexactpos 0
@@ -147,8 +173,8 @@ FrameWidgetClass Root {
     TextWidgetClass NoSelectionText {
      visible 1
      ignorepointer 1
-     position 0.05 0
-     size 0.9 1
+     position 0.08 0
+     size 0.84 1
      hexactpos 0
      vexactpos 0
      hexactsize 0
@@ -156,7 +182,7 @@ FrameWidgetClass Root {
      text "Select a recipe on the left to see what it needs."
      font "gui/fonts/sdf_MetronBook18"
      "exact text" 1
-     "text color" 0.75 0.75 0.75 1
+     "text color" 0.55 0.55 0.58 1
      "text halign" center
      "text valign" center
      wrap 1
@@ -173,18 +199,31 @@ FrameWidgetClass Root {
      vexactsize 0
      style Colorable
      {
-      ItemPreviewWidgetClass DetailPreview {
+      PanelWidgetClass DetailPreviewFrame {
        ignorepointer 1
+       color 0.05 0.05 0.06 1
        position 0.05 0.02
-       size 0.9 0.30
+       size 0.9 0.28
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
+       style Colorable
+       {
+        ItemPreviewWidgetClass DetailPreview {
+         ignorepointer 1
+         position 0.04 0.04
+         size 0.92 0.92
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+        }
+       }
       }
       TextWidgetClass DetailName {
        ignorepointer 1
-       position 0.05 0.335
+       position 0.05 0.315
        size 0.9 0.05
        hexactpos 0
        vexactpos 0
@@ -193,12 +232,23 @@ FrameWidgetClass Root {
        text ""
        font "gui/fonts/sdf_MetronBook22"
        "exact text" 1
-       "text color" 0.95 0.95 0.95 1
+       "text color" 0.97 0.97 0.97 1
        "text halign" center
+      }
+      PanelWidgetClass DetailDivider1 {
+       ignorepointer 1
+       color 0.22 0.22 0.25 1
+       position 0.05 0.375
+       size 0.9 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       style Colorable
       }
       TextWidgetClass MaterialsHeader {
        ignorepointer 1
-       position 0.05 0.40
+       position 0.05 0.395
        size 0.9 0.04
        hexactpos 0
        vexactpos 0
@@ -207,12 +257,12 @@ FrameWidgetClass Root {
        text "MATERIALS REQUIRED"
        font "gui/fonts/sdf_MetronBook14"
        "exact text" 1
-       "text color" 0.7 0.7 0.7 1
+       "text color" 0.6 0.6 0.63 1
       }
       ScrollWidgetClass MaterialsScroller {
        ignorepointer 1
-       position 0.05 0.445
-       size 0.9 0.19
+       position 0.05 0.44
+       size 0.9 0.18
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -234,6 +284,17 @@ FrameWidgetClass Root {
         }
        }
       }
+      PanelWidgetClass DetailDivider2 {
+       ignorepointer 1
+       color 0.22 0.22 0.25 1
+       position 0.05 0.628
+       size 0.9 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       style Colorable
+      }
       TextWidgetClass ToolsHeader {
        ignorepointer 1
        position 0.05 0.645
@@ -245,7 +306,7 @@ FrameWidgetClass Root {
        text "TOOLS REQUIRED"
        font "gui/fonts/sdf_MetronBook14"
        "exact text" 1
-       "text color" 0.7 0.7 0.7 1
+       "text color" 0.6 0.6 0.63 1
       }
       ScrollWidgetClass ToolsScroller {
        ignorepointer 1
@@ -273,8 +334,8 @@ FrameWidgetClass Root {
        }
       }
       ButtonWidgetClass BuildButton {
-       position 0.05 0.86
-       size 0.9 0.09
+       position 0.05 0.855
+       size 0.9 0.1
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -283,7 +344,7 @@ FrameWidgetClass Root {
        {
         PanelWidgetClass BuildButtonBackground {
          ignorepointer 1
-         color 0 0 0 0.45
+         color 0.16 0.16 0.17 1
          position 0 0
          size 1 1
          hexactpos 0
@@ -303,7 +364,7 @@ FrameWidgetClass Root {
            text "BUILD NOW"
            font "gui/fonts/sdf_MetronBook20"
            "exact text" 1
-           "text color" 0.95 0.95 0.95 1
+           "text color" 0.5 0.5 0.53 1
            "text halign" center
            "text valign" center
           }
@@ -315,19 +376,33 @@ FrameWidgetClass Root {
     }
    }
   }
-  TextWidgetClass StatusText {
+  PanelWidgetClass StatusBar {
    ignorepointer 1
+   color 0.08 0.08 0.09 0.9
    position 0.12 0.925
    size 0.76 0.04
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook16"
-   "exact text" 1
-   "text color" 0.8 0.8 0.8 1
-   "text halign" center
+   style Colorable
+   {
+    TextWidgetClass StatusText {
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     text ""
+     font "gui/fonts/sdf_MetronBook16"
+     "exact text" 1
+     "text color" 0.75 0.75 0.78 1
+     "text halign" center
+     "text valign" center
+    }
+   }
   }
  }
 }

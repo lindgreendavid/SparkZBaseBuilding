@@ -18,6 +18,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  protected ref array<string> m_Categories;
  protected string m_SelectedCategory;
  protected SPKZ_WorkbenchRecipe m_SelectedRecipe;
+ protected Widget m_SelectedRecipeWidget;
 
  protected Widget m_Root;
  protected Widget m_TabsSpacer;
@@ -75,12 +76,30 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   return m_Root;
  }
 
+ // Locks player movement/look input to the menu while it's open - the same
+ // technique used by a real, tested workbench UI in an installed third-party
+ // mod (structure/technique inspection only, per docs/BRIEF.md - see
+ // AftermathBaseBuilding.pbo's WorkbenchMenu.OnShow/OnHide). Without this the
+ // player keeps walking/looking around underneath the full-screen menu.
+ override void OnShow()
+ {
+  super.OnShow();
+  if (GetGame().GetPlayer())
+  {
+   GetGame().GetInput().ChangeGameFocus(1);
+  }
+ }
+
  override void OnHide()
  {
   super.OnHide();
   if (s_ActiveMenu == this) { s_ActiveMenu = null; }
   SPKZ_ClearPreviewItems(m_GridPreviewItems);
   SPKZ_ClearPreviewItems(m_DetailPreviewItems);
+  if (GetGame() && GetGame().GetInput())
+  {
+   GetGame().GetInput().ResetGameFocus();
+  }
  }
 
  protected void SPKZ_SendOpenRequest()
@@ -175,6 +194,22 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   return item;
  }
 
+ protected void SPKZ_StyleTab(Widget tabWidget, bool selected)
+ {
+  Widget background = tabWidget.FindAnyWidget("TabBackground");
+  TextWidget label = TextWidget.Cast(tabWidget.FindAnyWidget("TabLabel"));
+  if (selected)
+  {
+   if (background) { background.SetColor(ARGB(255, 242, 158, 38)); }
+   if (label) { label.SetColor(ARGB(255, 20, 20, 20)); }
+  }
+  else
+  {
+   if (background) { background.SetColor(ARGB(255, 36, 36, 40)); }
+   if (label) { label.SetColor(ARGB(255, 200, 200, 205)); }
+  }
+ }
+
  protected void SPKZ_RefreshTabs()
  {
   if (!m_TabsSpacer) return;
@@ -189,9 +224,34 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    TextWidget label = TextWidget.Cast(tabWidget.FindAnyWidget("TabLabel"));
    if (label) { label.SetText(category); }
 
-   Widget accent = tabWidget.FindAnyWidget("TabAccent");
-   if (accent) { accent.Show(category == m_SelectedCategory); }
+   SPKZ_StyleTab(tabWidget, category == m_SelectedCategory);
   }
+ }
+
+ // A recipe is "affordable" only if every material AND every tool it needs
+ // is currently satisfied - used to color the grid card and its name text so
+ // players can tell what they can build at a glance, without opening it.
+ protected bool SPKZ_IsRecipeAffordable(SPKZ_WorkbenchRecipe recipe)
+ {
+  for (int materialIndex = 0; materialIndex < recipe.Materials.Count(); materialIndex++)
+  {
+   SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(materialIndex);
+   if (SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, cost.ClassName) < cost.Quantity) return false;
+  }
+  for (int toolIndex = 0; toolIndex < recipe.Tools.Count(); toolIndex++)
+  {
+   SPKZ_WorkbenchToolRequirement toolReq = recipe.Tools.Get(toolIndex);
+   if (SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, toolReq.ClassName) < 1) return false;
+  }
+  return true;
+ }
+
+ protected void SPKZ_StyleRecipeItem(Widget itemWidget, bool selected)
+ {
+  Widget background = itemWidget.FindAnyWidget("RecipeItemBackground");
+  Widget accent = itemWidget.FindAnyWidget("RecipeItemAccent");
+  if (background) { background.SetColor(ARGB(235, 30, 30, 34)); }
+  if (accent) { accent.Show(selected); }
  }
 
  protected void SPKZ_RefreshRecipeGrid()
@@ -199,23 +259,39 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   if (!m_ItemsGridSpacer) return;
   SPKZ_ClearChildren(m_ItemsGridSpacer);
   SPKZ_ClearPreviewItems(m_GridPreviewItems);
+  m_SelectedRecipeWidget = null;
 
   for (int index = 0; index < m_Catalog.Recipes.Count(); index++)
   {
    SPKZ_WorkbenchRecipe recipe = m_Catalog.Recipes.Get(index);
    if (recipe.Category != m_SelectedCategory) continue;
 
+   bool selected = m_SelectedRecipe && m_SelectedRecipe.RecipeId == recipe.RecipeId;
+   bool affordable = SPKZ_IsRecipeAffordable(recipe);
+
    Widget itemWidget = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_recipe_item.layout", m_ItemsGridSpacer);
    itemWidget.SetName("SPKZ_RecipeItem");
    itemWidget.SetUserData(recipe);
+   SPKZ_StyleRecipeItem(itemWidget, selected);
+   if (selected) { m_SelectedRecipeWidget = itemWidget; }
 
    TextWidget nameWidget = TextWidget.Cast(itemWidget.FindAnyWidget("RecipeItemName"));
    if (nameWidget) { nameWidget.SetText(recipe.DisplayName); }
 
+   TextWidget affordWidget = TextWidget.Cast(itemWidget.FindAnyWidget("RecipeItemAfford"));
+   if (affordWidget)
+   {
+    affordWidget.SetColor(SPKZ_RequirementColor(affordable));
+    if (affordable) { affordWidget.SetText("READY TO BUILD"); }
+    else { affordWidget.SetText("MISSING REQUIREMENTS"); }
+   }
+
+   // Preview the finished piece (e.g. the wall itself), not the generic
+   // cardboard kit box every recipe's output kit shares.
    ItemPreviewWidget preview = ItemPreviewWidget.Cast(itemWidget.FindAnyWidget("RecipeItemPreview"));
    if (preview)
    {
-    EntityAI previewItem = SPKZ_CreatePreviewItem(recipe.OutputKitClassName, m_GridPreviewItems);
+    EntityAI previewItem = SPKZ_CreatePreviewItem(recipe.PreviewClassName, m_GridPreviewItems);
     if (previewItem) { preview.SetItem(previewItem); }
    }
   }
@@ -239,7 +315,8 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
 
   if (m_DetailPreview)
   {
-   EntityAI mainPreviewItem = SPKZ_CreatePreviewItem(m_SelectedRecipe.OutputKitClassName, m_DetailPreviewItems);
+   // Preview the finished piece, not the generic cardboard kit box.
+   EntityAI mainPreviewItem = SPKZ_CreatePreviewItem(m_SelectedRecipe.PreviewClassName, m_DetailPreviewItems);
    if (mainPreviewItem) { m_DetailPreview.SetItem(mainPreviewItem); }
   }
 
@@ -260,6 +337,8 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
     materialText.SetText(cost.ClassName + " (" + have.ToString() + "/" + cost.Quantity.ToString() + ")");
     materialText.SetColor(SPKZ_RequirementColor(enough));
    }
+   Widget materialDot = materialRow.FindAnyWidget("RequiredItemStatusDot");
+   if (materialDot) { materialDot.SetColor(SPKZ_RequirementColor(enough)); }
    ItemPreviewWidget materialPreview = ItemPreviewWidget.Cast(materialRow.FindAnyWidget("RequiredItemPreview"));
    if (materialPreview)
    {
@@ -285,6 +364,8 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
     toolText.SetText(toolReq.ClassName + " (" + status + ")");
     toolText.SetColor(SPKZ_RequirementColor(present));
    }
+   Widget toolDot = toolRow.FindAnyWidget("RequiredItemStatusDot");
+   if (toolDot) { toolDot.SetColor(SPKZ_RequirementColor(present)); }
    ItemPreviewWidget toolPreview = ItemPreviewWidget.Cast(toolRow.FindAnyWidget("RequiredItemPreview"));
    if (toolPreview)
    {
@@ -294,6 +375,20 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   }
 
   if (m_BuildButton) { m_BuildButton.Enable(affordable); }
+  Widget buildButtonBackground = null;
+  if (m_BuildButton) { buildButtonBackground = m_BuildButton.FindAnyWidget("BuildButtonBackground"); }
+  if (buildButtonBackground)
+  {
+   if (affordable) { buildButtonBackground.SetColor(ARGB(255, 242, 158, 38)); }
+   else { buildButtonBackground.SetColor(ARGB(255, 40, 40, 44)); }
+  }
+  TextWidget buildButtonLabel = null;
+  if (m_BuildButton) { buildButtonLabel = TextWidget.Cast(m_BuildButton.FindAnyWidget("BuildButtonLabel")); }
+  if (buildButtonLabel)
+  {
+   if (affordable) { buildButtonLabel.SetColor(ARGB(255, 20, 20, 20)); }
+   else { buildButtonLabel.SetColor(ARGB(255, 130, 130, 135)); }
+  }
  }
 
  protected int SPKZ_RequirementColor(bool met)
@@ -322,7 +417,10 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    w.GetUserData(recipe);
    if (recipe)
    {
+    if (m_SelectedRecipeWidget && m_SelectedRecipeWidget != w) { SPKZ_StyleRecipeItem(m_SelectedRecipeWidget, false); }
     m_SelectedRecipe = recipe;
+    m_SelectedRecipeWidget = w;
+    SPKZ_StyleRecipeItem(w, true);
     SPKZ_RefreshDetailPanel();
    }
    return true;
@@ -350,7 +448,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   if (w.GetName() == "SPKZ_RecipeItem")
   {
    Widget background = w.FindAnyWidget("RecipeItemBackground");
-   if (background) { background.SetColor(ARGB(255, 45, 45, 45)); }
+   if (background) { background.SetColor(ARGB(235, 48, 48, 54)); }
   }
   return super.OnMouseEnter(w, x, y);
  }
@@ -360,7 +458,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   if (w.GetName() == "SPKZ_RecipeItem")
   {
    Widget background = w.FindAnyWidget("RecipeItemBackground");
-   if (background) { background.SetColor(ARGB(115, 41, 41, 41)); }
+   if (background) { background.SetColor(ARGB(235, 30, 30, 34)); }
   }
   return super.OnMouseLeave(w, enterW, x, y);
  }

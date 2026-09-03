@@ -1,25 +1,48 @@
 PanelWidgetClass SPKZ_WorkbenchRequiredItem {
  color 0 0 0 0
  position 0 0
- size 1 52
+ size 1 60
  hexactpos 0
  vexactpos 1
  hexactsize 0
  vexactsize 0
  style Colorable
  {
-  ItemPreviewWidgetClass RequiredItemPreview {
+  PanelWidgetClass RequiredItemPreviewFrame {
    ignorepointer 1
-   position 0 0
-   size 48 48
+   color 0.08 0.08 0.09 1
+   position 0 4
+   size 52 52
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   style Colorable
+   {
+    ItemPreviewWidgetClass RequiredItemPreview {
+     ignorepointer 1
+     position 2 2
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+   }
+  }
+  PanelWidgetClass RequiredItemStatusDot {
+   color 0.5 0.5 0.5 1
+   position 60 10
+   size 9 9
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Colorable
   }
   TextWidgetClass RequiredItemText {
    ignorepointer 1
-   position 54 0
+   position 78 0
    size 1 1
    valign center_ref
    hexactpos 1

@@ -1,6 +1,6 @@
 ButtonWidgetClass SPKZ_WorkbenchRecipeItem {
  position 0 0
- size 1 220
+ size 1 240
  hexactpos 0
  vexactpos 1
  hexactsize 0
@@ -9,28 +9,53 @@ ButtonWidgetClass SPKZ_WorkbenchRecipeItem {
  {
   PanelWidgetClass RecipeItemBackground {
    ignorepointer 1
-   color 0.16 0.16 0.16 0.45
+   color 0.12 0.12 0.13 0.92
    position 0 0
-   size 0.97 0.95
+   size 0.96 0.96
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
    style Colorable
    {
-    ItemPreviewWidgetClass RecipeItemPreview {
+    PanelWidgetClass RecipeItemAccent {
+     visible 0
      ignorepointer 1
+     color 0.95 0.62 0.15 1
      position 0 0
-     size 1 0.78
+     size 1 4
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     style Colorable
+    }
+    PanelWidgetClass RecipeItemPreviewFrame {
+     ignorepointer 1
+     color 0.08 0.08 0.09 1
+     position 0.05 0.06
+     size 0.9 0.60
      hexactpos 0
      vexactpos 0
      hexactsize 0
      vexactsize 0
+     style Colorable
+     {
+      ItemPreviewWidgetClass RecipeItemPreview {
+       ignorepointer 1
+       position 0.04 0.04
+       size 0.92 0.92
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+     }
     }
     TextWidgetClass RecipeItemName {
      ignorepointer 1
-     position 0 0.80
-     size 1 0.18
+     position 0.04 0.68
+     size 0.92 0.16
      hexactpos 0
      vexactpos 0
      hexactsize 0
@@ -38,10 +63,25 @@ ButtonWidgetClass SPKZ_WorkbenchRecipeItem {
      text "Recipe"
      font "gui/fonts/sdf_MetronBook16"
      "exact text" 1
-     "text color" 0.92 0.92 0.92 1
+     "text color" 0.94 0.94 0.94 1
      "text halign" center
      "text valign" center
      wrap 1
+    }
+    TextWidgetClass RecipeItemAfford {
+     ignorepointer 1
+     position 0.04 0.85
+     size 0.92 0.12
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     text ""
+     font "gui/fonts/sdf_MetronBook12"
+     "exact text" 1
+     "text color" 0.55 0.85 0.55 1
+     "text halign" center
+     "text valign" center
     }
    }
   }

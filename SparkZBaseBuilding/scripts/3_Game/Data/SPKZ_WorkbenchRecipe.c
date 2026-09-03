@@ -66,6 +66,11 @@ class SPKZ_WorkbenchRecipe
  // open asset-source question; wire in per-recipe art here once it exists.
  string IconPath;
  string OutputKitClassName;
+ // The finished, placed piece this recipe's kit turns into (e.g.
+ // "SPKZ_WoodWall", not "SPKZ_WoodWallKit") - the menu previews this instead
+ // of the kit so players see the actual wall/door/window/etc. they're about
+ // to build, not the generic cardboard kit box every recipe's kit uses.
+ string PreviewClassName;
  ref array<ref SPKZ_WorkbenchMaterialCost> Materials;
  // Tools required to be present (and non-ruined) in the workbench to build
  // this recipe. Not consumed - each one takes HealthLossPoints of damage per
@@ -98,6 +103,7 @@ class SPKZ_WorkbenchRecipe
   ctx.Write(DisplayName);
   ctx.Write(IconPath);
   ctx.Write(OutputKitClassName);
+  ctx.Write(PreviewClassName);
 
   int materialCount = Materials.Count();
   ctx.Write(materialCount);
@@ -121,6 +127,7 @@ class SPKZ_WorkbenchRecipe
   if (!ctx.Read(DisplayName)) return false;
   if (!ctx.Read(IconPath)) return false;
   if (!ctx.Read(OutputKitClassName)) return false;
+  if (!ctx.Read(PreviewClassName)) return false;
 
   int materialCount;
   if (!ctx.Read(materialCount)) return false;
@@ -237,6 +244,7 @@ class SPKZ_WorkbenchRecipeCatalog
   wall.DisplayName = "Wood Wall Kit";
   wall.IconPath = placeholderIcon;
   wall.OutputKitClassName = "SPKZ_WoodWallKit";
+  wall.PreviewClassName = "SPKZ_WoodWall";
   wall.AddMaterial("WoodenLog", 1);
   wall.AddMaterial("WoodenPlank", 1);
   wall.AddMaterial("Nail", 1);
@@ -249,6 +257,7 @@ class SPKZ_WorkbenchRecipeCatalog
   doorWall.DisplayName = "Wood Wall Door Kit";
   doorWall.IconPath = placeholderIcon;
   doorWall.OutputKitClassName = "SPKZ_WoodWallDoorKit";
+  doorWall.PreviewClassName = "SPKZ_WoodWallDoor";
   doorWall.AddMaterial("WoodenLog", 1);
   doorWall.AddMaterial("WoodenPlank", 1);
   doorWall.AddMaterial("Nail", 1);
@@ -261,6 +270,7 @@ class SPKZ_WorkbenchRecipeCatalog
   windowWall.DisplayName = "Wood Window Kit";
   windowWall.IconPath = placeholderIcon;
   windowWall.OutputKitClassName = "SPKZ_WoodWindowKit";
+  windowWall.PreviewClassName = "SPKZ_WoodWindow";
   windowWall.AddMaterial("WoodenLog", 1);
   windowWall.AddMaterial("WoodenPlank", 1);
   windowWall.AddMaterial("Nail", 1);
@@ -273,6 +283,7 @@ class SPKZ_WorkbenchRecipeCatalog
   floor.DisplayName = "Wood Floor Kit";
   floor.IconPath = placeholderIcon;
   floor.OutputKitClassName = "SPKZ_WoodFloorKit";
+  floor.PreviewClassName = "SPKZ_WoodFloor";
   floor.AddMaterial("WoodenLog", 1);
   floor.AddMaterial("WoodenPlank", 1);
   floor.AddMaterial("Nail", 1);
@@ -285,6 +296,7 @@ class SPKZ_WorkbenchRecipeCatalog
   glassWindow.DisplayName = "Wood Glass Window Kit";
   glassWindow.IconPath = placeholderIcon;
   glassWindow.OutputKitClassName = "SPKZ_WoodGlassWindowKit";
+  glassWindow.PreviewClassName = "SPKZ_WoodGlassWindow";
   glassWindow.AddMaterial("WoodenLog", 1);
   glassWindow.AddMaterial("WoodenPlank", 1);
   glassWindow.AddMaterial("MetalPlate", 1);
@@ -298,6 +310,7 @@ class SPKZ_WorkbenchRecipeCatalog
   garage.DisplayName = "Wood Garage Door Kit";
   garage.IconPath = placeholderIcon;
   garage.OutputKitClassName = "SPKZ_WoodGarageKit";
+  garage.PreviewClassName = "SPKZ_WoodGarage";
   garage.AddMaterial("WoodenLog", 1);
   garage.AddMaterial("WoodenPlank", 1);
   garage.AddMaterial("MetalPlate", 1);
