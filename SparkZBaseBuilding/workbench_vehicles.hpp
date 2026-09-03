@@ -29,7 +29,7 @@
   scope=2;displayName="Building Workbench";
   descriptionShort="A workshop bench with 500 cargo slots and eight visible tool mounts. Crafting recipes are configured separately.";
   model="SparkZBaseBuilding\Data\Workbench\SPKZ_Workbench.p3d";
-  weight=15000;heavyItem=1;physLayer="item_large";canBeDigged=0;carveNavmesh=1;
+  weight=15000;heavyItem=1;itemSize[]={20,25};physLayer="item_large";canBeDigged=0;carveNavmesh=1;
   class DamageSystem {class GlobalHealth {class Health {hitpoints=1000;};};};
   attachments[]={"SPKZ_WB_Hacksaw","SPKZ_WB_HandSaw","SPKZ_WB_Hammer","SPKZ_WB_Shovel","SPKZ_WB_Screwdriver","SPKZ_WB_Pliers","SPKZ_WB_SledgeHammer","SPKZ_WB_SharpeningStone"};
   itemsCargoSize[]={20,25};

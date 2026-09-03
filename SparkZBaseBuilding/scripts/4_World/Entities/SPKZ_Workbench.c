@@ -76,6 +76,23 @@ class SPKZ_Workbench extends SPKZ_WoodWallDoor
  override string SPKZ_ReturnKitType() { return "SPKZ_WorkbenchKit"; }
  override bool CanDisplayCargo() { return true; }
 
+ // Once placed, a workbench is a fixed structure, not a loose item - it
+ // must never be pickable into hands or another container's cargo (only
+ // dismantling it with a screwdriver, via SPKZ_Dismantle, produces a
+ // portable kit again). EntityAI.CanPutIntoHands/CanPutInCargo/IsTakeable
+ // all default to true regardless of the config's itemSize - the wall/door/
+ // window family never needed to override these because their House-rooted
+ // config ancestor made them non-pickable at the engine level already; the
+ // workbench's Container_Base ancestor (needed for real cargo - see
+ // workbench_vehicles.hpp) does not, so it must be blocked here explicitly,
+ // matching the exact pattern the installed game's own TentBase uses to
+ // stay non-pickable once deployed.
+ override bool IsTakeable() { return false; }
+ override bool CanPutIntoHands(EntityAI parent) { return false; }
+ override bool CanPutInCargo(EntityAI parent) { return false; }
+ override bool CanRemoveFromCargo(EntityAI parent) { return false; }
+ override bool CanRemoveFromHands(EntityAI parent) { return false; }
+
  override bool CanReceiveItemIntoCargo(EntityAI item)
  {
   // The parent (SPKZ_WoodWallDoor) deliberately blocks cargo for walls - the
