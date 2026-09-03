@@ -87,12 +87,15 @@ if ($modDirs.Count -eq 0) {
 Write-Host "Found mods: $($modDirs.Name -join ', ')"
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
 
+$stagingRoot = Join-Path $OutputRoot "_staging"
+
 foreach ($modDir in $modDirs) {
     $mod = $modDir.Name
     $source = $modDir.FullName
     $modOut = Join-Path $OutputRoot ("@" + $mod)
     $addonsOut = Join-Path $modOut "addons"
     $keysOut = Join-Path $modOut "keys"
+    $staged = Join-Path $stagingRoot $mod
 
     Write-Host ""
     Write-Host "Building $mod ..."
@@ -100,7 +103,27 @@ foreach ($modDir in $modDirs) {
     Copy-Item -LiteralPath (Join-Path $source "mod.cpp") -Destination (Join-Path $modOut "mod.cpp") -Force
     Copy-Item -LiteralPath $PublicKeyPath -Destination (Join-Path $keysOut $keyFileName) -Force
 
-    & $fileBank -property "product=dayz ugc" -property "prefix=$mod" -exclude "*.bak" -exclude "*.tmp" -exclude "mod.cpp" -dst $addonsOut $source | Out-Host
+    # FileBank's own -exclude flag does not reliably match these patterns, so
+    # stage a filtered copy first (guaranteed exclusion) and pack that
+    # instead of the real source tree. Excludes match docs/WORKFLOW.md's
+    # release-packing rule: ship P3D, PAA, RVMAT, BISURF,
+    # config/scripts/layouts/inputs and the prefix - never Source/ (editable
+    # Blender files), PNG/PSD source textures, or dev/backup files.
+    if (Test-Path -LiteralPath $staged) {
+        Remove-Item -LiteralPath $staged -Recurse -Force
+    }
+    New-Item -ItemType Directory -Force -Path $staged | Out-Null
+    $robocopyArgs = @(
+        $source, $staged, "/E",
+        "/XD", "Source",
+        "/XF", "*.blend", "*.blend1", "*.blend2", "*.png", "*.psd", "*.bak", "*.tmp", "mod.cpp"
+    )
+    robocopy @robocopyArgs | Out-Null
+    if ($LASTEXITCODE -ge 8) {
+        throw "robocopy failed staging $mod for packing (exit code $LASTEXITCODE)"
+    }
+
+    & $fileBank -property "product=dayz ugc" -property "prefix=$mod" -dst $addonsOut $staged | Out-Host
 
     $pboPath = Join-Path $addonsOut ($mod + ".pbo")
     if (!(Test-Path -LiteralPath $pboPath)) {
@@ -115,6 +138,10 @@ foreach ($modDir in $modDirs) {
     }
 
     Write-Host "  -> $modOut"
+}
+
+if (Test-Path -LiteralPath $stagingRoot) {
+    Remove-Item -LiteralPath $stagingRoot -Recurse -Force
 }
 
 Write-Host ""
