@@ -107,10 +107,12 @@ payment enforcement and C4 integration are NOT implemented in this addon yet.
 ## Workbench crafting
 
 `SPKZ_WorkbenchKit` deploys `SPKZ_Workbench`: a 20x25 (500-cell) cargo
-container using a temporary real-vanilla placeholder model
-(`DZ\structures\furniture\various\workbench_dz.p3d` - borrowed for its visual
-geometry only, same approach as the other pieces' hologram classes) until a
-custom model exists. Store raw materials in its cargo, then press interact
+container with its own real model (`Data/Workbench/SPKZ_Workbench.p3d`) and
+eight real named attachment slots for tools (see below) - it extends
+`SPKZ_WoodWallDoor`/`SPKZ_WoodWallDoorKit` purely to reuse their owner
+tracking, lifetime refresh, save/load and dismantle-to-kit machinery; it is
+not a wall (`SPKZ_HasDoor()` is false). Store raw materials in its cargo, then
+press interact
 (whatever key you have bound - it uses the vanilla look-and-interact system,
 `SPKZ_ActionAccessWorkbench`) to open a build menu: category tabs on the left,
 recipes in the middle (red if you can't currently afford them), and a cost
@@ -128,23 +130,27 @@ scoped entirely to `SPKZ_Workbench`'s own `OnRPC`, not a shared registry. The
 server always re-validates recipe and stock server-side before consuming
 anything or spawning a kit, regardless of what the client's menu displays.
 
-### Nails, tools, and the sharpening stone (pending the workbench model)
+### Nails, tools, and the sharpening stone
 
-The real workbench model is planned to have 500 cargo cells plus eight
-designated single-item slots: hacksaw, saw, hammer, shovel, screwdriver,
-pliers, sledgehammer, and a sharpening stone - only items in those slots
-render on the model; ordinary cargo stays hidden. That model doesn't exist
-yet, so the *gameplay logic* for tools is built now against the placeholder
-model, ready to switch from "scan all cargo" to "check the named slot" with
-no schema change once the real model lands:
+The real workbench model has 500 cargo cells plus eight designated
+single-item attachment slots (`CfgSlots`/`CfgNonAIVehicles` in
+`workbench_slots.hpp`): `SPKZ_WB_Hacksaw`, `SPKZ_WB_HandSaw`,
+`SPKZ_WB_Hammer`, `SPKZ_WB_Shovel`, `SPKZ_WB_Screwdriver`, `SPKZ_WB_Pliers`,
+`SPKZ_WB_SledgeHammer`, `SPKZ_WB_SharpeningStone` - only a tool mounted in its
+own slot renders on the model and counts as "present"; ordinary cargo stays
+hidden. All eight tools and the sharpening stone are real vanilla items
+(`Hacksaw`, `HandSaw`, `Hammer`, `Shovel`, `Screwdriver`, `Pliers`,
+`SledgeHammer`, `Whetstone`).
 
 - Every recipe can require one or more tools (`SPKZ_WorkbenchRecipe.Tools`,
   `SPKZ_WorkbenchToolRequirement`). A tool is never consumed - it takes a
   flat health-point loss per successful craft instead
   (`SPKZ_Workbench.SPKZ_DamageToolOfType`), and a ruined tool no longer
-  counts as present. Today "present" means "anywhere in the workbench's
-  inventory," not a specific slot - see the comment on
-  `SPKZ_HasUsableTool`/`SPKZ_FindUsableTool`.
+  counts as present. "Present" means "mounted in its own named attachment
+  slot" (`GetInventory().FindAttachmentByName(slotName)` via
+  `SPKZ_Workbench.SPKZ_ToolSlotName`/`SPKZ_FindUsableTool`), not anywhere in
+  cargo - `CanReceiveAttachment` validates each slot only accepts its
+  matching tool classname.
 - Which tool a recipe needs, and how much durability it costs, is a
   placeholder pending real design (per direction: "we gotta find a nice way
   of checking what items use what tools") - the current seed data
@@ -153,12 +159,14 @@ no schema change once the real model lands:
   different tools per recipe; retune freely in the JSON.
 - Nail is now a required material on every seeded recipe - per direction,
   it's essential across all wall/door/window/floor/garage construction.
-- A sharpening stone (`SPKZ_WorkbenchRecipeCatalog.SharpeningStoneClassName`,
-  placeholder classname `SPKZ_SharpeningStone` - no such item exists yet)
-  fully offsets a tool's durability loss for the craft it's present for, if
-  found anywhere in the workbench. This is a placeholder repair amount
-  (full offset = "keeps tools maintained for free while loaded"); the exact
-  behaviour is a design decision to revisit once the real item exists.
+  Materials are counted/consumed from cargo only
+  (`CargoBase.GetItemCount()`/`GetItem(int)`) - tools in their attachment
+  slots are never scanned as materials.
+- The sharpening stone (`SPKZ_WorkbenchRecipeCatalog.SharpeningStoneClassName`
+  = `Whetstone`, mounted in `SPKZ_WB_SharpeningStone`) fully offsets a tool's
+  durability loss for the craft it's present for. This is a placeholder
+  repair amount (full offset = "keeps tools maintained for free while
+  mounted"); the exact behaviour is a design decision to revisit later.
 
 All recipe icons currently point at the same placeholder kit icon - there is
 no per-part icon art yet (see docs/BRIEF.md's open asset-source question).

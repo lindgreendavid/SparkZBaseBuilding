@@ -1,5 +1,51 @@
 # Changelog
 
+## 2026-09-03 — Integrate the real workbench model (named tool slots, no more placeholder)
+
+- Replaced the temporary vanilla-furniture placeholder (`SPKZ_Workbench` as a
+  bare `Container_Base`) with the real model and config from the
+  collaborator's finished workbench package: `Data/Workbench/SPKZ_Workbench.p3d`
+  (+ collision mesh, materials, textures), `workbench_slots.hpp` (`CfgSlots`/
+  `CfgNonAIVehicles` for the eight real named tool-attachment slots), and
+  `workbench_vehicles.hpp` (the real `SPKZ_Workbench`/`SPKZ_WorkbenchKit`/
+  `SPKZ_Workbench_Hologram` CfgVehicles entries, plus `inventorySlot[]`
+  additions on the vanilla tool classes so they fit the named slots). Added
+  `SPKZ_Workbench_Hologram` to `CfgPatches` and `DZ_Gear_Tools` to
+  `requiredAddons[]`; registered the new `spkz_workbench.imageset` (ghost-icon
+  art for the slots) via `CfgMods`.
+- `SPKZ_Workbench`/`SPKZ_WorkbenchKit` (`scripts/4_World/Entities/SPKZ_Workbench.c`)
+  now extend `SPKZ_WoodWallDoor`/`SPKZ_WoodWallDoorKit` instead of `ItemBase`,
+  reusing their owner tracking, lifetime refresh, save/load and
+  dismantle-to-kit logic instead of duplicating it. Added the model's separate
+  invisible collision object (`SPKZ_WorkbenchCollision`, created/tracked via
+  `EEInit`/`AfterStoreLoad`/`EEDelete`), and `CanReceiveAttachment`/
+  `CanReceiveItemIntoCargo`/`CanDisplayCargo` overrides (the parent blocks
+  cargo/attachments by default, since walls don't have either).
+- Tool detection now uses the real named attachment slots
+  (`GetInventory().FindAttachmentByName(slotName)`) instead of the old "scan
+  all cargo for a matching classname" placeholder; material counting/consuming
+  now scans cargo specifically (`CargoBase.GetItemCount()`/`GetItem(int)`)
+  rather than the whole inventory tree, now that tools live outside cargo in
+  their own slots. `SPKZ_CanDismantle` additionally requires all eight tool
+  slots to be empty, not just cargo.
+- Removed the now-redundant `SPKZ_ActionDismantleWorkbench`/
+  `SPKZ_ActionDismantleWorkbenchCB` actions and their two registrations
+  (`SPKZ_WoodDoorActions.c`'s `ActionConstructor`, `SPKZ_DismantleWoodWall.c`'s
+  `Screwdriver.SetActions`) - now that `SPKZ_Workbench` extends
+  `SPKZ_WoodWallDoor`, the existing generic `SPKZ_ActionDismantleWoodWall`
+  (which casts to `SPKZ_WoodWallDoor`) already matches a workbench
+  polymorphically; keeping both would have doubled the screwdriver's
+  "Dismantle to kit" entry on a workbench.
+- Verified every new API used (`InventorySlots.GetSlotIdFromString`,
+  `GameInventory.AttachmentCount`/`FindAttachmentByName`,
+  `CargoBase.GetItemCount`/`GetItem`, `EntityAI.CanReceiveAttachment`/
+  `CanReceiveItemIntoCargo`/`CanDisplayCargo`/`AfterStoreLoad`) against the
+  installed game's own `scripts.pbo` before using it.
+- The crafting menu, recipe data model, and RPC round trip
+  (`SPKZ_WorkbenchRecipe`/`SPKZ_WorkbenchRPC`/`SPKZ_WorkbenchClientBridge`/
+  `SPKZ_WorkbenchMenu`) are unaffected - they were already written against the
+  named-slot design in anticipation of this model, per docs/WORKFLOW.md.
+
 ## 2026-09-03 — Rebuild the workbench menu UI (real 3D item previews, proper grid layout)
 
 - Reference: inspected (structure only, no code/assets copied - same policy as

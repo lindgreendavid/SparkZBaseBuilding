@@ -40,6 +40,5 @@ modded class Screwdriver
  {
   super.SetActions();
   AddAction(SPKZ_ActionDismantleWoodWall);
-  AddAction(SPKZ_ActionDismantleWorkbench);
  }
 }

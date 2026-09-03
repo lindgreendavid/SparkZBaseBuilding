@@ -37,40 +37,9 @@ class SPKZ_ActionAccessWorkbench: ActionInteractBase
  }
 }
 
-class SPKZ_ActionDismantleWorkbenchCB extends ActionContinuousBaseCB
-{
- override void CreateActionComponent()
- {
-  m_ActionData.m_ActionComponent = new CAContinuousTime(10.0);
- }
-}
-
-class SPKZ_ActionDismantleWorkbench extends ActionContinuousBase
-{
- void SPKZ_ActionDismantleWorkbench()
- {
-  m_CallbackClass = SPKZ_ActionDismantleWorkbenchCB;
-  m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DISASSEMBLE;
-  m_FullBody = true;
-  m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT | DayZPlayerConstants.STANCEMASK_CROUCH;
-  m_Text = "Dismantle to kit";
- }
- override void CreateConditionComponents()
- {
-  m_ConditionItem = new CCINonRuined;
-  m_ConditionTarget = new CCTCursor(3.0);
- }
- override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
- {
-  if (!target || !m_ConditionTarget.Can(player, target)) { return false; }
-  SPKZ_Workbench workbench = SPKZ_Workbench.Cast(target.GetObject());
-  if (!workbench) { return false; }
-  return workbench.SPKZ_CanDismantle(player, item);
- }
- override void OnFinishProgressServer(ActionData action_data)
- {
-  if (!ActionCondition(action_data.m_Player, action_data.m_Target, action_data.m_MainItem)) { return; }
-  SPKZ_Workbench workbench = SPKZ_Workbench.Cast(action_data.m_Target.GetObject());
-  if (workbench) { workbench.SPKZ_Dismantle(action_data.m_Player, action_data.m_MainItem); }
- }
-}
+// No dedicated dismantle action here: SPKZ_Workbench now extends
+// SPKZ_WoodWallDoor, so the generic SPKZ_ActionDismantleWoodWall (see
+// SPKZ_DismantleWoodWall.c, which casts its target to SPKZ_WoodWallDoor)
+// already matches a workbench polymorphically. A separate action casting to
+// SPKZ_Workbench specifically would just double the screwdriver's dismantle
+// entry for the same object.

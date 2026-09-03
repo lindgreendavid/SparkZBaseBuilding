@@ -2,9 +2,9 @@ class CfgPatches
 {
  class SPKZ_BaseBuilding_Standalone
  {
-  units[]={"SPKZ_WoodWallDoorKit","SPKZ_WoodWallDoor","SPKZ_WoodWallDoor_Hologram","SPKZ_WoodWallKit","SPKZ_WoodWall","SPKZ_WoodWall_Hologram","SPKZ_WoodFloorKit","SPKZ_WoodFloor","SPKZ_WoodFloor_Hologram","SPKZ_WoodWindowKit","SPKZ_WoodWindow","SPKZ_WoodWindow_Hologram","SPKZ_WoodGlassWindowKit","SPKZ_WoodGlassWindow","SPKZ_WoodGlassWindow_Hologram","SPKZ_WoodGarageKit","SPKZ_WoodGarage","SPKZ_WoodGarage_Hologram","SPKZ_WorkbenchKit","SPKZ_Workbench"};
+  units[]={"SPKZ_WoodWallDoorKit","SPKZ_WoodWallDoor","SPKZ_WoodWallDoor_Hologram","SPKZ_WoodWallKit","SPKZ_WoodWall","SPKZ_WoodWall_Hologram","SPKZ_WoodFloorKit","SPKZ_WoodFloor","SPKZ_WoodFloor_Hologram","SPKZ_WoodWindowKit","SPKZ_WoodWindow","SPKZ_WoodWindow_Hologram","SPKZ_WoodGlassWindowKit","SPKZ_WoodGlassWindow","SPKZ_WoodGlassWindow_Hologram","SPKZ_WoodGarageKit","SPKZ_WoodGarage","SPKZ_WoodGarage_Hologram","SPKZ_WorkbenchKit","SPKZ_Workbench","SPKZ_Workbench_Hologram"};
   weapons[]={}; requiredVersion=0.1;
-  requiredAddons[]={"DZ_Data","DZ_Gear_Containers"};
+  requiredAddons[]={"DZ_Data","DZ_Gear_Containers","DZ_Gear_Tools"};
  };
 };
 class CfgMods
@@ -16,12 +16,14 @@ class CfgMods
   inputs="SparkZBaseBuilding/inputsSparkZBaseBuilding.xml";
   class defs
   {
+   class imageSets {files[]={"SparkZBaseBuilding/gui/imagesets/spkz_workbench.imageset"};};
    class gameScriptModule {value=""; files[]={"SparkZBaseBuilding/scripts/3_Game"};};
    class worldScriptModule {value=""; files[]={"SparkZBaseBuilding/scripts/4_World"};};
    class missionScriptModule {value=""; files[]={"SparkZBaseBuilding/scripts/5_Mission"};};
   };
  };
 };
+#include "workbench_slots.hpp"
 class CfgVehicles
 {
  class Container_Base;
@@ -159,33 +161,5 @@ class CfgVehicles
   alignHologramToTerain=0;
   class AnimationSources {class Door {source="user"; initPhase=0; animPeriod=1;};};
  };
- // Workbench: crafts construction kits from raw materials. Temporary vanilla
- // placeholder model until the real workbench model exists (see docs/BRIEF.md
- // asset-source question) - a real DayZ static furniture model borrowed only
- // for its visual geometry, same approach as the wood pieces' hologram
- // classes. Not a wall/floor kit, so it does NOT extend SPKZ_WoodWallDoorKit -
- // it deliberately falls through to vanilla ActionDeployObject/Hologram
- // behaviour (terrain-aligned, normal collision, normal reach), which is the
- // correct placement style for a standalone piece of furniture, not a
- // wall-snapping part.
- class SPKZ_WorkbenchKit: Container_Base
- {
-  scope=2; displayName="Workbench Kit";
-  descriptionShort="A packaged crafting workbench. Deploy it to build construction kits from raw materials.";
-  model="SparkZBaseBuilding\Data\SparkZKit\SPKZ_CardboardKit.p3d";
-  itemSize[]={5,4}; weight=8000; rotationFlags=34; itemBehaviour=1; physLayer="item_large";
-  itemsCargoSize[]={0,0}; heavyItem=1; canBeDigged=0;
-  class DamageSystem {class GlobalHealth {class Health {hitpoints=100;};};};
- };
- class SPKZ_Workbench: Container_Base
- {
-  scope=2; displayName="Workbench";
-  descriptionShort="A crafting workbench. Access it to build construction kits from stored materials.";
-  // Real vanilla DayZ static-furniture model (DZ\structures\furniture\various\workbench_dz.p3d),
-  // borrowed only for its visual geometry as a temporary stand-in - see comment above.
-  model="DZ\structures\furniture\various\workbench_dz.p3d";
-  // 20 x 25 = 500 cargo cells, matching the requested "500 slots" of storage.
-  itemsCargoSize[]={20,25};
-  weight=15000; canBeDigged=0;
- };
+ #include "workbench_vehicles.hpp"
 };

@@ -1,24 +1,31 @@
-// Crafting workbench: 500-slot cargo (20x25 grid) holding raw materials.
-// Anyone can access the build menu (matching this addon's existing rule that
-// ordinary interactions - open/close doors and windows - are not owner-
-// gated, only dismantle is; see SPKZ_ActionAccessWorkbench). Full squad-role
-// gating (Base Access holders only) is future work once this addon has a
-// plot-pole/squad-permission system to check against - see docs/WORKFLOW.md's
-// list of not-yet-implemented features and docs/BRIEF.md.
-class SPKZ_Workbench extends ItemBase
+// Crafting workbench: extends SPKZ_WoodWallDoor/SPKZ_WoodWallDoorKit (see
+// SPKZ_WoodWallDoor.c) purely to reuse its owner tracking, lifetime refresh,
+// save/load and dismantle-to-kit machinery - a workbench is not a wall, so
+// SPKZ_HasDoor/IsOpen/SetActions are overridden below to drop door behaviour.
+// Real named attachment slots (SPKZ_WB_Hacksaw, SPKZ_WB_HandSaw,
+// SPKZ_WB_Hammer, SPKZ_WB_Shovel, SPKZ_WB_Screwdriver, SPKZ_WB_Pliers,
+// SPKZ_WB_SledgeHammer, SPKZ_WB_SharpeningStone - see workbench_slots.hpp)
+// come from the real model; the earlier "scan all cargo for a tool anywhere"
+// placeholder logic is gone. Anyone can access the build menu (matching this
+// addon's existing rule that ordinary interactions - open/close doors - are
+// not owner-gated, only dismantle is; see SPKZ_ActionAccessWorkbench). Full
+// squad-role gating (Base Access holders only) is future work once this
+// addon has a plot-pole/squad-permission system to check against - see
+// docs/WORKFLOW.md's list of not-yet-implemented features and docs/BRIEF.md.
+class SPKZ_WorkbenchCollision extends BuildingSuper
 {
- protected string m_SPKZOwnerId;
- protected int m_SPKZOwnerHash;
+ // Matches the model's separate invisible collision mesh - block player
+ // movement without blocking inventory access, same as a working open
+ // wardrobe.
+ override bool CanObstruct() { return false; }
+}
+
+class SPKZ_Workbench extends SPKZ_WoodWallDoor
+{
+ protected Object m_SPKZBenchCollision;
  // Only set server-side and never networked to every client - each client
  // only receives the specific OPEN_RESPONSE/BUILD_RESPONSE addressed to it.
  protected ref SPKZ_WorkbenchRecipeCatalog m_SPKZCatalog;
-
- void SPKZ_Workbench()
- {
-  RegisterNetSyncVariableInt("m_SPKZOwnerHash");
-  SetAllowDamage(false);
-  SetCanBeDestroyed(false);
- }
 
  override void EEInit()
  {
@@ -26,178 +33,130 @@ class SPKZ_Workbench extends ItemBase
   if (GetGame().IsServer())
   {
    m_SPKZCatalog = SPKZ_WorkbenchRecipeCatalog.Load();
+   GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SPKZ_EnsureBenchCollision, 100, false);
   }
  }
 
- void SPKZ_RefreshLifetime()
+ override void AfterStoreLoad()
  {
-  if (!GetGame().IsServer()) return;
-  // Native CE owns persistence, matching SPKZ_WoodWallDoor's convention -
-  // refresh cleanup lifetime, never recreate a deleted workbench.
-  SetLifetimeMax(315360000);
-  SetLifetime(315360000);
- }
-
- override void OnCEUpdate()
- {
-  super.OnCEUpdate();
-  SPKZ_RefreshLifetime();
- }
-
- void SPKZ_SetOwner(PlayerBase player)
- {
-  if (!GetGame().IsServer() || !player || !player.GetIdentity()) return;
-  m_SPKZOwnerId = player.GetIdentity().GetId();
-  m_SPKZOwnerHash = m_SPKZOwnerId.Hash();
-  SPKZ_RefreshLifetime();
-  SetSynchDirty();
- }
-
- bool SPKZ_CanDismantle(PlayerBase player, ItemBase tool)
- {
-  if (!player || !player.GetIdentity() || !tool) return false;
-  if (!tool.IsKindOf("Screwdriver") || tool.IsRuined()) return false;
-  string id = player.GetIdentity().GetId();
+  super.AfterStoreLoad();
   if (GetGame().IsServer())
   {
-   return m_SPKZOwnerId != "" && m_SPKZOwnerId == id;
+   GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SPKZ_EnsureBenchCollision, 100, false);
   }
-  return m_SPKZOwnerHash != 0 && m_SPKZOwnerHash == id.Hash();
  }
 
- void SPKZ_Dismantle(PlayerBase player, ItemBase tool)
+ void SPKZ_EnsureBenchCollision()
  {
-  if (!GetGame().IsServer() || !SPKZ_CanDismantle(player, tool)) return;
-  // Refuse to dismantle a workbench that still has materials in it - avoids
-  // silently deleting whatever was stored inside.
-  if (GetInventory().GetCargo() && GetInventory().GetCargo().GetItemCount() > 0)
+  if (!GetGame() || !GetGame().IsServer()) return;
+  if (!m_SPKZBenchCollision)
   {
-   player.MessageStatus("[SparkZBaseBuilding] Empty the workbench before dismantling it.");
-   return;
+   int flags = ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_NOLIFETIME | ECE_NOPERSISTENCY_WORLD | ECE_NOPERSISTENCY_CHAR;
+   m_SPKZBenchCollision = GetGame().CreateObjectEx("SPKZ_WorkbenchCollision", GetPosition(), flags);
   }
-
-  EntityAI kit = EntityAI.Cast(GetGame().CreateObjectEx("SPKZ_WorkbenchKit", player.GetPosition(), ECE_PLACE_ON_SURFACE));
-  if (!kit) return;
-  tool.AddHealth("", "Health", -5);
-  GetGame().ObjectDelete(this);
- }
-
- override void OnStoreSave(ParamsWriteContext ctx)
- {
-  super.OnStoreSave(ctx);
-  ctx.Write(m_SPKZOwnerId);
- }
-
- override bool OnStoreLoad(ParamsReadContext ctx, int version)
- {
-  if (!super.OnStoreLoad(ctx, version))
+  if (m_SPKZBenchCollision)
   {
-   return false;
+   m_SPKZBenchCollision.SetPosition(GetPosition());
+   m_SPKZBenchCollision.SetOrientation(GetOrientation());
   }
+ }
 
-  // Workbenches saved before owner tracking existed have no stored owner.
-  // Do not assign them to a stranger.
-  if (!ctx.Read(m_SPKZOwnerId)) { m_SPKZOwnerId = ""; }
-  if (m_SPKZOwnerId != "") { m_SPKZOwnerHash = m_SPKZOwnerId.Hash(); }
-  SPKZ_RefreshLifetime();
+ override void EEDelete(EntityAI parent)
+ {
+  if (GetGame())
+  {
+   GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SPKZ_EnsureBenchCollision);
+   if (GetGame().IsServer() && m_SPKZBenchCollision) { GetGame().ObjectDelete(m_SPKZBenchCollision); }
+  }
+  super.EEDelete(parent);
+ }
+
+ override bool SPKZ_HasDoor() { return false; }
+ override bool IsOpen() { return true; }
+ override string SPKZ_ReturnKitType() { return "SPKZ_WorkbenchKit"; }
+ override bool CanDisplayCargo() { return true; }
+
+ override bool CanReceiveItemIntoCargo(EntityAI item)
+ {
+  // The parent (SPKZ_WoodWallDoor) deliberately blocks cargo for walls - the
+  // bench is a storage object, so it needs to allow it.
+  if (!item || item == this || SPKZ_WoodWallDoor.Cast(item)) return false;
   return true;
+ }
+
+ override bool CanReceiveAttachment(EntityAI attachment, int slotId)
+ {
+  if (!attachment || !super.CanReceiveAttachment(attachment, slotId)) return false;
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_Hacksaw")) return attachment.IsKindOf("Hacksaw");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_HandSaw")) return attachment.IsKindOf("HandSaw");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_Hammer")) return attachment.IsKindOf("Hammer");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_Shovel")) return attachment.IsKindOf("Shovel");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_Screwdriver")) return attachment.IsKindOf("Screwdriver");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_Pliers")) return attachment.IsKindOf("Pliers");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_SledgeHammer")) return attachment.IsKindOf("SledgeHammer");
+  if (slotId == InventorySlots.GetSlotIdFromString("SPKZ_WB_SharpeningStone")) return attachment.IsKindOf("Whetstone");
+  return false;
+ }
+
+ override bool SPKZ_CanDismantle(PlayerBase player, ItemBase tool)
+ {
+  if (!super.SPKZ_CanDismantle(player, tool)) return false;
+  if (GetInventory().AttachmentCount() > 0) return false;
+  CargoBase cargo = GetInventory().GetCargo();
+  return !cargo || cargo.GetItemCount() == 0;
  }
 
  override void SetActions()
  {
-  super.SetActions();
+  // No door actions (SPKZ_HasDoor() is false) - normal inventory interaction
+  // already exposes cargo/attachments without a dedicated action. This one
+  // custom action opens the crafting menu.
   AddAction(SPKZ_ActionAccessWorkbench);
  }
 
- // Every distinct material AND tool classname referenced by any recipe
- // currently known to this workbench's catalog - the set we scan cargo for
- // and report back to the client so the menu can compute red/green
- // highlighting for both material costs and tool availability.
- protected void SPKZ_CollectMaterialClassNames(out array<string> outNames)
+ // Maps a recipe's tool classname to the real named attachment slot it must
+ // sit in on the workbench model. A fixed table, not a string transform,
+ // since Whetstone (the sharpening stone) doesn't follow the same
+ // "SPKZ_WB_" + classname pattern as the rest.
+ protected string SPKZ_ToolSlotName(string toolClassName)
  {
-  outNames = new array<string>();
-  for (int index = 0; index < m_SPKZCatalog.Recipes.Count(); index++)
-  {
-   SPKZ_WorkbenchRecipe recipe = m_SPKZCatalog.Recipes.Get(index);
-   for (int materialIndex = 0; materialIndex < recipe.Materials.Count(); materialIndex++)
-   {
-    string className = recipe.Materials.Get(materialIndex).ClassName;
-    if (outNames.Find(className) == -1)
-    {
-     outNames.Insert(className);
-    }
-   }
-   for (int toolIndex = 0; toolIndex < recipe.Tools.Count(); toolIndex++)
-   {
-    string toolClassName = recipe.Tools.Get(toolIndex).ClassName;
-    if (outNames.Find(toolClassName) == -1)
-    {
-     outNames.Insert(toolClassName);
-    }
-   }
-  }
+  if (toolClassName == "Hacksaw") return "SPKZ_WB_Hacksaw";
+  if (toolClassName == "HandSaw") return "SPKZ_WB_HandSaw";
+  if (toolClassName == "Hammer") return "SPKZ_WB_Hammer";
+  if (toolClassName == "Shovel") return "SPKZ_WB_Shovel";
+  if (toolClassName == "Screwdriver") return "SPKZ_WB_Screwdriver";
+  if (toolClassName == "Pliers") return "SPKZ_WB_Pliers";
+  if (toolClassName == "SledgeHammer") return "SPKZ_WB_SledgeHammer";
+  if (toolClassName == "Whetstone") return "SPKZ_WB_SharpeningStone";
+  return "";
  }
 
- // Ruined items (materials or tools) never count as usable stock.
- protected int SPKZ_CountItemsOfType(string className)
+ // A tool "counts" for a recipe only if it sits in its own designated
+ // attachment slot - matching what the model actually shows mounted on the
+ // pegboard, rather than the old "anywhere in cargo" placeholder.
+ protected ItemBase SPKZ_FindUsableTool(string toolClassName)
  {
-  int total = 0;
-  array<EntityAI> items = new array<EntityAI>();
-  GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
-  for (int index = 0; index < items.Count(); index++)
-  {
-   ItemBase item = ItemBase.Cast(items.Get(index));
-   if (!item || !item.IsKindOf(className) || item.IsRuined()) continue;
+  string slotName = SPKZ_ToolSlotName(toolClassName);
+  if (slotName == "") return null;
 
-   if (item.HasQuantity())
-   {
-    total += item.GetQuantity();
-   }
-   else
-   {
-    total += 1;
-   }
-  }
-
-  return total;
+  ItemBase tool = ItemBase.Cast(GetInventory().FindAttachmentByName(slotName));
+  if (!tool || !tool.IsKindOf(toolClassName) || tool.IsRuined()) return null;
+  return tool;
  }
 
- // A tool "counts" for a recipe if at least one non-ruined instance is
- // anywhere in the workbench's inventory. This is a stand-in for the real
- // model's designated tool-attachment slots (see docs/BRIEF.md and the
- // pending workbench model) - once that model exists with named slots for
- // hacksaw/saw/hammer/shovel/screwdriver/pliers/sledgehammer, this should
- // check that specific slot instead of scanning all cargo, and the check
- // shown on-model becomes real rather than just a script-side rule.
- protected bool SPKZ_HasUsableTool(string className)
+ protected bool SPKZ_HasUsableTool(string toolClassName)
  {
-  return SPKZ_FindUsableTool(className) != null;
- }
-
- protected ItemBase SPKZ_FindUsableTool(string className)
- {
-  array<EntityAI> items = new array<EntityAI>();
-  GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
-  for (int index = 0; index < items.Count(); index++)
-  {
-   ItemBase item = ItemBase.Cast(items.Get(index));
-   if (item && item.IsKindOf(className) && !item.IsRuined())
-    return item;
-  }
-
-  return null;
+  return SPKZ_FindUsableTool(toolClassName) != null;
  }
 
  // Applies a flat health-point loss to one matching tool. Does not consume
- // or remove it - a ruined tool remains in the workbench until a player
- // takes it out and repairs or replaces it. If a sharpening stone is
- // present (see SPKZ_WorkbenchRecipeCatalog.SharpeningStoneClassName), the
- // loss is immediately offset - net effect: tools stay maintained for free
- // as long as a stone is loaded. Placeholder behaviour pending the model
- // update that actually adds the stone's designated slot.
- protected void SPKZ_DamageToolOfType(string className, int healthLossPoints)
+ // or remove it - a ruined tool remains mounted until a player takes it out
+ // and repairs or replaces it. If a sharpening stone is present in its own
+ // slot, the loss is immediately offset - net effect: tools stay maintained
+ // for free as long as a stone is mounted.
+ protected void SPKZ_DamageToolOfType(string toolClassName, int healthLossPoints)
  {
-  ItemBase tool = SPKZ_FindUsableTool(className);
+  ItemBase tool = SPKZ_FindUsableTool(toolClassName);
   if (!tool || healthLossPoints <= 0) return;
 
   tool.AddHealth("", "Health", -healthLossPoints);
@@ -213,6 +172,54 @@ class SPKZ_Workbench extends ItemBase
   return SPKZ_HasUsableTool(m_SPKZCatalog.SharpeningStoneClassName);
  }
 
+ // Every distinct material classname referenced by any recipe currently
+ // known to this workbench's catalog - the set counted in cargo and reported
+ // back to the client so the menu can compute red/green affordability. Tools
+ // are checked separately via their designated attachment slots, not listed
+ // here.
+ protected void SPKZ_CollectMaterialClassNames(out array<string> outNames)
+ {
+  outNames = new array<string>();
+  for (int index = 0; index < m_SPKZCatalog.Recipes.Count(); index++)
+  {
+   SPKZ_WorkbenchRecipe recipe = m_SPKZCatalog.Recipes.Get(index);
+   for (int materialIndex = 0; materialIndex < recipe.Materials.Count(); materialIndex++)
+   {
+    string className = recipe.Materials.Get(materialIndex).ClassName;
+    if (outNames.Find(className) == -1)
+    {
+     outNames.Insert(className);
+    }
+   }
+  }
+ }
+
+ // Materials live in cargo - tools own their own named attachment slots and
+ // are never counted here. Ruined items never count as usable stock.
+ protected int SPKZ_CountItemsOfType(string className)
+ {
+  int total = 0;
+  CargoBase cargo = GetInventory().GetCargo();
+  if (!cargo) return 0;
+
+  for (int index = 0; index < cargo.GetItemCount(); index++)
+  {
+   ItemBase item = ItemBase.Cast(cargo.GetItem(index));
+   if (!item || !item.IsKindOf(className) || item.IsRuined()) continue;
+
+   if (item.HasQuantity())
+   {
+    total += item.GetQuantity();
+   }
+   else
+   {
+    total += 1;
+   }
+  }
+
+  return total;
+ }
+
  // Removes up to `amount` units of `className` from this workbench's cargo.
  // Returns false (and removes nothing) if the workbench does not currently
  // hold at least `amount` - callers must check this before consuming any
@@ -221,12 +228,13 @@ class SPKZ_Workbench extends ItemBase
  {
   if (SPKZ_CountItemsOfType(className) < amount) return false;
 
-  array<EntityAI> items = new array<EntityAI>();
-  GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
+  CargoBase cargo = GetInventory().GetCargo();
+  if (!cargo) return false;
+
   int remaining = amount;
-  for (int index = 0; index < items.Count() && remaining > 0; index++)
+  for (int index = 0; index < cargo.GetItemCount() && remaining > 0; index++)
   {
-   ItemBase item = ItemBase.Cast(items.Get(index));
+   ItemBase item = ItemBase.Cast(cargo.GetItem(index));
    if (!item || !item.IsKindOf(className)) continue;
 
    if (item.HasQuantity())
@@ -397,31 +405,8 @@ class SPKZ_Workbench extends ItemBase
  }
 }
 
-class SPKZ_WorkbenchKit extends ItemBase
+class SPKZ_WorkbenchKit extends SPKZ_WoodWallDoorKit
 {
- override bool IsBasebuildingKit() { return true; }
- override bool IsDeployable() { return true; }
-
- override void OnPlacementComplete(Man player, vector position = "0 0 0", vector orientation = "0 0 0")
- {
-  super.OnPlacementComplete(player, position, orientation);
-  if (!GetGame().IsServer()) return;
-
-  Object workbench = GetGame().CreateObjectEx("SPKZ_Workbench", position, ECE_OBJECT_SWAP);
-  if (!workbench) return;
-
-  SPKZ_Workbench placed = SPKZ_Workbench.Cast(workbench);
-  if (placed) { placed.SPKZ_SetOwner(PlayerBase.Cast(player)); }
-  workbench.SetPosition(position);
-  workbench.SetOrientation(orientation);
-  // ActionPlaceObject deletes base-building kits at the end of the action -
-  // matching SPKZ_WoodWallDoorKit's own convention, never delete it here.
- }
-
- override void SetActions()
- {
-  super.SetActions();
-  AddAction(ActionTogglePlaceObject);
-  AddAction(ActionPlaceObject);
- }
+ override string SPKZ_PlacedType() { return "SPKZ_Workbench"; }
+ override string SPKZ_ProjectionType() { return "SPKZ_Workbench_Hologram"; }
 }

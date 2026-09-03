@@ -1,0 +1,15 @@
+ImageSetClass {
+ Name "spkz_workbench"
+ RefSize 1024 128
+ Textures { ImageSetTextureClass { mpix 1 path "SparkZBaseBuilding/gui/imagesets/spkz_workbench_tools.paa" } }
+ Images {
+  ImageSetDefClass Hacksaw { Name "Hacksaw" Pos 0 0 Size 128 128 Flags 0 }
+  ImageSetDefClass HandSaw { Name "HandSaw" Pos 128 0 Size 128 128 Flags 0 }
+  ImageSetDefClass Hammer { Name "Hammer" Pos 256 0 Size 128 128 Flags 0 }
+  ImageSetDefClass Shovel { Name "Shovel" Pos 384 0 Size 128 128 Flags 0 }
+  ImageSetDefClass Screwdriver { Name "Screwdriver" Pos 512 0 Size 128 128 Flags 0 }
+  ImageSetDefClass Pliers { Name "Pliers" Pos 640 0 Size 128 128 Flags 0 }
+  ImageSetDefClass SledgeHammer { Name "SledgeHammer" Pos 768 0 Size 128 128 Flags 0 }
+  ImageSetDefClass SharpeningStone { Name "SharpeningStone" Pos 896 0 Size 128 128 Flags 0 }
+ }
+}
