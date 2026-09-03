@@ -9,6 +9,17 @@ modded class MissionGameplay
  override void OnUpdate(float timeslice)
  {
   super.OnUpdate(timeslice);
+
+  // Opens the workbench build menu when SPKZ_ActionAccessWorkbench (4_World)
+  // records a pending request via SPKZ_WorkbenchClientBridge (3_Game) - this
+  // World/Mission hand-off can't go through a direct method call in either
+  // direction (see Pitfall #8 in docs/CODING_STANDARDS.md), only polling.
+  if(SPKZ_WorkbenchClientBridge.s_HasPendingAccessRequest)
+  {
+   SPKZ_WorkbenchClientBridge.s_HasPendingAccessRequest=false;
+   GetGame().GetUIManager().ShowScriptedMenu(new SPKZ_WorkbenchMenu(SPKZ_WorkbenchClientBridge.s_PendingAccessWorkbench),null);
+  }
+
   if(Hologram.SPKZ_IsActive())
   {
    if(!m_SPKZPlacementLegend)

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-03 — Fix Mission-module compile error: World/Mission can't cross-reference custom classes
+
+- Fix `Unknown type 'SPKZ_Workbench'` compiling the Mission module -
+  `SPKZ_WorkbenchNetworking.c` tried to `modded class SPKZ_Workbench` from
+  `5_Mission`, but `4_World` and `5_Mission` are sibling modules that cannot
+  reference each other's own newly-declared classes at all (only pre-
+  existing vanilla classes, which are globally known regardless of tier).
+  Documented as Pitfall #8 in `docs/CODING_STANDARDS.md`.
+- Fix: added `SPKZ_WorkbenchClientBridge` (3_Game - visible to both tiers),
+  using only the universally-known `Object` type at its connection points.
+  `SPKZ_Workbench` (World) writes into it; `SPKZ_WorkbenchMenu` (Mission)
+  polls it via `Update()`, and the existing `MissionGameplay.OnUpdate` in
+  `SPKZ_PlacementLegend.c` polls it to open the menu - the same
+  poll-don't-call-into pattern that file already used successfully for
+  `Hologram` state. Deleted the now-obsolete `SPKZ_WorkbenchNetworking.c`.
+- `SPKZ_WorkbenchMenu` now stores its workbench reference as `Object`
+  instead of the concrete `SPKZ_Workbench` type, since Mission cannot name
+  that type either.
+
 ## 2026-09-03 — Fix real compile error found by first in-game test
 
 - Fix `Multiple declaration of variable 'cost'` compile error in

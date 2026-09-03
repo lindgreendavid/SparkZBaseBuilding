@@ -22,16 +22,18 @@ class SPKZ_ActionAccessWorkbench: ActionInteractBase
  // Opening a menu is a pure client-side view - the server never needs to be
  // told "the menu opened", only the OPEN_REQUEST RPC the menu itself sends
  // once it's constructed. This 4_World action cannot reference the
- // 5_Mission-only SPKZ_WorkbenchMenu class directly, so it calls a virtual
- // hook on the entity instead - SPKZ_Workbench's base (4_World) version of
- // that hook does nothing; scripts/5_Mission/UI/SPKZ_WorkbenchNetworking.c
- // overrides it to actually open the menu.
+ // 5_Mission-only SPKZ_WorkbenchMenu class directly (nor can Mission
+ // reference this World-tier SPKZ_Workbench type - see Pitfall #8 in
+ // docs/CODING_STANDARDS.md), so it hands off through
+ // SPKZ_WorkbenchClientBridge (3_Game) instead; Mission-side polling (see
+ // the modded MissionGameplay.OnUpdate in scripts/5_Mission/SPKZ_PlacementLegend.c)
+ // opens the menu when it sees the pending request.
  override void OnStartClient(ActionData action_data)
  {
   super.OnStartClient(action_data);
   SPKZ_Workbench workbench = SPKZ_Workbench.Cast(action_data.m_Target.GetObject());
   if (!workbench) return;
-  workbench.SPKZ_OnAccessRequested(action_data.m_Player);
+  SPKZ_WorkbenchClientBridge.RequestAccess(workbench);
  }
 }
 

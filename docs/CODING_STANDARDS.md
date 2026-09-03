@@ -143,6 +143,46 @@ distinct name** (`consumeIndex`, `toolCheckIndex`, `emptyRowIndex`, etc.) —
 don't reuse `index`/`i` across multiple loops in the same function just
 because they don't visually overlap.
 
+### 8. `4_World` and `5_Mission` are sibling modules — neither sees the other's own new classes
+
+```c
+// BROKEN - "Unknown type 'SPKZ_Workbench'" when compiling the Mission module,
+// even though SPKZ_Workbench compiles fine in 4_World/entities/spkz_workbench.c:
+modded class SPKZ_Workbench   // scripts/5_Mission/UI/SPKZ_WorkbenchNetworking.c
+{
+    override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx) { ... }
+}
+```
+
+The three script tiers are **not** a simple "each sees everything before it"
+chain for an addon's *own* newly-declared classes. `3_Game` genuinely is
+visible to both `4_World` and `5_Mission` (confirmed repeatedly in this
+addon — `SPKZ_WorkbenchRecipe`, `SPKZ_WorkbenchRPCId`, etc. all live in
+`3_Game` and are used from both tiers without issue). But `4_World` and
+`5_Mission` are **siblings**, not a chain: neither can reference a brand-new
+class the *other* declares, in either direction — not even to `modded class`
+it, not even to write a variable of that type. This looks superficially like
+it contradicts vanilla code such as `SPKZ_PlacementLegend.c` (`5_Mission`)
+calling `Hologram.SPKZ_IsActive()`, where `Hologram` is itself declared in a
+vanilla `4_world/classes/hologram.c` — but `Hologram` is a **base-game**
+class, already globally known before any addon's own module split happens;
+that's different from a class *this addon* declares fresh in its own
+`4_World` folder, which only that addon's `World` module compilation knows
+about.
+
+**The fix, verified working**: route communication through a class declared
+in `3_Game` (visible to both), using only universally-known types
+(`Object`, not the concrete custom class) at the connection points, and
+**poll from the `5_Mission` side** rather than trying to call into Mission
+from World directly — see `SPKZ_WorkbenchClientBridge.c` (3_Game, holds
+static state using `Object` fields) plus the polling block added to the
+existing `MissionGameplay.OnUpdate` in `SPKZ_PlacementLegend.c`. This is the
+same shape as the pre-existing, already-proven pattern in that same file:
+`5_Mission` polls `4_World`-modded *vanilla* class state
+(`Hologram.SPKZ_IsActive()`) every frame rather than being called into
+directly — it just turns out that pattern is not optional for addon-local
+classes, it's the only mechanism that compiles at all.
+
 ## Testing checklist before calling a change done
 
 1. Build, then **delete** (not overwrite) the old folder on the test server

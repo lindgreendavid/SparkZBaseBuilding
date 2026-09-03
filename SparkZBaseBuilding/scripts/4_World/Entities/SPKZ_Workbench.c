@@ -109,15 +109,6 @@ class SPKZ_Workbench extends ItemBase
   AddAction(SPKZ_ActionAccessWorkbench);
  }
 
- // Virtual hook called client-side when a player presses interact on this
- // workbench (see SPKZ_ActionAccessWorkbench.OnStartClient). Does nothing at
- // this tier - scripts/5_Mission/UI/SPKZ_WorkbenchNetworking.c overrides it
- // to actually open the build menu, since 4_World cannot reference the
- // 5_Mission-only SPKZ_WorkbenchMenu class directly.
- void SPKZ_OnAccessRequested(PlayerBase player)
- {
- }
-
  // Every distinct material AND tool classname referenced by any recipe
  // currently known to this workbench's catalog - the set we scan cargo for
  // and report back to the client so the menu can compute red/green
@@ -365,24 +356,43 @@ class SPKZ_Workbench extends ItemBase
   rpc.Send(this, SPKZ_WorkbenchRPCId.BUILD_RESPONSE, true, sender);
  }
 
- // Server-side RPC handling only. The client-side branch (forwarding
- // OPEN_RESPONSE/BUILD_RESPONSE to the open build menu) lives in
- // scripts/5_Mission/UI/SPKZ_WorkbenchNetworking.c instead of here, because
- // 4_World code cannot reference the 5_Mission-only SPKZ_WorkbenchMenu class
- // - see the module-tier rule in docs/CODING_STANDARDS.md's parent project.
+ // Client-side responses are handed to SPKZ_WorkbenchClientBridge (3_Game)
+ // rather than to SPKZ_WorkbenchMenu directly - 4_World cannot reference
+ // 5_Mission's custom classes (Mission can't reference World's either; see
+ // Pitfall #8 in docs/CODING_STANDARDS.md), so the bridge is the only
+ // channel between them.
  override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
  {
   super.OnRPC(sender, rpc_type, ctx);
 
-  if (!GetGame().IsServer()) return;
-
-  if (rpc_type == SPKZ_WorkbenchRPCId.OPEN_REQUEST)
+  if (GetGame().IsServer())
   {
-   SPKZ_HandleOpenRequest(sender);
+   if (rpc_type == SPKZ_WorkbenchRPCId.OPEN_REQUEST)
+   {
+    SPKZ_HandleOpenRequest(sender);
+   }
+   else if (rpc_type == SPKZ_WorkbenchRPCId.BUILD_REQUEST)
+   {
+    SPKZ_HandleBuildRequest(sender, ctx);
+   }
+   return;
   }
-  else if (rpc_type == SPKZ_WorkbenchRPCId.BUILD_REQUEST)
+
+  if (rpc_type == SPKZ_WorkbenchRPCId.OPEN_RESPONSE)
   {
-   SPKZ_HandleBuildRequest(sender, ctx);
+   SPKZ_WorkbenchOpenResponse response = new SPKZ_WorkbenchOpenResponse();
+   if (response.ReadFromContext(ctx))
+   {
+    SPKZ_WorkbenchClientBridge.DeliverOpenResponse(this, response);
+   }
+  }
+  else if (rpc_type == SPKZ_WorkbenchRPCId.BUILD_RESPONSE)
+  {
+   SPKZ_WorkbenchBuildResponse response = new SPKZ_WorkbenchBuildResponse();
+   if (response.ReadFromContext(ctx))
+   {
+    SPKZ_WorkbenchClientBridge.DeliverBuildResponse(response);
+   }
   }
  }
 }

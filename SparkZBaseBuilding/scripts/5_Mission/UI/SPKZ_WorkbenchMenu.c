@@ -12,7 +12,12 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
 
  protected static ref SPKZ_WorkbenchMenu s_ActiveMenu;
 
- protected SPKZ_Workbench m_Workbench;
+ // Typed as the generic, universally-known Object rather than the concrete
+ // SPKZ_Workbench - this 5_Mission class cannot reference that 4_World-only
+ // type at all (World and Mission are sibling script modules; see Pitfall
+ // #8 in docs/CODING_STANDARDS.md). Passed straight through to ScriptRPC.Send,
+ // which itself takes a plain Object.
+ protected Object m_Workbench;
  protected ref SPKZ_WorkbenchRecipeCatalog m_Catalog;
  protected ref array<ref SPKZ_WorkbenchStockEntry> m_Stock;
  protected ref array<string> m_Categories;
@@ -29,7 +34,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  protected ButtonWidget m_CloseButton;
  protected TextWidget m_CostRows[6];
 
- void SPKZ_WorkbenchMenu(SPKZ_Workbench workbench)
+ void SPKZ_WorkbenchMenu(Object workbench)
  {
   m_Workbench = workbench;
   m_Catalog = new SPKZ_WorkbenchRecipeCatalog();
@@ -76,18 +81,25 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   rpc.Send(m_Workbench, SPKZ_WorkbenchRPCId.OPEN_REQUEST, true, null);
  }
 
- // Called from SPKZ_WorkbenchNetworking.c when this workbench's
- // OPEN_RESPONSE arrives.
- static void SPKZ_OnOpenResponse(SPKZ_Workbench workbench, SPKZ_WorkbenchOpenResponse response)
+ // Polls SPKZ_WorkbenchClientBridge (3_Game) for responses SPKZ_Workbench
+ // (4_World) delivered - this Mission-tier class cannot be called into
+ // directly from World, so it checks each frame instead, the same pattern
+ // scripts/5_Mission/SPKZ_PlacementLegend.c already uses for Hologram state.
+ override void Update(float timeslice)
  {
-  if (!s_ActiveMenu || s_ActiveMenu.m_Workbench != workbench) return;
-  s_ActiveMenu.SPKZ_ApplyOpenResponse(response);
- }
+  super.Update(timeslice);
 
- static void SPKZ_OnBuildResponse(SPKZ_Workbench workbench, SPKZ_WorkbenchBuildResponse response)
- {
-  if (!s_ActiveMenu || s_ActiveMenu.m_Workbench != workbench) return;
-  s_ActiveMenu.SPKZ_ApplyBuildResponse(response);
+  if (SPKZ_WorkbenchClientBridge.s_HasNewOpenResponse && SPKZ_WorkbenchClientBridge.s_ResponseWorkbench == m_Workbench)
+  {
+   SPKZ_WorkbenchClientBridge.s_HasNewOpenResponse = false;
+   SPKZ_ApplyOpenResponse(SPKZ_WorkbenchClientBridge.s_LatestOpenResponse);
+  }
+
+  if (SPKZ_WorkbenchClientBridge.s_HasNewBuildResponse)
+  {
+   SPKZ_WorkbenchClientBridge.s_HasNewBuildResponse = false;
+   SPKZ_ApplyBuildResponse(SPKZ_WorkbenchClientBridge.s_LatestBuildResponse);
+  }
  }
 
  protected void SPKZ_ApplyOpenResponse(SPKZ_WorkbenchOpenResponse response)
