@@ -6,11 +6,16 @@
 _build_output_*/
 @*/
 
-# Claude Code internal state - not part of mod source
+# Local editor state - not part of mod source
 .claude/
+.*local*/
 
 # OS/editor noise
 Thumbs.db
 .DS_Store
 *.tmp
 *.blend1
+*.blend2
+**/*_before_*.blend
+**/*_before_*.p3d
+**/__pycache__/

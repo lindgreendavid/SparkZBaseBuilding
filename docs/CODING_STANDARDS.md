@@ -1,6 +1,6 @@
 # Coding Standards & Known Pitfalls
 
-This file exists so that every AI session or contributor picking up this mod
+This file exists so that every contributor picking up this mod
 inherits lessons that were expensive to learn the first time. Read the
 pitfalls section **before** touching `requiredAddons`, multi-line boolean
 expressions, or a `super.ActionCondition()` call.

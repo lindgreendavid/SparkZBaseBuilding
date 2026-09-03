@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+    <type name="SPKZ_WoodWallDoor">
+        <nominal>0</nominal>
+        <lifetime>315360000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodWallDoorKit">
+        <nominal>0</nominal>
+        <lifetime>3888000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodWall">
+        <nominal>0</nominal>
+        <lifetime>315360000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodWallKit">
+        <nominal>0</nominal>
+        <lifetime>3888000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodFloor">
+        <nominal>0</nominal>
+        <lifetime>315360000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodFloorKit">
+        <nominal>0</nominal>
+        <lifetime>3888000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodWindow">
+        <nominal>0</nominal>
+        <lifetime>315360000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodWindowKit">
+        <nominal>0</nominal>
+        <lifetime>3888000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodGlassWindow">
+        <nominal>0</nominal>
+        <lifetime>315360000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodGlassWindowKit">
+        <nominal>0</nominal>
+        <lifetime>3888000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodGarage">
+        <nominal>0</nominal>
+        <lifetime>315360000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+    <type name="SPKZ_WoodGarageKit">
+        <nominal>0</nominal>
+        <lifetime>3888000</lifetime>
+        <restock>0</restock><min>0</min>
+        <quantmin>-1</quantmin><quantmax>-1</quantmax><cost>100</cost>
+        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+    </type>
+</types>

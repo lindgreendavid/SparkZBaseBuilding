@@ -1,0 +1,30 @@
+STOP THE SERVER BEFORE CHANGING MISSION FILES. DO NOT DELETE storage_1.
+
+1. Back up the active mission folder, including storage_1.
+2. Copy this SparkZBaseBuilding folder (containing types.xml) into:
+   DayZServer/mpmissions/dayzOffline.chernarusplus/
+3. Back up that mission's cfgeconomycore.xml, then replace it with the provided
+   cfgeconomycore.xml. It preserves the local mission file read on 2026-09-03,
+   adding only the SparkZBaseBuilding/types.xml include. If anyone has edited
+   your live file since then, merge only the <ce> section instead.
+4. Pack the updated addon and install the same PBO on client and server.
+5. Start the server, place a fresh test wall and a garage door, then perform
+   a clean shutdown/restart after the server has saved. Check their locations,
+   ownership/dismantling and saved door states. Do not force-kill for this test.
+
+The six placed classes now have explicit CE types entries. Their long cleanup
+lifetime is renewed by server CE updates. Kits have no automatic loot spawns.
+This does not block ObjectDelete or respawn deleted pieces: future payment-mod
+deletion and screwdriver dismantling remain possible.
+
+The local mission contained these XML files when the repository handover was
+checked on 2026-09-03. Packing the PBO alone does not install them on other servers.
+No storage data has been wiped. Objects already lost cannot be recovered by
+this patch; a suitable existing server backup may allow recovery.
+
+Garage fix: native GarageTilt angle reversed so front faces up, braces down.
+Your edited Blender model and its mesh were preserved; only model.cfg changed.
+
+Local API/XML checks completed. In-game restart persistence and corrected
+native animation still need verification. This uses native server storage,
+not a custom JSON restore system.

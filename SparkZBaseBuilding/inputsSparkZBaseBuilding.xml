@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<modded_inputs>
+ <inputs><actions>
+  <input name="UASPKZBuildFreeLook" loc="Toggle ground / free-look placement"/>
+  <input name="UASPKZBuildSnap" loc="Toggle wall edge snapping"/>
+  <input name="UASPKZBuildAxis" loc="Cycle placement axis" />
+  <input name="UASPKZBuildFreeze" loc="Freeze placement hologram" />
+  <input name="UASPKZBuildPositiveV2" loc="Fine positive adjustment" />
+  <input name="UASPKZBuildNegativeV2" loc="Fine negative adjustment" />
+  <input name="UASPKZBuildWheelUpV2" loc="Placement adjustment forward" />
+  <input name="UASPKZBuildWheelDownV2" loc="Placement adjustment backward" />
+ </actions><sorting name="sparkz_building" loc="SparkZ Base Building">
+  <input name="UASPKZBuildAxis"/><input name="UASPKZBuildFreeze"/>
+  <input name="UASPKZBuildPositiveV2"/><input name="UASPKZBuildNegativeV2"/>
+ <input name="UASPKZBuildWheelUpV2"/><input name="UASPKZBuildWheelDownV2"/>
+  <input name="UASPKZBuildFreeLook"/><input name="UASPKZBuildSnap"/>
+ </sorting></inputs>
+ <preset>
+  <input name="UASPKZBuildFreeLook"><btn name="kHome"/></input>
+  <input name="UASPKZBuildSnap"><btn name="kEnd"/></input>
+  <input name="UASPKZBuildAxis"><btn name="kX"/></input>
+  <input name="UASPKZBuildFreeze"><btn name="kF"/></input>
+  <input name="UASPKZBuildPositiveV2"><btn name="kPrior"/></input>
+  <input name="UASPKZBuildNegativeV2"><btn name="kNext"/></input>
+  <input name="UASPKZBuildWheelUpV2"><btn name="mWheelUp"/></input>
+  <input name="UASPKZBuildWheelDownV2"><btn name="mWheelDown"/></input>
+ </preset>
+</modded_inputs>

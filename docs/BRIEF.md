@@ -44,7 +44,7 @@ we'd wanted to), but the *shape* of the problem: things like
 
 These are **concepts to design our own version of**, not implementation
 details to copy. Nothing here is a spec — it's a starting vocabulary for
-design discussions between the two of you (and your AI sessions) before
+design discussions between the two of you before
 committing to a schema.
 
 ## What's being carried over from the old `SparkZBase/` prototype

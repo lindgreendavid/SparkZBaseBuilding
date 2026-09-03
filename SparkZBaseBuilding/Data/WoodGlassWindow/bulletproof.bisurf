@@ -1,0 +1,7 @@
+density=2500;
+thickness=1000;
+rough=0.1;
+dust=0;
+bulletPenetrability=0;
+soundEnviron="glass";
+isWater=false;

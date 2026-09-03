@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-03 — Standalone building kits and development handover
+
+- Add current addon, six editable models, game P3Ds, textures and materials.
+- Add custom axis placement, live legend, full freeze, optional ground/free
+  placement, edge snapping and attachment-pivot rotation.
+- Add owner-only screwdriver dismantling and animated doors/shutters/garage.
+- Add walkable 4.5 m floors/roofs, wider wall boards and fixed transparent glass.
+- Correct glass rendering after in-game tests; preserve owner's garage edits.
+- Reverse native garage tilt direction (pending in-game confirmation).
+- Add native CE persistence types/install files and lifetime renewal (pending
+  mission installation and a clean restart test). No storage wipe or resurrection.
+- Add portable saved-Blender-to-MLOD exporter and detailed workflow/test handover.
+- Preserve legacy prototype folders; do not pack them for this standalone build.
+
+
+
 Dated entries, newest first. Bump `SparkZBaseConstants.MOD_VERSION` alongside
 any entry that ships to the test server (see `docs/CONTRIBUTING.md`).
 
@@ -56,7 +72,7 @@ new construction system will integrate with.
 - Added `docs/ARCHITECTURE.md`, `docs/CODING_STANDARDS.md`,
   `docs/CONTRIBUTING.md`, `docs/FEATURES.md` documenting the current
   implementation, real bugs already hit and their fixes, and the workflow
-  for two people/AI sessions collaborating on this codebase.
+  for two contributors collaborating on this codebase.
 
 ## Prior history (from the SparkZ modpack, current `0.3.3-STORAGE-DISMANTLE-FIX`)
 

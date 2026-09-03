@@ -1,0 +1,113 @@
+FrameWidgetClass Root {
+ position 0.715 0.05
+ size 0.275 0.255
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ ignorepointer 1
+ {
+  PanelWidgetClass Background {
+   position 0 0
+   size 1 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style DayZDefaultPanel
+   color 0.16 0.16 0.16 0.78
+   ignorepointer 1
+  }
+  TextWidgetClass Title {
+   position 0.035 0.045
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "WOOD WALL DOOR KIT"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+  TextWidgetClass State {
+   position 0.035 0.177
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "SPIN"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+  TextWidgetClass Rotation {
+   position 0.035 0.309
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "Yaw 0° | Tilt 0° | Roll 0°"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+  TextWidgetClass Position {
+   position 0.035 0.441
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "Height 0 m | Reach 0 m"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+  TextWidgetClass Options {
+   position 0.035 0.573
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "GROUND | SNAP: ON"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+  TextWidgetClass Controls1 {
+   position 0.035 0.705
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "X  Axis     Wheel  Adjust     PgUp/PgDn  Fine"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+  TextWidgetClass Controls2 {
+   position 0.035 0.837
+   size 0.93 0.12
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   text "F  Freeze     Home  Ground/Free     End  Snap"
+   font "gui/fonts/sdf_MetronBook24"
+   "exact text" 1
+   "text color" 0.95 0.95 0.95 1
+   ignorepointer 1
+  }
+ }
+}

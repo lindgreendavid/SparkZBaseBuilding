@@ -1,16 +1,22 @@
-# Contributing (for two people / two AI sessions working at once)
+# Contributing
 
-This mod is being built by two people, each likely working through their own
-AI assistant session, sometimes at the same time. Enfusion Script files don't
+This mod is being built collaboratively, sometimes with concurrent edits. Enfusion Script files don't
 diff or merge cleanly (no semantic merge tooling), so the rules below matter
 more here than in a typical software project — treat file ownership as the
 real safety net, git as the backstop.
 
+## Current standalone workflow
+
+See WORKFLOW.md for the active addon. Sync the repository when explicitly
+requested by the owner, not on every local model edit. Before an authorized
+commit/push, fetch and reconcile current remote changes. The older automatic
+session-sync and SparkZBase version rules below apply to the legacy prototype.
+
 ## Git workflow
 
 **Hard rule, no exceptions: `git fetch` and check for upstream changes
-before you (or your AI session) read code to plan work, before every
-commit, and before every push.** The whole point of two people/AI sessions
+before you read code to plan work, before every
+commit, and before every push.** The whole point of two contributors
 working on this at once is that the other person's changes can land at any
 moment — starting work, committing, or pushing against a stale view of
 `main` is exactly how the "both edited the same file" and "my change
@@ -116,5 +122,5 @@ and only then look at what changed in that RPT's timeframe.
 If you add a new permission flag, a new hook file, a new persisted field, or
 find a new pitfall the hard way: update `docs/ARCHITECTURE.md`,
 `docs/CODING_STANDARDS.md`, or `CHANGELOG.md` in the *same* PR. The next
-session (human or AI) starts cold and only has these files plus the code —
+contributor starts cold and only has these files plus the code —
 undocumented tribal knowledge is knowledge that gets re-broken.
