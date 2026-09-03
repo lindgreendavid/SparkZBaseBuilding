@@ -173,6 +173,25 @@ no per-part icon art yet (see docs/BRIEF.md's open asset-source question).
 The icon widget and per-recipe `IconPath` field are already wired end to end,
 so real art drops in later with zero script changes.
 
+Material/tool requirement rows show each item's real, already-translated
+name (`EntityAI.GetDisplayName()` on the same local preview instance the row
+renders - no manual classname-to-label table to maintain) rather than the
+raw classname, plus a quantity or MOUNTED/MISSING line and a colored status
+dot.
+
+Categories: "Wood" covers all six wall/door/window/floor/garage kits
+(including the garage, which uses some metal plate but is still fundamentally
+a wood structure - it was miscategorized as "Metal" originally). "Misc" is
+for real vanilla deployables that aren't SparkZ kit/placed pairs - currently
+just the vanilla `GardenPlotGreenhouse`. Sandbags and tank traps were
+requested too, but neither exists as a player-craftable vanilla item in the
+installed game version - the only "tank trap"-like class found anywhere in
+`structures_*`/`gear_*.pbo` is `StaticObj_Misc_Hedgehog_Concrete`/`_Iron`,
+non-spawnable map decoration, not a deployable kit. Adding either for real
+would mean building custom SparkZ models for them, the same kind of work as
+the workbench itself - a real "Metal" category (chain-link, corrugated
+sheet, etc.) is in the same position.
+
 Not yet done: squad Base Access permission gating on the access/build actions
 (this addon has no plot-pole/squad-permission system to check against yet -
 see docs/BRIEF.md), a real workbench model, and in-game verification of the

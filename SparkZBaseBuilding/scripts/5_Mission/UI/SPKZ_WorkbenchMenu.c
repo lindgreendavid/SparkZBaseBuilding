@@ -212,12 +212,17 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   return item;
  }
 
- protected void SPKZ_ApplyPreview(ItemPreviewWidget preview, string className, array<EntityAI> tracker)
+ // Returns the local preview instance it created (or null) so callers can
+ // pull a clean, already-translated display name off it via
+ // EntityAI.GetDisplayName() instead of showing a raw classname like
+ // "WoodenLog" in the UI.
+ protected EntityAI SPKZ_ApplyPreview(ItemPreviewWidget preview, string className, array<EntityAI> tracker)
  {
-  if (!preview) return;
+  if (!preview) return null;
   EntityAI item = SPKZ_CreatePreviewItem(className, tracker);
-  if (!item) return;
+  if (!item) return null;
   preview.SetItem(item);
+  return item;
  }
 
  protected void SPKZ_StyleTab(Widget tabWidget, bool selected)
@@ -349,16 +354,24 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    if (!enough) { affordable = false; }
 
    Widget materialRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_MaterialsGridSpacer);
-   TextWidget materialText = TextWidget.Cast(materialRow.FindAnyWidget("RequiredItemText"));
-   if (materialText)
+   ItemPreviewWidget materialPreview = ItemPreviewWidget.Cast(materialRow.FindAnyWidget("RequiredItemPreview"));
+   EntityAI materialPreviewItem = SPKZ_ApplyPreview(materialPreview, cost.ClassName, m_DetailPreviewItems);
+
+   TextWidget materialName = TextWidget.Cast(materialRow.FindAnyWidget("RequiredItemName"));
+   if (materialName)
    {
-    materialText.SetText(cost.ClassName + " (" + have.ToString() + "/" + cost.Quantity.ToString() + ")");
-    materialText.SetColor(SPKZ_RequirementColor(enough));
+    string materialLabel = cost.ClassName;
+    if (materialPreviewItem) { materialLabel = materialPreviewItem.GetDisplayName(); }
+    materialName.SetText(materialLabel);
+   }
+   TextWidget materialStatus = TextWidget.Cast(materialRow.FindAnyWidget("RequiredItemStatus"));
+   if (materialStatus)
+   {
+    materialStatus.SetText(have.ToString() + " / " + cost.Quantity.ToString());
+    materialStatus.SetColor(SPKZ_RequirementColor(enough));
    }
    Widget materialDot = materialRow.FindAnyWidget("RequiredItemStatusDot");
    if (materialDot) { materialDot.SetColor(SPKZ_RequirementColor(enough)); }
-   ItemPreviewWidget materialPreview = ItemPreviewWidget.Cast(materialRow.FindAnyWidget("RequiredItemPreview"));
-   SPKZ_ApplyPreview(materialPreview, cost.ClassName, m_DetailPreviewItems);
   }
 
   SPKZ_ClearChildren(m_ToolsGridSpacer);
@@ -369,19 +382,27 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    if (!present) { affordable = false; }
 
    string status = "MISSING";
-   if (present) { status = "AVAILABLE"; }
+   if (present) { status = "MOUNTED"; }
 
    Widget toolRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_ToolsGridSpacer);
-   TextWidget toolText = TextWidget.Cast(toolRow.FindAnyWidget("RequiredItemText"));
-   if (toolText)
+   ItemPreviewWidget toolPreview = ItemPreviewWidget.Cast(toolRow.FindAnyWidget("RequiredItemPreview"));
+   EntityAI toolPreviewItem = SPKZ_ApplyPreview(toolPreview, toolReq.ClassName, m_DetailPreviewItems);
+
+   TextWidget toolName = TextWidget.Cast(toolRow.FindAnyWidget("RequiredItemName"));
+   if (toolName)
    {
-    toolText.SetText(toolReq.ClassName + " (" + status + ")");
-    toolText.SetColor(SPKZ_RequirementColor(present));
+    string toolLabel = toolReq.ClassName;
+    if (toolPreviewItem) { toolLabel = toolPreviewItem.GetDisplayName(); }
+    toolName.SetText(toolLabel);
+   }
+   TextWidget toolStatus = TextWidget.Cast(toolRow.FindAnyWidget("RequiredItemStatus"));
+   if (toolStatus)
+   {
+    toolStatus.SetText(status);
+    toolStatus.SetColor(SPKZ_RequirementColor(present));
    }
    Widget toolDot = toolRow.FindAnyWidget("RequiredItemStatusDot");
    if (toolDot) { toolDot.SetColor(SPKZ_RequirementColor(present)); }
-   ItemPreviewWidget toolPreview = ItemPreviewWidget.Cast(toolRow.FindAnyWidget("RequiredItemPreview"));
-   SPKZ_ApplyPreview(toolPreview, toolReq.ClassName, m_DetailPreviewItems);
   }
 
   if (m_BuildButton) { m_BuildButton.Enable(affordable); }
