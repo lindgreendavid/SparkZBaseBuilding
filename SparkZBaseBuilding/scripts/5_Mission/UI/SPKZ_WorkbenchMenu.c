@@ -1,15 +1,10 @@
-// Build menu: category list -> recipe list -> cost breakdown -> Build Now.
-// v1 UI intentionally keeps every recipe on one shared placeholder icon
-// (SPKZ_CardboardKit_co.paa) since no per-part icon art exists yet - see the
-// open asset-source question in docs/BRIEF.md. The icon widget and the
-// per-recipe IconPath field are already wired end to end, so real art drops
-// in later with no script changes.
+// Build menu: category tabs -> a scrollable grid of recipes (each shown with
+// a real live 3D preview of its output kit, via ItemPreviewWidget - no icon
+// art needed at all, it renders whatever model the class already has) ->
+// selecting one shows a big preview plus required materials/tools (each
+// with their own small live preview) and a Build Now button.
 class SPKZ_WorkbenchMenu extends UIScriptedMenu
 {
- // At most this many material lines are shown per recipe. Recipes with more
- // materials than this need a v2 layout with a scrollable cost list.
- static const int MAX_COST_ROWS = 6;
-
  protected static ref SPKZ_WorkbenchMenu s_ActiveMenu;
 
  // Typed as the generic, universally-known Object rather than the concrete
@@ -22,17 +17,27 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  protected ref array<ref SPKZ_WorkbenchStockEntry> m_Stock;
  protected ref array<string> m_Categories;
  protected string m_SelectedCategory;
- protected string m_SelectedRecipeId;
+ protected SPKZ_WorkbenchRecipe m_SelectedRecipe;
 
  protected Widget m_Root;
- protected TextListboxWidget m_CategoryList;
- protected TextListboxWidget m_ItemList;
+ protected Widget m_TabsSpacer;
+ protected Widget m_ItemsGridSpacer;
+ protected Widget m_MaterialsGridSpacer;
+ protected Widget m_ToolsGridSpacer;
+ protected Widget m_NoSelectionText;
+ protected Widget m_DetailContainer;
+ protected ItemPreviewWidget m_DetailPreview;
  protected TextWidget m_DetailName;
- protected ImageWidget m_DetailIcon;
- protected TextWidget m_StatusText;
  protected ButtonWidget m_BuildButton;
  protected ButtonWidget m_CloseButton;
- protected TextWidget m_CostRows[6];
+ protected TextWidget m_StatusText;
+
+ // Every ItemPreviewWidget needs a real (but purely local, never networked -
+ // see GetGame().CreateObject's create_local param) EntityAI instance to
+ // render. Tracked here so they get deleted rather than leaking every time
+ // the grid/detail panel refreshes or the menu closes.
+ protected ref array<EntityAI> m_GridPreviewItems;
+ protected ref array<EntityAI> m_DetailPreviewItems;
 
  void SPKZ_WorkbenchMenu(Object workbench)
  {
@@ -40,6 +45,8 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   m_Catalog = new SPKZ_WorkbenchRecipeCatalog();
   m_Stock = new array<ref SPKZ_WorkbenchStockEntry>();
   m_Categories = new array<string>();
+  m_GridPreviewItems = new array<EntityAI>();
+  m_DetailPreviewItems = new array<EntityAI>();
  }
 
  override Widget Init()
@@ -47,21 +54,21 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   m_Root = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/layouts/sparkz_workbench_menu.layout");
   layoutRoot = m_Root;
 
-  m_CategoryList = TextListboxWidget.Cast(m_Root.FindAnyWidget("CategoryList"));
-  m_ItemList = TextListboxWidget.Cast(m_Root.FindAnyWidget("ItemList"));
+  m_TabsSpacer = m_Root.FindAnyWidget("TabsSpacer");
+  m_ItemsGridSpacer = m_Root.FindAnyWidget("ItemsGridSpacer");
+  m_MaterialsGridSpacer = m_Root.FindAnyWidget("MaterialsGridSpacer");
+  m_ToolsGridSpacer = m_Root.FindAnyWidget("ToolsGridSpacer");
+  m_NoSelectionText = m_Root.FindAnyWidget("NoSelectionText");
+  m_DetailContainer = m_Root.FindAnyWidget("DetailContainer");
+  m_DetailPreview = ItemPreviewWidget.Cast(m_Root.FindAnyWidget("DetailPreview"));
   m_DetailName = TextWidget.Cast(m_Root.FindAnyWidget("DetailName"));
-  m_DetailIcon = ImageWidget.Cast(m_Root.FindAnyWidget("DetailIcon"));
-  m_StatusText = TextWidget.Cast(m_Root.FindAnyWidget("StatusText"));
   m_BuildButton = ButtonWidget.Cast(m_Root.FindAnyWidget("BuildButton"));
   m_CloseButton = ButtonWidget.Cast(m_Root.FindAnyWidget("CloseButton"));
-  for (int index = 0; index < MAX_COST_ROWS; index++)
-  {
-   m_CostRows[index] = TextWidget.Cast(m_Root.FindAnyWidget("CostRow" + index.ToString()));
-   if (m_CostRows[index]) { m_CostRows[index].Show(false); }
-  }
+  m_StatusText = TextWidget.Cast(m_Root.FindAnyWidget("StatusText"));
 
+  if (m_CloseButton) { m_CloseButton.SetName("SPKZ_CloseButton"); }
+  if (m_BuildButton) { m_BuildButton.SetName("SPKZ_BuildButton"); m_BuildButton.Enable(false); }
   if (m_StatusText) { m_StatusText.SetText("Loading..."); }
-  if (m_BuildButton) { m_BuildButton.Enable(false); }
 
   s_ActiveMenu = this;
   SPKZ_SendOpenRequest();
@@ -72,6 +79,8 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  {
   super.OnHide();
   if (s_ActiveMenu == this) { s_ActiveMenu = null; }
+  SPKZ_ClearPreviewItems(m_GridPreviewItems);
+  SPKZ_ClearPreviewItems(m_DetailPreviewItems);
  }
 
  protected void SPKZ_SendOpenRequest()
@@ -117,135 +126,171 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    }
   }
 
+  if (m_SelectedCategory == "" && m_Categories.Count() > 0)
+  {
+   m_SelectedCategory = m_Categories.Get(0);
+  }
+
   if (m_StatusText) { m_StatusText.SetText(response.Message); }
-  SPKZ_RefreshCategoryList();
+  SPKZ_RefreshTabs();
+  SPKZ_RefreshRecipeGrid();
+  SPKZ_RefreshDetailPanel();
  }
 
  protected void SPKZ_ApplyBuildResponse(SPKZ_WorkbenchBuildResponse response)
  {
   m_Stock = response.Stock;
   if (m_StatusText) { m_StatusText.SetText(response.Message); }
-  SPKZ_RefreshItemList();
+  SPKZ_RefreshRecipeGrid();
   SPKZ_RefreshDetailPanel();
  }
 
- protected void SPKZ_RefreshCategoryList()
+ protected void SPKZ_ClearChildren(Widget parent)
  {
-  if (!m_CategoryList) return;
-  m_CategoryList.ClearItems();
-  for (int index = 0; index < m_Categories.Count(); index++)
+  if (!parent) return;
+  Widget child = parent.GetChildren();
+  while (child)
   {
-   m_CategoryList.AddItem(m_Categories.Get(index), null, 0);
+   Widget next = child.GetSibling();
+   child.Unlink();
+   child = next;
   }
-
-  if (m_Categories.Count() > 0)
-  {
-   m_SelectedCategory = m_Categories.Get(0);
-   m_CategoryList.SelectRow(0);
-  }
-  SPKZ_RefreshItemList();
  }
 
- protected void SPKZ_RefreshItemList()
+ protected void SPKZ_ClearPreviewItems(array<EntityAI> items)
  {
-  if (!m_ItemList) return;
-  m_ItemList.ClearItems();
-  if (m_SelectedCategory == "") return;
+  for (int index = 0; index < items.Count(); index++)
+  {
+   EntityAI item = items.Get(index);
+   if (item) { GetGame().ObjectDelete(item); }
+  }
+  items.Clear();
+ }
+
+ protected EntityAI SPKZ_CreatePreviewItem(string className, array<EntityAI> tracker)
+ {
+  if (className == "") return null;
+  EntityAI item = EntityAI.Cast(GetGame().CreateObject(className, Vector(0, 0, 0), true, false, false));
+  if (item) { tracker.Insert(item); }
+  return item;
+ }
+
+ protected void SPKZ_RefreshTabs()
+ {
+  if (!m_TabsSpacer) return;
+  SPKZ_ClearChildren(m_TabsSpacer);
+
+  for (int index = 0; index < m_Categories.Count(); index++)
+  {
+   string category = m_Categories.Get(index);
+   Widget tabWidget = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_tab.layout", m_TabsSpacer);
+   tabWidget.SetName("SPKZ_Tab_" + category);
+
+   TextWidget label = TextWidget.Cast(tabWidget.FindAnyWidget("TabLabel"));
+   if (label) { label.SetText(category); }
+
+   Widget accent = tabWidget.FindAnyWidget("TabAccent");
+   if (accent) { accent.Show(category == m_SelectedCategory); }
+  }
+ }
+
+ protected void SPKZ_RefreshRecipeGrid()
+ {
+  if (!m_ItemsGridSpacer) return;
+  SPKZ_ClearChildren(m_ItemsGridSpacer);
+  SPKZ_ClearPreviewItems(m_GridPreviewItems);
 
   for (int index = 0; index < m_Catalog.Recipes.Count(); index++)
   {
    SPKZ_WorkbenchRecipe recipe = m_Catalog.Recipes.Get(index);
    if (recipe.Category != m_SelectedCategory) continue;
 
-   int row = m_ItemList.AddItem(recipe.DisplayName, null, 0);
-   if (!SPKZ_CanAffordRecipe(recipe))
+   Widget itemWidget = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_recipe_item.layout", m_ItemsGridSpacer);
+   itemWidget.SetName("SPKZ_RecipeItem");
+   itemWidget.SetUserData(recipe);
+
+   TextWidget nameWidget = TextWidget.Cast(itemWidget.FindAnyWidget("RecipeItemName"));
+   if (nameWidget) { nameWidget.SetText(recipe.DisplayName); }
+
+   ItemPreviewWidget preview = ItemPreviewWidget.Cast(itemWidget.FindAnyWidget("RecipeItemPreview"));
+   if (preview)
    {
-    m_ItemList.SetItemColor(row, 0, ARGB(255, 200, 90, 90));
+    EntityAI previewItem = SPKZ_CreatePreviewItem(recipe.OutputKitClassName, m_GridPreviewItems);
+    if (previewItem) { preview.SetItem(previewItem); }
    }
   }
- }
-
- protected SPKZ_WorkbenchRecipe SPKZ_FindRecipeByDisplayName(string displayName)
- {
-  for (int index = 0; index < m_Catalog.Recipes.Count(); index++)
-  {
-   SPKZ_WorkbenchRecipe recipe = m_Catalog.Recipes.Get(index);
-   if (recipe.Category == m_SelectedCategory && recipe.DisplayName == displayName)
-    return recipe;
-  }
-  return null;
- }
-
- protected bool SPKZ_CanAffordRecipe(SPKZ_WorkbenchRecipe recipe)
- {
-  for (int index = 0; index < recipe.Materials.Count(); index++)
-  {
-   SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(index);
-   if (SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, cost.ClassName) < cost.Quantity)
-    return false;
-  }
-  for (int toolIndex = 0; toolIndex < recipe.Tools.Count(); toolIndex++)
-  {
-   if (SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, recipe.Tools.Get(toolIndex).ClassName) < 1)
-    return false;
-  }
-  return true;
  }
 
  protected void SPKZ_RefreshDetailPanel()
  {
-  SPKZ_WorkbenchRecipe recipe = m_Catalog.FindRecipe(m_SelectedRecipeId);
-  if (!recipe)
+  SPKZ_ClearPreviewItems(m_DetailPreviewItems);
+
+  if (!m_SelectedRecipe)
   {
-   if (m_DetailName) { m_DetailName.SetText(""); }
-   for (int emptyRowIndex = 0; emptyRowIndex < MAX_COST_ROWS; emptyRowIndex++)
-   {
-    if (m_CostRows[emptyRowIndex]) { m_CostRows[emptyRowIndex].Show(false); }
-   }
+   if (m_NoSelectionText) { m_NoSelectionText.Show(true); }
+   if (m_DetailContainer) { m_DetailContainer.Show(false); }
    if (m_BuildButton) { m_BuildButton.Enable(false); }
    return;
   }
 
-  if (m_DetailName) { m_DetailName.SetText(recipe.DisplayName); }
-  if (m_DetailIcon) { m_DetailIcon.LoadImageFile(0, recipe.IconPath); }
+  if (m_NoSelectionText) { m_NoSelectionText.Show(false); }
+  if (m_DetailContainer) { m_DetailContainer.Show(true); }
+  if (m_DetailName) { m_DetailName.SetText(m_SelectedRecipe.DisplayName); }
 
-  // Materials and tools share the same row list - materials show "have/need"
-  // and are consumed on build; tools show "AVAILABLE"/"MISSING" (or
-  // "RUINED" - a present-but-ruined tool reports as absent, see
-  // SPKZ_Workbench.SPKZ_CountItemsOfType) and are only damaged, not consumed.
-  bool affordable = true;
-  int row = 0;
-  for (int materialIndex = 0; materialIndex < recipe.Materials.Count() && row < MAX_COST_ROWS; materialIndex++)
+  if (m_DetailPreview)
   {
-   SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(materialIndex);
+   EntityAI mainPreviewItem = SPKZ_CreatePreviewItem(m_SelectedRecipe.OutputKitClassName, m_DetailPreviewItems);
+   if (mainPreviewItem) { m_DetailPreview.SetItem(mainPreviewItem); }
+  }
+
+  bool affordable = true;
+
+  SPKZ_ClearChildren(m_MaterialsGridSpacer);
+  for (int materialIndex = 0; materialIndex < m_SelectedRecipe.Materials.Count(); materialIndex++)
+  {
+   SPKZ_WorkbenchMaterialCost cost = m_SelectedRecipe.Materials.Get(materialIndex);
    int have = SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, cost.ClassName);
    bool enough = have >= cost.Quantity;
    if (!enough) { affordable = false; }
 
-   m_CostRows[row].Show(true);
-   m_CostRows[row].SetText(cost.ClassName + "  " + have.ToString() + " / " + cost.Quantity.ToString());
-   m_CostRows[row].SetColor(SPKZ_RequirementColor(enough));
-   row++;
+   Widget materialRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_MaterialsGridSpacer);
+   TextWidget materialText = TextWidget.Cast(materialRow.FindAnyWidget("RequiredItemText"));
+   if (materialText)
+   {
+    materialText.SetText(cost.ClassName + " (" + have.ToString() + "/" + cost.Quantity.ToString() + ")");
+    materialText.SetColor(SPKZ_RequirementColor(enough));
+   }
+   ItemPreviewWidget materialPreview = ItemPreviewWidget.Cast(materialRow.FindAnyWidget("RequiredItemPreview"));
+   if (materialPreview)
+   {
+    EntityAI materialPreviewItem = SPKZ_CreatePreviewItem(cost.ClassName, m_DetailPreviewItems);
+    if (materialPreviewItem) { materialPreview.SetItem(materialPreviewItem); }
+   }
   }
 
-  for (int toolIndex = 0; toolIndex < recipe.Tools.Count() && row < MAX_COST_ROWS; toolIndex++)
+  SPKZ_ClearChildren(m_ToolsGridSpacer);
+  for (int toolIndex = 0; toolIndex < m_SelectedRecipe.Tools.Count(); toolIndex++)
   {
-   SPKZ_WorkbenchToolRequirement toolReq = recipe.Tools.Get(toolIndex);
+   SPKZ_WorkbenchToolRequirement toolReq = m_SelectedRecipe.Tools.Get(toolIndex);
    bool present = SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, toolReq.ClassName) >= 1;
    if (!present) { affordable = false; }
 
    string status = "MISSING";
    if (present) { status = "AVAILABLE"; }
 
-   m_CostRows[row].Show(true);
-   m_CostRows[row].SetText(toolReq.ClassName + " (tool)  " + status);
-   m_CostRows[row].SetColor(SPKZ_RequirementColor(present));
-   row++;
-  }
-
-  for (int clearIndex = row; clearIndex < MAX_COST_ROWS; clearIndex++)
-  {
-   if (m_CostRows[clearIndex]) { m_CostRows[clearIndex].Show(false); }
+   Widget toolRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_ToolsGridSpacer);
+   TextWidget toolText = TextWidget.Cast(toolRow.FindAnyWidget("RequiredItemText"));
+   if (toolText)
+   {
+    toolText.SetText(toolReq.ClassName + " (" + status + ")");
+    toolText.SetColor(SPKZ_RequirementColor(present));
+   }
+   ItemPreviewWidget toolPreview = ItemPreviewWidget.Cast(toolRow.FindAnyWidget("RequiredItemPreview"));
+   if (toolPreview)
+   {
+    EntityAI toolPreviewItem = SPKZ_CreatePreviewItem(toolReq.ClassName, m_DetailPreviewItems);
+    if (toolPreviewItem) { toolPreview.SetItem(toolPreviewItem); }
+   }
   }
 
   if (m_BuildButton) { m_BuildButton.Enable(affordable); }
@@ -257,61 +302,75 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   return ARGB(255, 220, 90, 90);
  }
 
- override bool OnItemSelected(Widget w, int x, int y, int row, int column, int oldRow, int oldColumn)
- {
-  if (w == m_CategoryList)
-  {
-   if (row >= 0 && row < m_Categories.Count())
-   {
-    m_SelectedCategory = m_Categories.Get(row);
-    m_SelectedRecipeId = "";
-    SPKZ_RefreshItemList();
-    SPKZ_RefreshDetailPanel();
-   }
-   return true;
-  }
-
-  if (w == m_ItemList)
-  {
-   string displayName;
-   if (m_ItemList.GetItemText(row, 0, displayName))
-   {
-    SPKZ_WorkbenchRecipe recipe = SPKZ_FindRecipeByDisplayName(displayName);
-    if (recipe)
-    {
-     m_SelectedRecipeId = recipe.RecipeId;
-     SPKZ_RefreshDetailPanel();
-    }
-   }
-   return true;
-  }
-
-  return super.OnItemSelected(w, x, y, row, column, oldRow, oldColumn);
- }
-
  override bool OnClick(Widget w, int x, int y, int button)
  {
-  if (w == m_BuildButton)
+  if (w.GetName() == "SPKZ_CloseButton")
+  {
+   Close();
+   return true;
+  }
+
+  if (w.GetName() == "SPKZ_BuildButton")
   {
    SPKZ_SendBuildRequest();
    return true;
   }
 
-  if (w == m_CloseButton)
+  if (w.GetName() == "SPKZ_RecipeItem")
   {
-   Close();
+   SPKZ_WorkbenchRecipe recipe;
+   w.GetUserData(recipe);
+   if (recipe)
+   {
+    m_SelectedRecipe = recipe;
+    SPKZ_RefreshDetailPanel();
+   }
+   return true;
+  }
+
+  if (w.GetName().IndexOf("SPKZ_Tab_") == 0)
+  {
+   string category = w.GetName().Substring(9, w.GetName().Length() - 9);
+   if (category != m_SelectedCategory)
+   {
+    m_SelectedCategory = category;
+    m_SelectedRecipe = null;
+    SPKZ_RefreshTabs();
+    SPKZ_RefreshRecipeGrid();
+    SPKZ_RefreshDetailPanel();
+   }
    return true;
   }
 
   return super.OnClick(w, x, y, button);
  }
 
+ override bool OnMouseEnter(Widget w, int x, int y)
+ {
+  if (w.GetName() == "SPKZ_RecipeItem")
+  {
+   Widget background = w.FindAnyWidget("RecipeItemBackground");
+   if (background) { background.SetColor(ARGB(255, 45, 45, 45)); }
+  }
+  return super.OnMouseEnter(w, x, y);
+ }
+
+ override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+ {
+  if (w.GetName() == "SPKZ_RecipeItem")
+  {
+   Widget background = w.FindAnyWidget("RecipeItemBackground");
+   if (background) { background.SetColor(ARGB(115, 41, 41, 41)); }
+  }
+  return super.OnMouseLeave(w, enterW, x, y);
+ }
+
  protected void SPKZ_SendBuildRequest()
  {
-  if (!m_Workbench || m_SelectedRecipeId == "") return;
+  if (!m_Workbench || !m_SelectedRecipe) return;
 
   SPKZ_WorkbenchBuildRequest request = new SPKZ_WorkbenchBuildRequest();
-  request.RecipeId = m_SelectedRecipeId;
+  request.RecipeId = m_SelectedRecipe.RecipeId;
 
   ScriptRPC rpc = new ScriptRPC();
   request.WriteToContext(rpc);

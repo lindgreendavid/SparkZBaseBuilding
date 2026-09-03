@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-09-03 — Rebuild the workbench menu UI (real 3D item previews, proper grid layout)
+
+- Reference: inspected (structure only, no code/assets copied - same policy as
+  looking at BaseBuildingPlus in docs/BRIEF.md) the workbench UI in an
+  installed third-party server mod's `AftermathBaseBuilding.pbo` to learn
+  real, proven layout/widget techniques for a DayZ crafting menu.
+- Full rewrite of `sparkz_workbench_menu.layout` as a full-screen overlay:
+  header bar, a horizontal category tab strip (dynamically populated, not
+  fixed), a scrollable grid of recipe cells, and a right-side detail panel.
+- Recipes and required materials/tools now show a **real live 3D preview**
+  of the actual item via the vanilla `ItemPreviewWidget.SetItem(EntityAI)`
+  API - not a static icon. This needs no new art at all: it renders
+  whatever `model=` the class already has, so even the placeholder cardboard
+  kit/vanilla workbench model previews correctly right now. Preview
+  instances are purely local (`GetGame().CreateObject(..., create_local:
+  true)`, never networked) and are tracked and deleted on every refresh/on
+  close to avoid leaking objects.
+- Added three reusable component layouts under `gui/components/`: category
+  tab, recipe grid cell, and a required-material/tool row.
+- Rewrote `SPKZ_WorkbenchMenu.c` around dynamic widget creation
+  (`CreateWidgets` per tab/recipe/requirement row) and `Widget.SetUserData`/
+  `GetUserData` for click routing, instead of the old fixed 6-row
+  `TextListboxWidget` layout.
+- Audited the new file for the duplicate-local-variable pattern (Pitfall
+  #7/#8) before shipping - found and fixed one instance (`row`/`text`/
+  `preview`/`previewItem` reused across the materials and tools loops in
+  `SPKZ_RefreshDetailPanel`).
+
 ## 2026-09-03 — Fix another duplicate-declaration compile error, audit whole codebase
 
 - Fix `Multiple declaration of variable 'response'` in `SPKZ_Workbench.OnRPC`

@@ -1,0 +1,36 @@
+PanelWidgetClass SPKZ_WorkbenchRequiredItem {
+ color 0 0 0 0
+ position 0 0
+ size 1 52
+ hexactpos 0
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ style Colorable
+ {
+  ItemPreviewWidgetClass RequiredItemPreview {
+   ignorepointer 1
+   position 0 0
+   size 48 48
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
+  TextWidgetClass RequiredItemText {
+   ignorepointer 1
+   position 54 0
+   size 1 1
+   valign center_ref
+   hexactpos 1
+   vexactpos 0
+   hexactsize 1
+   vexactsize 0
+   text "Item (0/0)"
+   font "gui/fonts/sdf_MetronBook16"
+   "exact text" 1
+   "text color" 0.9 0.9 0.9 1
+   "text valign" center
+  }
+ }
+}

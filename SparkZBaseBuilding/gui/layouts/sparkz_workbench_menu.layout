@@ -1,187 +1,324 @@
 FrameWidgetClass Root {
- position 0.2 0.1
- size 0.6 0.8
- halign center_ref
- valign center_ref
+ position 0 0
+ size 1 1
  hexactpos 0
  vexactpos 0
  hexactsize 0
  vexactsize 0
  {
   PanelWidgetClass Background {
+   ignorepointer 1
+   color 0 0 0 0.55
    position 0 0
    size 1 1
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style DayZDefaultPanel
+   style Colorable
+  }
+  PanelWidgetClass HeaderBar {
+   ignorepointer 1
    color 0.10 0.10 0.10 0.92
+   position 0.12 0.08
+   size 0.76 0.06
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style Colorable
+   {
+    TextWidgetClass HeaderTitle {
+     ignorepointer 1
+     position 0.02 0
+     size 0.6 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     text "WORKBENCH"
+     font "gui/fonts/sdf_MetronBook28"
+     "exact text" 1
+     "text color" 0.95 0.95 0.95 1
+     "text valign" center
+    }
+    ButtonWidgetClass CloseButton {
+     position 0.01 0.15
+     size 0.05 0.7
+     halign right_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Empty
+     {
+      TextWidgetClass CloseButtonLabel {
+       ignorepointer 1
+       position 0 0
+       size 1 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "X"
+       font "gui/fonts/sdf_MetronBook24"
+       "exact text" 1
+       "text color" 0.9 0.9 0.9 1
+       "text halign" center
+       "text valign" center
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass TabBar {
    ignorepointer 1
-  }
-  TextWidgetClass HeaderTitle {
-   position 0.03 0.02
-   size 0.6 0.06
+   color 0.10 0.10 0.10 0.85
+   position 0.12 0.145
+   size 0.76 0.045
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   text "WORKBENCH"
-   font "gui/fonts/sdf_MetronBook36"
-   "exact text" 1
-   "text color" 0.95 0.95 0.95 1
+   style Colorable
+   {
+    WrapSpacerWidgetClass TabsSpacer {
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     Padding 4
+     Margin 0
+     content_halign left
+    }
+   }
+  }
+  PanelWidgetClass GridPanel {
    ignorepointer 1
-  }
-  ButtonWidgetClass CloseButton {
-   position 0.92 0.02
-   size 0.05 0.05
+   color 0.10 0.10 0.10 0.78
+   position 0.12 0.20
+   size 0.50 0.72
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   style EmptyHighlight
-   text "X"
-   font "gui/fonts/sdf_MetronBook24"
+   style Colorable
+   {
+    ScrollWidgetClass ItemsScroller {
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     "Scrollbar V" 1
+     {
+      GridSpacerWidgetClass ItemsGridSpacer {
+       position 0 0
+       size 1 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       Padding 6
+       Margin 4
+       "Size To Content V" 1
+       Columns 3
+       Rows 100
+      }
+     }
+    }
+   }
   }
-  TextListboxWidgetClass CategoryList {
-   position 0.03 0.10
-   size 0.20 0.85
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   style NoScrollBar
-   "title visible" 0
-   colums "Category;100;"
-   font "gui/fonts/sdf_MetronBook24"
-  }
-  TextListboxWidgetClass ItemList {
-   position 0.25 0.10
-   size 0.30 0.85
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   style NoScrollBar
-   "title visible" 0
-   colums "Item;100;"
-   font "gui/fonts/sdf_MetronBook24"
-  }
-  ImageWidgetClass DetailIcon {
-   position 0.58 0.10
-   size 0.14 0.14
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   mode blend
-  }
-  TextWidgetClass DetailName {
-   position 0.74 0.10
-   size 0.23 0.06
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook24"
-   "exact text" 1
-   "text color" 0.95 0.95 0.95 1
-  }
-  TextWidgetClass CostHeader {
-   position 0.58 0.27
-   size 0.39 0.05
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text "MATERIALS REQUIRED"
-   font "gui/fonts/sdf_MetronBook16"
-   "exact text" 1
-   "text color" 0.75 0.75 0.75 1
+  PanelWidgetClass InfoPanel {
    ignorepointer 1
-  }
-  TextWidgetClass CostRow0 {
-   position 0.58 0.33
-   size 0.39 0.05
+   color 0.10 0.10 0.10 0.85
+   position 0.635 0.20
+   size 0.245 0.72
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook20"
-   "exact text" 1
-   "text color" 0.9 0.9 0.9 1
-   ignorepointer 1
-  }
-  TextWidgetClass CostRow1 {
-   position 0.58 0.39
-   size 0.39 0.05
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook20"
-   "exact text" 1
-   "text color" 0.9 0.9 0.9 1
-   ignorepointer 1
-  }
-  TextWidgetClass CostRow2 {
-   position 0.58 0.45
-   size 0.39 0.05
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook20"
-   "exact text" 1
-   "text color" 0.9 0.9 0.9 1
-   ignorepointer 1
-  }
-  TextWidgetClass CostRow3 {
-   position 0.58 0.51
-   size 0.39 0.05
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook20"
-   "exact text" 1
-   "text color" 0.9 0.9 0.9 1
-   ignorepointer 1
-  }
-  TextWidgetClass CostRow4 {
-   position 0.58 0.57
-   size 0.39 0.05
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook20"
-   "exact text" 1
-   "text color" 0.9 0.9 0.9 1
-   ignorepointer 1
-  }
-  TextWidgetClass CostRow5 {
-   position 0.58 0.63
-   size 0.39 0.05
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   text ""
-   font "gui/fonts/sdf_MetronBook20"
-   "exact text" 1
-   "text color" 0.9 0.9 0.9 1
-   ignorepointer 1
+   style Colorable
+   {
+    TextWidgetClass NoSelectionText {
+     visible 1
+     ignorepointer 1
+     position 0.05 0
+     size 0.9 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     text "Select a recipe on the left to see what it needs."
+     font "gui/fonts/sdf_MetronBook18"
+     "exact text" 1
+     "text color" 0.75 0.75 0.75 1
+     "text halign" center
+     "text valign" center
+     wrap 1
+    }
+    PanelWidgetClass DetailContainer {
+     visible 0
+     ignorepointer 1
+     color 0 0 0 0
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Colorable
+     {
+      ItemPreviewWidgetClass DetailPreview {
+       ignorepointer 1
+       position 0.05 0.02
+       size 0.9 0.30
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+      TextWidgetClass DetailName {
+       ignorepointer 1
+       position 0.05 0.335
+       size 0.9 0.05
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text ""
+       font "gui/fonts/sdf_MetronBook22"
+       "exact text" 1
+       "text color" 0.95 0.95 0.95 1
+       "text halign" center
+      }
+      TextWidgetClass MaterialsHeader {
+       ignorepointer 1
+       position 0.05 0.40
+       size 0.9 0.04
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "MATERIALS REQUIRED"
+       font "gui/fonts/sdf_MetronBook14"
+       "exact text" 1
+       "text color" 0.7 0.7 0.7 1
+      }
+      ScrollWidgetClass MaterialsScroller {
+       ignorepointer 1
+       position 0.05 0.445
+       size 0.9 0.19
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       "Scrollbar V" 1
+       {
+        GridSpacerWidgetClass MaterialsGridSpacer {
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         Padding 2
+         Margin 0
+         "Size To Content V" 1
+         Columns 1
+         Rows 100
+        }
+       }
+      }
+      TextWidgetClass ToolsHeader {
+       ignorepointer 1
+       position 0.05 0.645
+       size 0.9 0.04
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "TOOLS REQUIRED"
+       font "gui/fonts/sdf_MetronBook14"
+       "exact text" 1
+       "text color" 0.7 0.7 0.7 1
+      }
+      ScrollWidgetClass ToolsScroller {
+       ignorepointer 1
+       position 0.05 0.69
+       size 0.9 0.14
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       "Scrollbar V" 1
+       {
+        GridSpacerWidgetClass ToolsGridSpacer {
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         Padding 2
+         Margin 0
+         "Size To Content V" 1
+         Columns 1
+         Rows 100
+        }
+       }
+      }
+      ButtonWidgetClass BuildButton {
+       position 0.05 0.86
+       size 0.9 0.09
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style Empty
+       {
+        PanelWidgetClass BuildButtonBackground {
+         ignorepointer 1
+         color 0 0 0 0.45
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         style Colorable
+         {
+          TextWidgetClass BuildButtonLabel {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "BUILD NOW"
+           font "gui/fonts/sdf_MetronBook20"
+           "exact text" 1
+           "text color" 0.95 0.95 0.95 1
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
   }
   TextWidgetClass StatusText {
-   position 0.03 0.88
-   size 0.55 0.08
+   ignorepointer 1
+   position 0.12 0.925
+   size 0.76 0.04
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -190,18 +327,7 @@ FrameWidgetClass Root {
    font "gui/fonts/sdf_MetronBook16"
    "exact text" 1
    "text color" 0.8 0.8 0.8 1
-   ignorepointer 1
-  }
-  ButtonWidgetClass BuildButton {
-   position 0.72 0.87
-   size 0.25 0.09
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   style EmptyHighlight
-   text "BUILD NOW"
-   font "gui/fonts/sdf_MetronBook24"
+   "text halign" center
   }
  }
 }
