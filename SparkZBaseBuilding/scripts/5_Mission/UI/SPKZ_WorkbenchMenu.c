@@ -186,9 +186,9 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   if (!recipe)
   {
    if (m_DetailName) { m_DetailName.SetText(""); }
-   for (int clearIndex = 0; clearIndex < MAX_COST_ROWS; clearIndex++)
+   for (int emptyRowIndex = 0; emptyRowIndex < MAX_COST_ROWS; emptyRowIndex++)
    {
-    if (m_CostRows[clearIndex]) { m_CostRows[clearIndex].Show(false); }
+    if (m_CostRows[emptyRowIndex]) { m_CostRows[emptyRowIndex].Show(false); }
    }
    if (m_BuildButton) { m_BuildButton.Enable(false); }
    return;

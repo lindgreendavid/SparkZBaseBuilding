@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-03 — Fix real compile error found by first in-game test
+
+- Fix `Multiple declaration of variable 'cost'` compile error in
+  `SPKZ_Workbench.c` (two separate `for` loops in `SPKZ_HandleBuildRequest`
+  both declared a loop variable named `cost`) - Enfusion Script's `for`
+  variables are function-scoped, not block-scoped like C/C++; see new
+  Pitfall #7 in `docs/CODING_STANDARDS.md`. Also fixed the same pattern
+  (`clearIndex` declared twice in `SPKZ_RefreshDetailPanel`) found by
+  auditing the rest of the new code for the same mistake.
+- Sharpening-stone classname corrected from the placeholder
+  `SPKZ_SharpeningStone` to the real vanilla item `Whetstone` (confirmed
+  against the installed game's `gear_tools.pbo`) - the tools (Hammer,
+  Pliers, Hacksaw, etc.) were already real vanilla classnames.
+- Simplified all seeded recipe material costs to a flat 1-of-each (one log,
+  one plank, one nail, etc.) instead of tuned quantities, for easier testing
+  - per direction, exact costs are still a placeholder to retune later.
+
 ## 2026-09-03 — Workbench tools, nails, sharpening stone (not yet in-game tested)
 
 - Recipes can now require tools (`SPKZ_WorkbenchToolRequirement`): present

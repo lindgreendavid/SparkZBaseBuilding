@@ -333,14 +333,14 @@ class SPKZ_Workbench extends ItemBase
 
   for (int consumeIndex = 0; consumeIndex < recipe.Materials.Count(); consumeIndex++)
   {
-   SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(consumeIndex);
-   SPKZ_ConsumeItemsOfType(cost.ClassName, cost.Quantity);
+   SPKZ_WorkbenchMaterialCost consumeCost = recipe.Materials.Get(consumeIndex);
+   SPKZ_ConsumeItemsOfType(consumeCost.ClassName, consumeCost.Quantity);
   }
 
   for (int toolDamageIndex = 0; toolDamageIndex < recipe.Tools.Count(); toolDamageIndex++)
   {
-   SPKZ_WorkbenchToolRequirement toolReq = recipe.Tools.Get(toolDamageIndex);
-   SPKZ_DamageToolOfType(toolReq.ClassName, toolReq.HealthLossPoints);
+   SPKZ_WorkbenchToolRequirement damageToolReq = recipe.Tools.Get(toolDamageIndex);
+   SPKZ_DamageToolOfType(damageToolReq.ClassName, damageToolReq.HealthLossPoints);
   }
 
   EntityAI kit = EntityAI.Cast(GetGame().CreateObjectEx(recipe.OutputKitClassName, GetPosition(), ECE_PLACE_ON_SURFACE));

@@ -119,6 +119,30 @@ from live-verifying real object class names in-game (an admin's
 object is targeted — use that instead of guessing from decompiled/packed
 source).
 
+### 7. Enfusion Script's `for` loop variables are function-scoped, not block-scoped
+
+```c
+// BROKEN - "Multiple declaration of variable 'index'" compile error:
+void DoWork()
+{
+    for (int index = 0; index < a.Count(); index++) { ... }
+    for (int index = 0; index < b.Count(); index++) { ... }   // <- same name, same function
+}
+```
+
+Unlike C/C++, a variable declared in a `for (...)` header is **not** scoped
+to just that loop — it's scoped to the whole enclosing method. Declaring the
+same variable name in two separate `for` loops within one method is a
+compile error even though the loops never overlap at runtime, and even if
+one of them is inside an early-return branch that the other never reaches.
+Hit twice in the same session while building the workbench: once with two
+loops both named `cost` in `SPKZ_HandleBuildRequest`, once with two loops
+both named `clearIndex` in `SPKZ_RefreshDetailPanel` (one in an early-return
+branch, one at the end). **Give every loop variable within a method a
+distinct name** (`consumeIndex`, `toolCheckIndex`, `emptyRowIndex`, etc.) —
+don't reuse `index`/`i` across multiple loops in the same function just
+because they don't visually overlap.
+
 ## Testing checklist before calling a change done
 
 1. Build, then **delete** (not overwrite) the old folder on the test server

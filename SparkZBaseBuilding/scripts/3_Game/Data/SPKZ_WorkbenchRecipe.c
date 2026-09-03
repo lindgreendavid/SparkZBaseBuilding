@@ -160,20 +160,19 @@ class SPKZ_WorkbenchRecipeCatalog
  ref array<ref SPKZ_WorkbenchRecipe> Recipes;
  // Classname of the item that goes in the workbench's designated sharpening-
  // stone slot (per the pending model update: 500-cell cargo + one slot each
- // for hacksaw/saw/hammer/shovel/screwdriver/pliers/sledgehammer + this one).
- // While present, it fully offsets the durability a tool loses per craft
- // (see SPKZ_Workbench.SPKZ_DamageToolOfType) - a real, exact repair amount
- // is a design decision to make once the model/item exists; full offset is
- // the simplest placeholder ("keeps tools maintained for free"). Placeholder
- // classname only - no such item exists yet, so this harmlessly never
- // matches anything until it's added (IsKindOf on an unknown classname just
- // returns false, no compile-time dependency on the class existing).
+ // for hacksaw/saw/hammer/shovel/screwdriver/pliers/sledgehammer + this one -
+ // all of those, and this, are real vanilla DayZ items: "Whetstone" is the
+ // real vanilla classname, confirmed against the installed game's own
+ // gear_tools.pbo). While present, it fully offsets the durability a tool
+ // loses per craft (see SPKZ_Workbench.SPKZ_DamageToolOfType) - a real,
+ // exact repair amount is a design decision to make later; full offset is
+ // the simplest placeholder ("keeps tools maintained for free").
  string SharpeningStoneClassName;
 
  void SPKZ_WorkbenchRecipeCatalog()
  {
   Recipes = new array<ref SPKZ_WorkbenchRecipe>();
-  SharpeningStoneClassName = "SPKZ_SharpeningStone";
+  SharpeningStoneClassName = "Whetstone";
  }
 
  SPKZ_WorkbenchRecipe FindRecipe(string recipeId)
@@ -217,12 +216,16 @@ class SPKZ_WorkbenchRecipeCatalog
  // Placeholder starting costs/tools - tune freely by editing the generated
  // JSON on the server; these defaults only seed a fresh file the first time
  // it's created. All items referenced here are real vanilla DayZ classnames.
- // Nail is added to every recipe - per direction, nails are an essential
- // material across all wall/door/window/floor/garage construction. Each
- // recipe also gets one placeholder tool requirement, deliberately varied
- // (Hammer for wood, Pliers for the glass frame, Hacksaw for the garage's
- // metal sheets) to demonstrate the system supports different tools per
- // recipe - the real mapping is a design decision still to be made.
+ // Per direction, every material cost is a flat 1-of-each for now (one log,
+ // one plank, one nail, etc. - whatever set of materials makes sense for
+ // that piece), not tuned real quantities - easy to test with, easy to
+ // retune in the JSON once real costs are decided. Nail is included on
+ // every recipe since nails are essential across all wall/door/window/
+ // floor/garage construction. Each recipe also gets one placeholder tool
+ // requirement, deliberately varied (Hammer for wood, Pliers for the glass
+ // frame, Hacksaw for the garage's metal sheets) to demonstrate the system
+ // supports different tools per recipe - the real mapping is a design
+ // decision still to be made.
  protected void SeedDefaults()
  {
   Recipes.Clear();
@@ -234,9 +237,9 @@ class SPKZ_WorkbenchRecipeCatalog
   wall.DisplayName = "Wood Wall Kit";
   wall.IconPath = placeholderIcon;
   wall.OutputKitClassName = "SPKZ_WoodWallKit";
-  wall.AddMaterial("WoodenLog", 2);
-  wall.AddMaterial("WoodenPlank", 5);
-  wall.AddMaterial("Nail", 6);
+  wall.AddMaterial("WoodenLog", 1);
+  wall.AddMaterial("WoodenPlank", 1);
+  wall.AddMaterial("Nail", 1);
   wall.AddTool("Hammer", 5);
   Recipes.Insert(wall);
 
@@ -246,9 +249,9 @@ class SPKZ_WorkbenchRecipeCatalog
   doorWall.DisplayName = "Wood Wall Door Kit";
   doorWall.IconPath = placeholderIcon;
   doorWall.OutputKitClassName = "SPKZ_WoodWallDoorKit";
-  doorWall.AddMaterial("WoodenLog", 2);
-  doorWall.AddMaterial("WoodenPlank", 6);
-  doorWall.AddMaterial("Nail", 5);
+  doorWall.AddMaterial("WoodenLog", 1);
+  doorWall.AddMaterial("WoodenPlank", 1);
+  doorWall.AddMaterial("Nail", 1);
   doorWall.AddTool("Hammer", 5);
   Recipes.Insert(doorWall);
 
@@ -258,9 +261,9 @@ class SPKZ_WorkbenchRecipeCatalog
   windowWall.DisplayName = "Wood Window Kit";
   windowWall.IconPath = placeholderIcon;
   windowWall.OutputKitClassName = "SPKZ_WoodWindowKit";
-  windowWall.AddMaterial("WoodenLog", 2);
-  windowWall.AddMaterial("WoodenPlank", 5);
-  windowWall.AddMaterial("Nail", 4);
+  windowWall.AddMaterial("WoodenLog", 1);
+  windowWall.AddMaterial("WoodenPlank", 1);
+  windowWall.AddMaterial("Nail", 1);
   windowWall.AddTool("Hammer", 5);
   Recipes.Insert(windowWall);
 
@@ -271,8 +274,8 @@ class SPKZ_WorkbenchRecipeCatalog
   floor.IconPath = placeholderIcon;
   floor.OutputKitClassName = "SPKZ_WoodFloorKit";
   floor.AddMaterial("WoodenLog", 1);
-  floor.AddMaterial("WoodenPlank", 8);
-  floor.AddMaterial("Nail", 10);
+  floor.AddMaterial("WoodenPlank", 1);
+  floor.AddMaterial("Nail", 1);
   floor.AddTool("Hammer", 5);
   Recipes.Insert(floor);
 
@@ -282,10 +285,10 @@ class SPKZ_WorkbenchRecipeCatalog
   glassWindow.DisplayName = "Wood Glass Window Kit";
   glassWindow.IconPath = placeholderIcon;
   glassWindow.OutputKitClassName = "SPKZ_WoodGlassWindowKit";
-  glassWindow.AddMaterial("WoodenLog", 2);
-  glassWindow.AddMaterial("WoodenPlank", 5);
+  glassWindow.AddMaterial("WoodenLog", 1);
+  glassWindow.AddMaterial("WoodenPlank", 1);
   glassWindow.AddMaterial("MetalPlate", 1);
-  glassWindow.AddMaterial("Nail", 3);
+  glassWindow.AddMaterial("Nail", 1);
   glassWindow.AddTool("Pliers", 5);
   Recipes.Insert(glassWindow);
 
@@ -295,10 +298,10 @@ class SPKZ_WorkbenchRecipeCatalog
   garage.DisplayName = "Wood Garage Door Kit";
   garage.IconPath = placeholderIcon;
   garage.OutputKitClassName = "SPKZ_WoodGarageKit";
-  garage.AddMaterial("WoodenLog", 3);
-  garage.AddMaterial("WoodenPlank", 10);
-  garage.AddMaterial("MetalPlate", 4);
-  garage.AddMaterial("Nail", 8);
+  garage.AddMaterial("WoodenLog", 1);
+  garage.AddMaterial("WoodenPlank", 1);
+  garage.AddMaterial("MetalPlate", 1);
+  garage.AddMaterial("Nail", 1);
   garage.AddTool("Hacksaw", 8);
   Recipes.Insert(garage);
  }
