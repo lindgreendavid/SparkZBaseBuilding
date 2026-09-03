@@ -17,14 +17,26 @@
  // family ultimately traces back to HouseNoDestruct (simulation="house",
  // confirmed via the installed game's own base config), which gives the
  // engine's proxy-only BuildingInventory - no real drag-and-drop cargo grid,
- // and it never shows up in the player's nearby-storage Tab screen. A
- // container that needs real 500-slot cargo needs Container_Base
- // (simulation="inventoryItem", the same ancestor tents/backpacks/crates
- // use). The SPKZ_Workbench SCRIPT class still extends SPKZ_WoodWallDoor
- // (see spkz_workbench.c) for its owner/dismantle/persistence logic - the
- // config ancestor and the script ancestor are independent, the engine only
- // matches script classes to CfgVehicles entries by name.
- class SPKZ_Workbench: Container_Base
+ // and it never shows up in the player's nearby-storage Tab screen.
+ //
+ // Container_Base (simulation="inventoryItem", the ancestor tents/backpacks
+ // use) fixes the cargo/Tab problem but reintroduces a NEW one: it's a
+ // normal portable item, so the client's "Take to hands [HOLD]" quick-grab
+ // prompt shows regardless of script-level CanPutIntoHands/IsTakeable
+ // overrides - that gate is a native, config-only check (inventoryCondition),
+ // never consulted from script (confirmed: no script in the installed game
+ // references it at all).
+ //
+ // WorldContainer_Base is the real vanilla answer for exactly this case - a
+ // container that lives only in the world and can never enter an inventory
+ // or hands (inventoryCondition="false"), while still being Inventory_Base
+ // rooted (simulation="inventoryItem") for full cargo/Tab support. It's what
+ // the installed game's own Refrigerator extends. The SPKZ_Workbench SCRIPT
+ // class still extends SPKZ_WoodWallDoor (see spkz_workbench.c) for its
+ // owner/dismantle/persistence logic - the config ancestor and the script
+ // ancestor are independent, the engine only matches script classes to
+ // CfgVehicles entries by name.
+ class SPKZ_Workbench: WorldContainer_Base
  {
   scope=2;displayName="Building Workbench";
   descriptionShort="A workshop bench with 500 cargo slots and eight visible tool mounts. Crafting recipes are configured separately.";
