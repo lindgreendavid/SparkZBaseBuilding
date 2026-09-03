@@ -33,11 +33,16 @@
     Where to write the built @ModName folders. Defaults to a timestamped
     folder under this repo (gitignored - never commit build output).
 
+.PARAMETER OnlyMods
+    Optional list of mod folder names to build (e.g. -OnlyMods SparkZBaseBuilding).
+    Omit to build every detected mod folder.
+
 .EXAMPLE
     ./tools/Build-SparkZBaseBuilding.ps1 `
         -DayZToolsPath "C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools" `
         -PrivateKeyPath "C:\path\to\YourKey.biprivatekey" `
-        -PublicKeyPath "C:\path\to\YourKey.bikey"
+        -PublicKeyPath "C:\path\to\YourKey.bikey" `
+        -OnlyMods SparkZBaseBuilding
 #>
 param(
     [string]$DayZToolsPath = "C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools",
@@ -45,7 +50,8 @@ param(
     [string]$PrivateKeyPath,
     [Parameter(Mandatory = $true)]
     [string]$PublicKeyPath,
-    [string]$OutputRoot
+    [string]$OutputRoot,
+    [string[]]$OnlyMods
 )
 
 $ErrorActionPreference = "Stop"
@@ -70,8 +76,12 @@ $keyFileName = Split-Path -Leaf $PublicKeyPath
 $modDirs = Get-ChildItem -LiteralPath $repoRoot -Directory |
     Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName "mod.cpp") }
 
+if ($OnlyMods) {
+    $modDirs = $modDirs | Where-Object { $OnlyMods -contains $_.Name }
+}
+
 if ($modDirs.Count -eq 0) {
-    throw "No mod folders found (looked for a mod.cpp under each top-level directory in $repoRoot)"
+    throw "No matching mod folders found (looked for a mod.cpp under each top-level directory in $repoRoot)"
 }
 
 Write-Host "Found mods: $($modDirs.Name -join ', ')"

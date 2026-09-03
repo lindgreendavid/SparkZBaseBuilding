@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-09-03 — Workbench tools, nails, sharpening stone (not yet in-game tested)
+
+- Recipes can now require tools (`SPKZ_WorkbenchToolRequirement`): present
+  and non-ruined, not consumed, takes a flat health-point loss per craft.
+  Seed data varies the tool per recipe (Hammer/Pliers/Hacksaw) to
+  demonstrate the system, pending real tool-to-recipe design.
+- Nail added as a required material to every seeded recipe.
+- Placeholder sharpening-stone mechanic: an item of class
+  `SPKZ_SharpeningStone` (doesn't exist yet) anywhere in the workbench fully
+  offsets tool durability loss for that craft.
+- All of the above anticipates the real workbench model (500 cargo cells +
+  8 designated single-item slots: hacksaw/saw/hammer/shovel/screwdriver/
+  pliers/sledgehammer/sharpening stone, only those render on the model) -
+  logic is written against "anywhere in cargo" for now and is designed to
+  swap to "the named slot" with no schema change once that model exists.
+
 ## 2026-09-03 — Workbench crafting (not yet in-game tested)
 
 - Add `SPKZ_WorkbenchKit` / `SPKZ_Workbench`: a deployable 500-cell (20x25)

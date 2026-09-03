@@ -118,9 +118,10 @@ class SPKZ_Workbench extends ItemBase
  {
  }
 
- // Every distinct material classname referenced by any recipe currently
- // known to this workbench's catalog - the set we scan cargo for and report
- // back to the client so the menu can compute red/green highlighting.
+ // Every distinct material AND tool classname referenced by any recipe
+ // currently known to this workbench's catalog - the set we scan cargo for
+ // and report back to the client so the menu can compute red/green
+ // highlighting for both material costs and tool availability.
  protected void SPKZ_CollectMaterialClassNames(out array<string> outNames)
  {
   outNames = new array<string>();
@@ -135,9 +136,18 @@ class SPKZ_Workbench extends ItemBase
      outNames.Insert(className);
     }
    }
+   for (int toolIndex = 0; toolIndex < recipe.Tools.Count(); toolIndex++)
+   {
+    string toolClassName = recipe.Tools.Get(toolIndex).ClassName;
+    if (outNames.Find(toolClassName) == -1)
+    {
+     outNames.Insert(toolClassName);
+    }
+   }
   }
  }
 
+ // Ruined items (materials or tools) never count as usable stock.
  protected int SPKZ_CountItemsOfType(string className)
  {
   int total = 0;
@@ -146,7 +156,7 @@ class SPKZ_Workbench extends ItemBase
   for (int index = 0; index < items.Count(); index++)
   {
    ItemBase item = ItemBase.Cast(items.Get(index));
-   if (!item || !item.IsKindOf(className)) continue;
+   if (!item || !item.IsKindOf(className) || item.IsRuined()) continue;
 
    if (item.HasQuantity())
    {
@@ -159,6 +169,57 @@ class SPKZ_Workbench extends ItemBase
   }
 
   return total;
+ }
+
+ // A tool "counts" for a recipe if at least one non-ruined instance is
+ // anywhere in the workbench's inventory. This is a stand-in for the real
+ // model's designated tool-attachment slots (see docs/BRIEF.md and the
+ // pending workbench model) - once that model exists with named slots for
+ // hacksaw/saw/hammer/shovel/screwdriver/pliers/sledgehammer, this should
+ // check that specific slot instead of scanning all cargo, and the check
+ // shown on-model becomes real rather than just a script-side rule.
+ protected bool SPKZ_HasUsableTool(string className)
+ {
+  return SPKZ_FindUsableTool(className) != null;
+ }
+
+ protected ItemBase SPKZ_FindUsableTool(string className)
+ {
+  array<EntityAI> items = new array<EntityAI>();
+  GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
+  for (int index = 0; index < items.Count(); index++)
+  {
+   ItemBase item = ItemBase.Cast(items.Get(index));
+   if (item && item.IsKindOf(className) && !item.IsRuined())
+    return item;
+  }
+
+  return null;
+ }
+
+ // Applies a flat health-point loss to one matching tool. Does not consume
+ // or remove it - a ruined tool remains in the workbench until a player
+ // takes it out and repairs or replaces it. If a sharpening stone is
+ // present (see SPKZ_WorkbenchRecipeCatalog.SharpeningStoneClassName), the
+ // loss is immediately offset - net effect: tools stay maintained for free
+ // as long as a stone is loaded. Placeholder behaviour pending the model
+ // update that actually adds the stone's designated slot.
+ protected void SPKZ_DamageToolOfType(string className, int healthLossPoints)
+ {
+  ItemBase tool = SPKZ_FindUsableTool(className);
+  if (!tool || healthLossPoints <= 0) return;
+
+  tool.AddHealth("", "Health", -healthLossPoints);
+  if (SPKZ_HasUsableSharpeningStone())
+  {
+   tool.AddHealth("", "Health", healthLossPoints);
+  }
+ }
+
+ protected bool SPKZ_HasUsableSharpeningStone()
+ {
+  if (!m_SPKZCatalog || m_SPKZCatalog.SharpeningStoneClassName == "") return false;
+  return SPKZ_HasUsableTool(m_SPKZCatalog.SharpeningStoneClassName);
  }
 
  // Removes up to `amount` units of `className` from this workbench's cargo.
@@ -244,8 +305,8 @@ class SPKZ_Workbench extends ItemBase
    return;
   }
 
-  // Re-check every material server-side - the client's red/green display is
-  // cosmetic only and is never trusted here.
+  // Re-check every material AND every required tool server-side - the
+  // client's red/green display is cosmetic only and is never trusted here.
   for (int index = 0; index < recipe.Materials.Count(); index++)
   {
    SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(index);
@@ -258,10 +319,28 @@ class SPKZ_Workbench extends ItemBase
    }
   }
 
+  for (int toolCheckIndex = 0; toolCheckIndex < recipe.Tools.Count(); toolCheckIndex++)
+  {
+   SPKZ_WorkbenchToolRequirement toolReq = recipe.Tools.Get(toolCheckIndex);
+   if (!SPKZ_HasUsableTool(toolReq.ClassName))
+   {
+    response.Message = "Missing tool: " + toolReq.ClassName;
+    response.Stock = SPKZ_BuildStockSnapshot();
+    SPKZ_SendBuildResponse(sender, response);
+    return;
+   }
+  }
+
   for (int consumeIndex = 0; consumeIndex < recipe.Materials.Count(); consumeIndex++)
   {
    SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(consumeIndex);
    SPKZ_ConsumeItemsOfType(cost.ClassName, cost.Quantity);
+  }
+
+  for (int toolDamageIndex = 0; toolDamageIndex < recipe.Tools.Count(); toolDamageIndex++)
+  {
+   SPKZ_WorkbenchToolRequirement toolReq = recipe.Tools.Get(toolDamageIndex);
+   SPKZ_DamageToolOfType(toolReq.ClassName, toolReq.HealthLossPoints);
   }
 
   EntityAI kit = EntityAI.Cast(GetGame().CreateObjectEx(recipe.OutputKitClassName, GetPosition(), ECE_PLACE_ON_SURFACE));

@@ -26,6 +26,36 @@ class SPKZ_WorkbenchMaterialCost
  }
 }
 
+// A tool that must be present in the workbench (not consumed) to build a
+// given recipe. Real DayZ health values are absolute points, not percent
+// (see SPKZ_Workbench.SPKZ_DamageToolOfType), matching the flat -5 already
+// used for the screwdriver in SPKZ_ActionDismantleWorkbench - so this is a
+// flat point loss per craft, not a percentage.
+class SPKZ_WorkbenchToolRequirement
+{
+ string ClassName;
+ int HealthLossPoints;
+
+ void SPKZ_WorkbenchToolRequirement(string className = "", int healthLossPoints = 0)
+ {
+  ClassName = className;
+  HealthLossPoints = healthLossPoints;
+ }
+
+ void WriteToContext(ParamsWriteContext ctx)
+ {
+  ctx.Write(ClassName);
+  ctx.Write(HealthLossPoints);
+ }
+
+ bool ReadFromContext(ParamsReadContext ctx)
+ {
+  if (!ctx.Read(ClassName)) return false;
+  if (!ctx.Read(HealthLossPoints)) return false;
+  return true;
+ }
+}
+
 class SPKZ_WorkbenchRecipe
 {
  string RecipeId;
@@ -37,15 +67,28 @@ class SPKZ_WorkbenchRecipe
  string IconPath;
  string OutputKitClassName;
  ref array<ref SPKZ_WorkbenchMaterialCost> Materials;
+ // Tools required to be present (and non-ruined) in the workbench to build
+ // this recipe. Not consumed - each one takes HealthLossPoints of damage per
+ // successful build instead. Which tool(s) a given recipe needs, and how
+ // much damage per craft, is a placeholder pending real design (the user's
+ // own framing: "we gotta find a nice way of checking what items use what
+ // tools") - tune freely in the generated JSON, no code changes needed.
+ ref array<ref SPKZ_WorkbenchToolRequirement> Tools;
 
  void SPKZ_WorkbenchRecipe()
  {
   Materials = new array<ref SPKZ_WorkbenchMaterialCost>();
+  Tools = new array<ref SPKZ_WorkbenchToolRequirement>();
  }
 
  void AddMaterial(string className, int quantity)
  {
   Materials.Insert(new SPKZ_WorkbenchMaterialCost(className, quantity));
+ }
+
+ void AddTool(string className, int healthLossPoints)
+ {
+  Tools.Insert(new SPKZ_WorkbenchToolRequirement(className, healthLossPoints));
  }
 
  void WriteToContext(ParamsWriteContext ctx)
@@ -55,11 +98,19 @@ class SPKZ_WorkbenchRecipe
   ctx.Write(DisplayName);
   ctx.Write(IconPath);
   ctx.Write(OutputKitClassName);
-  int count = Materials.Count();
-  ctx.Write(count);
-  for (int index = 0; index < count; index++)
+
+  int materialCount = Materials.Count();
+  ctx.Write(materialCount);
+  for (int index = 0; index < materialCount; index++)
   {
    Materials.Get(index).WriteToContext(ctx);
+  }
+
+  int toolCount = Tools.Count();
+  ctx.Write(toolCount);
+  for (int toolIndex = 0; toolIndex < toolCount; toolIndex++)
+  {
+   Tools.Get(toolIndex).WriteToContext(ctx);
   }
  }
 
@@ -71,15 +122,26 @@ class SPKZ_WorkbenchRecipe
   if (!ctx.Read(IconPath)) return false;
   if (!ctx.Read(OutputKitClassName)) return false;
 
-  int count;
-  if (!ctx.Read(count)) return false;
+  int materialCount;
+  if (!ctx.Read(materialCount)) return false;
 
   Materials.Clear();
-  for (int index = 0; index < count; index++)
+  for (int index = 0; index < materialCount; index++)
   {
    SPKZ_WorkbenchMaterialCost cost = new SPKZ_WorkbenchMaterialCost();
    if (!cost.ReadFromContext(ctx)) return false;
    Materials.Insert(cost);
+  }
+
+  int toolCount;
+  if (!ctx.Read(toolCount)) return false;
+
+  Tools.Clear();
+  for (int toolIndex = 0; toolIndex < toolCount; toolIndex++)
+  {
+   SPKZ_WorkbenchToolRequirement tool = new SPKZ_WorkbenchToolRequirement();
+   if (!tool.ReadFromContext(ctx)) return false;
+   Tools.Insert(tool);
   }
 
   return true;
@@ -96,10 +158,22 @@ class SPKZ_WorkbenchRecipeCatalog
  static const string CONFIG_FILE = "$profile:SparkZBaseBuilding/WorkbenchRecipes.json";
 
  ref array<ref SPKZ_WorkbenchRecipe> Recipes;
+ // Classname of the item that goes in the workbench's designated sharpening-
+ // stone slot (per the pending model update: 500-cell cargo + one slot each
+ // for hacksaw/saw/hammer/shovel/screwdriver/pliers/sledgehammer + this one).
+ // While present, it fully offsets the durability a tool loses per craft
+ // (see SPKZ_Workbench.SPKZ_DamageToolOfType) - a real, exact repair amount
+ // is a design decision to make once the model/item exists; full offset is
+ // the simplest placeholder ("keeps tools maintained for free"). Placeholder
+ // classname only - no such item exists yet, so this harmlessly never
+ // matches anything until it's added (IsKindOf on an unknown classname just
+ // returns false, no compile-time dependency on the class existing).
+ string SharpeningStoneClassName;
 
  void SPKZ_WorkbenchRecipeCatalog()
  {
   Recipes = new array<ref SPKZ_WorkbenchRecipe>();
+  SharpeningStoneClassName = "SPKZ_SharpeningStone";
  }
 
  SPKZ_WorkbenchRecipe FindRecipe(string recipeId)
@@ -140,9 +214,15 @@ class SPKZ_WorkbenchRecipeCatalog
   return true;
  }
 
- // Placeholder starting costs - tune freely by editing the generated JSON on
- // the server; these defaults only seed a fresh file the first time it's
- // created. All items referenced here are real vanilla DayZ classnames.
+ // Placeholder starting costs/tools - tune freely by editing the generated
+ // JSON on the server; these defaults only seed a fresh file the first time
+ // it's created. All items referenced here are real vanilla DayZ classnames.
+ // Nail is added to every recipe - per direction, nails are an essential
+ // material across all wall/door/window/floor/garage construction. Each
+ // recipe also gets one placeholder tool requirement, deliberately varied
+ // (Hammer for wood, Pliers for the glass frame, Hacksaw for the garage's
+ // metal sheets) to demonstrate the system supports different tools per
+ // recipe - the real mapping is a design decision still to be made.
  protected void SeedDefaults()
  {
   Recipes.Clear();
@@ -156,6 +236,8 @@ class SPKZ_WorkbenchRecipeCatalog
   wall.OutputKitClassName = "SPKZ_WoodWallKit";
   wall.AddMaterial("WoodenLog", 2);
   wall.AddMaterial("WoodenPlank", 5);
+  wall.AddMaterial("Nail", 6);
+  wall.AddTool("Hammer", 5);
   Recipes.Insert(wall);
 
   SPKZ_WorkbenchRecipe doorWall = new SPKZ_WorkbenchRecipe();
@@ -167,6 +249,7 @@ class SPKZ_WorkbenchRecipeCatalog
   doorWall.AddMaterial("WoodenLog", 2);
   doorWall.AddMaterial("WoodenPlank", 6);
   doorWall.AddMaterial("Nail", 5);
+  doorWall.AddTool("Hammer", 5);
   Recipes.Insert(doorWall);
 
   SPKZ_WorkbenchRecipe windowWall = new SPKZ_WorkbenchRecipe();
@@ -178,6 +261,7 @@ class SPKZ_WorkbenchRecipeCatalog
   windowWall.AddMaterial("WoodenLog", 2);
   windowWall.AddMaterial("WoodenPlank", 5);
   windowWall.AddMaterial("Nail", 4);
+  windowWall.AddTool("Hammer", 5);
   Recipes.Insert(windowWall);
 
   SPKZ_WorkbenchRecipe floor = new SPKZ_WorkbenchRecipe();
@@ -188,6 +272,8 @@ class SPKZ_WorkbenchRecipeCatalog
   floor.OutputKitClassName = "SPKZ_WoodFloorKit";
   floor.AddMaterial("WoodenLog", 1);
   floor.AddMaterial("WoodenPlank", 8);
+  floor.AddMaterial("Nail", 10);
+  floor.AddTool("Hammer", 5);
   Recipes.Insert(floor);
 
   SPKZ_WorkbenchRecipe glassWindow = new SPKZ_WorkbenchRecipe();
@@ -199,6 +285,8 @@ class SPKZ_WorkbenchRecipeCatalog
   glassWindow.AddMaterial("WoodenLog", 2);
   glassWindow.AddMaterial("WoodenPlank", 5);
   glassWindow.AddMaterial("MetalPlate", 1);
+  glassWindow.AddMaterial("Nail", 3);
+  glassWindow.AddTool("Pliers", 5);
   Recipes.Insert(glassWindow);
 
   SPKZ_WorkbenchRecipe garage = new SPKZ_WorkbenchRecipe();
@@ -211,6 +299,7 @@ class SPKZ_WorkbenchRecipeCatalog
   garage.AddMaterial("WoodenPlank", 10);
   garage.AddMaterial("MetalPlate", 4);
   garage.AddMaterial("Nail", 8);
+  garage.AddTool("Hacksaw", 8);
   Recipes.Insert(garage);
  }
 

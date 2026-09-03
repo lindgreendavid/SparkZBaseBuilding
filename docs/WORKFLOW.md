@@ -128,6 +128,38 @@ scoped entirely to `SPKZ_Workbench`'s own `OnRPC`, not a shared registry. The
 server always re-validates recipe and stock server-side before consuming
 anything or spawning a kit, regardless of what the client's menu displays.
 
+### Nails, tools, and the sharpening stone (pending the workbench model)
+
+The real workbench model is planned to have 500 cargo cells plus eight
+designated single-item slots: hacksaw, saw, hammer, shovel, screwdriver,
+pliers, sledgehammer, and a sharpening stone - only items in those slots
+render on the model; ordinary cargo stays hidden. That model doesn't exist
+yet, so the *gameplay logic* for tools is built now against the placeholder
+model, ready to switch from "scan all cargo" to "check the named slot" with
+no schema change once the real model lands:
+
+- Every recipe can require one or more tools (`SPKZ_WorkbenchRecipe.Tools`,
+  `SPKZ_WorkbenchToolRequirement`). A tool is never consumed - it takes a
+  flat health-point loss per successful craft instead
+  (`SPKZ_Workbench.SPKZ_DamageToolOfType`), and a ruined tool no longer
+  counts as present. Today "present" means "anywhere in the workbench's
+  inventory," not a specific slot - see the comment on
+  `SPKZ_HasUsableTool`/`SPKZ_FindUsableTool`.
+- Which tool a recipe needs, and how much durability it costs, is a
+  placeholder pending real design (per direction: "we gotta find a nice way
+  of checking what items use what tools") - the current seed data
+  deliberately varies it (Hammer for wood pieces, Pliers for the glass
+  frame, Hacksaw for the garage's metal sheets) to prove the system supports
+  different tools per recipe; retune freely in the JSON.
+- Nail is now a required material on every seeded recipe - per direction,
+  it's essential across all wall/door/window/floor/garage construction.
+- A sharpening stone (`SPKZ_WorkbenchRecipeCatalog.SharpeningStoneClassName`,
+  placeholder classname `SPKZ_SharpeningStone` - no such item exists yet)
+  fully offsets a tool's durability loss for the craft it's present for, if
+  found anywhere in the workbench. This is a placeholder repair amount
+  (full offset = "keeps tools maintained for free while loaded"); the exact
+  behaviour is a design decision to revisit once the real item exists.
+
 All recipe icons currently point at the same placeholder kit icon - there is
 no per-part icon art yet (see docs/BRIEF.md's open asset-source question).
 The icon widget and per-recipe `IconPath` field are already wired end to end,

@@ -172,6 +172,11 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    if (SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, cost.ClassName) < cost.Quantity)
     return false;
   }
+  for (int toolIndex = 0; toolIndex < recipe.Tools.Count(); toolIndex++)
+  {
+   if (SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, recipe.Tools.Get(toolIndex).ClassName) < 1)
+    return false;
+  }
   return true;
  }
 
@@ -192,35 +197,52 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   if (m_DetailName) { m_DetailName.SetText(recipe.DisplayName); }
   if (m_DetailIcon) { m_DetailIcon.LoadImageFile(0, recipe.IconPath); }
 
+  // Materials and tools share the same row list - materials show "have/need"
+  // and are consumed on build; tools show "AVAILABLE"/"MISSING" (or
+  // "RUINED" - a present-but-ruined tool reports as absent, see
+  // SPKZ_Workbench.SPKZ_CountItemsOfType) and are only damaged, not consumed.
   bool affordable = true;
-  int rowCount = Math.Min(recipe.Materials.Count(), MAX_COST_ROWS);
-  for (int index = 0; index < MAX_COST_ROWS; index++)
+  int row = 0;
+  for (int materialIndex = 0; materialIndex < recipe.Materials.Count() && row < MAX_COST_ROWS; materialIndex++)
   {
-   if (!m_CostRows[index]) continue;
-   if (index >= rowCount)
-   {
-    m_CostRows[index].Show(false);
-    continue;
-   }
-
-   SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(index);
+   SPKZ_WorkbenchMaterialCost cost = recipe.Materials.Get(materialIndex);
    int have = SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, cost.ClassName);
    bool enough = have >= cost.Quantity;
    if (!enough) { affordable = false; }
 
-   m_CostRows[index].Show(true);
-   m_CostRows[index].SetText(cost.ClassName + "  " + have.ToString() + " / " + cost.Quantity.ToString());
-   if (enough)
-   {
-    m_CostRows[index].SetColor(ARGB(255, 140, 220, 140));
-   }
-   else
-   {
-    m_CostRows[index].SetColor(ARGB(255, 220, 90, 90));
-   }
+   m_CostRows[row].Show(true);
+   m_CostRows[row].SetText(cost.ClassName + "  " + have.ToString() + " / " + cost.Quantity.ToString());
+   m_CostRows[row].SetColor(SPKZ_RequirementColor(enough));
+   row++;
+  }
+
+  for (int toolIndex = 0; toolIndex < recipe.Tools.Count() && row < MAX_COST_ROWS; toolIndex++)
+  {
+   SPKZ_WorkbenchToolRequirement toolReq = recipe.Tools.Get(toolIndex);
+   bool present = SPKZ_WorkbenchStockEntry.FindQuantity(m_Stock, toolReq.ClassName) >= 1;
+   if (!present) { affordable = false; }
+
+   string status = "MISSING";
+   if (present) { status = "AVAILABLE"; }
+
+   m_CostRows[row].Show(true);
+   m_CostRows[row].SetText(toolReq.ClassName + " (tool)  " + status);
+   m_CostRows[row].SetColor(SPKZ_RequirementColor(present));
+   row++;
+  }
+
+  for (int clearIndex = row; clearIndex < MAX_COST_ROWS; clearIndex++)
+  {
+   if (m_CostRows[clearIndex]) { m_CostRows[clearIndex].Show(false); }
   }
 
   if (m_BuildButton) { m_BuildButton.Enable(affordable); }
+ }
+
+ protected int SPKZ_RequirementColor(bool met)
+ {
+  if (met) return ARGB(255, 140, 220, 140);
+  return ARGB(255, 220, 90, 90);
  }
 
  override bool OnItemSelected(Widget w, int x, int y, int row, int column, int oldRow, int oldColumn)
