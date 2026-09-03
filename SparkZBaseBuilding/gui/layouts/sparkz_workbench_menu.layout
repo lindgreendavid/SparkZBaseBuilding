@@ -257,71 +257,30 @@ FrameWidgetClass Root {
        inheritalpha 0
        style rover_sim_colorable
       }
-      TextWidgetClass MaterialsHeader {
+      ScrollWidgetClass DetailScroller {
        ignorepointer 1
-       position 0.05 0.395
-       size 0.9 0.04
+       position 0.05 0.39
+       size 0.9 0.455
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       text "MATERIALS REQUIRED"
-       font "gui/fonts/sdf_MetronBook14"
-       "exact text" 1
-       "text color" 0.6 0.6 0.63 1
-      }
-      GridSpacerWidgetClass MaterialsGridSpacer {
-       ignorepointer 1
-       position 0.05 0.44
-       size 0.9 0.18
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       Padding 2
-       Margin 0
-       "Size To Content V" 1
-       Columns 1
-       Rows 100
-      }
-      PanelWidgetClass DetailDivider2 {
-       ignorepointer 1
-       color 0.22 0.22 0.25 1
-       position 0.05 0.628
-       size 0.9 1
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 1
-       inheritalpha 0
-       style rover_sim_colorable
-      }
-      TextWidgetClass ToolsHeader {
-       ignorepointer 1
-       position 0.05 0.645
-       size 0.9 0.04
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       text "TOOLS REQUIRED"
-       font "gui/fonts/sdf_MetronBook14"
-       "exact text" 1
-       "text color" 0.6 0.6 0.63 1
-      }
-      GridSpacerWidgetClass ToolsGridSpacer {
-       ignorepointer 1
-       position 0.05 0.69
-       size 0.9 0.14
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       Padding 2
-       Margin 0
-       "Size To Content V" 1
-       Columns 1
-       Rows 100
+       "Scrollbar V" 1
+       {
+        GridSpacerWidgetClass DetailFlowSpacer {
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         Padding 0
+         Margin 0
+         "Size To Content V" 1
+         Columns 1
+         Rows 200
+        }
+       }
       }
       ButtonWidgetClass BuildButton {
        position 0.05 0.855

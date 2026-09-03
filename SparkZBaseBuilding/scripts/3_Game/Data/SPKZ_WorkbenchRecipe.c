@@ -318,27 +318,12 @@ class SPKZ_WorkbenchRecipeCatalog
   garage.AddTool("Hacksaw", 8);
   Recipes.Insert(garage);
 
-  // Misc: real vanilla deployables, not SparkZ kit/placed pairs, so their
-  // OutputKitClassName/PreviewClassName are the same real classname -
-  // SPKZ_HandleBuildRequest just needs GetGame().CreateObjectEx(...) to
-  // work with it, which it does for any classname. Sandbags and tank traps
-  // were explicitly requested too, but neither exists as a player-craftable
-  // vanilla item as of the installed game version (confirmed by searching
-  // every structures_*/gear_*.pbo - the only "tank trap" match is
-  // StaticObj_Misc_Hedgehog_Concrete/Iron, non-spawnable map decoration, not
-  // a deployable kit) - see docs/WORKFLOW.md for the note on this.
-  SPKZ_WorkbenchRecipe greenhouse = new SPKZ_WorkbenchRecipe();
-  greenhouse.RecipeId = "vanilla_greenhouse";
-  greenhouse.Category = "Misc";
-  greenhouse.DisplayName = "Greenhouse Garden Plot";
-  greenhouse.IconPath = placeholderIcon;
-  greenhouse.OutputKitClassName = "GardenPlotGreenhouse";
-  greenhouse.PreviewClassName = "GardenPlotGreenhouse";
-  greenhouse.AddMaterial("WoodenLog", 1);
-  greenhouse.AddMaterial("WoodenPlank", 1);
-  greenhouse.AddMaterial("Nail", 1);
-  greenhouse.AddTool("Hammer", 5);
-  Recipes.Insert(greenhouse);
+  // "Metal" and "Misc" categories are intentionally empty for now (see
+  // SPKZ_WorkbenchMenu.SPKZ_ApplyOpenResponse, which always shows a "Metal"
+  // tab even with zero recipes in it) - real metal structures, sandbags,
+  // greenhouses etc. are future work. A vanilla GardenPlotGreenhouse recipe
+  // was tried here and removed again - it needs a preview/placement fix
+  // before it's worth shipping.
  }
 
  static ref SPKZ_WorkbenchRecipeCatalog Load()

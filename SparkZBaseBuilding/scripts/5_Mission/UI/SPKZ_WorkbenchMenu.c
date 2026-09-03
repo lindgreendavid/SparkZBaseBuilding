@@ -23,8 +23,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  protected Widget m_Root;
  protected Widget m_TabsSpacer;
  protected Widget m_ItemsGridSpacer;
- protected Widget m_MaterialsGridSpacer;
- protected Widget m_ToolsGridSpacer;
+ protected Widget m_DetailFlowSpacer;
  protected Widget m_NoSelectionText;
  protected Widget m_DetailContainer;
  protected ItemPreviewWidget m_DetailPreview;
@@ -75,8 +74,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
 
   m_TabsSpacer = m_Root.FindAnyWidget("TabsSpacer");
   m_ItemsGridSpacer = m_Root.FindAnyWidget("ItemsGridSpacer");
-  m_MaterialsGridSpacer = m_Root.FindAnyWidget("MaterialsGridSpacer");
-  m_ToolsGridSpacer = m_Root.FindAnyWidget("ToolsGridSpacer");
+  m_DetailFlowSpacer = m_Root.FindAnyWidget("DetailFlowSpacer");
   m_NoSelectionText = m_Root.FindAnyWidget("NoSelectionText");
   m_DetailContainer = m_Root.FindAnyWidget("DetailContainer");
   m_DetailPreview = ItemPreviewWidget.Cast(m_Root.FindAnyWidget("DetailPreview"));
@@ -153,7 +151,12 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   m_Catalog = response.Catalog;
   m_Stock = response.Stock;
 
+  // "Metal" is always shown, even with zero recipes in it yet - a preview
+  // of what's coming, per direction. Real categories found in the catalog
+  // are appended after the fixed set, in case more get added later.
   m_Categories.Clear();
+  m_Categories.Insert("Wood");
+  m_Categories.Insert("Metal");
   for (int index = 0; index < m_Catalog.Recipes.Count(); index++)
   {
    string category = m_Catalog.Recipes.Get(index).Category;
@@ -324,6 +327,14 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   }
  }
 
+ protected void SPKZ_CreateSectionHeader(Widget parent, string text)
+ {
+  if (!parent) return;
+  Widget header = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_section_header.layout", parent);
+  TextWidget headerText = TextWidget.Cast(header.FindAnyWidget("SectionHeaderText"));
+  if (headerText) { headerText.SetText(text); }
+ }
+
  protected void SPKZ_RefreshDetailPanel()
  {
   SPKZ_ClearPreviewItems(m_DetailPreviewItems);
@@ -345,7 +356,12 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
 
   bool affordable = true;
 
-  SPKZ_ClearChildren(m_MaterialsGridSpacer);
+  SPKZ_ClearChildren(m_DetailFlowSpacer);
+
+  if (m_SelectedRecipe.Materials.Count() > 0)
+  {
+   SPKZ_CreateSectionHeader(m_DetailFlowSpacer, "MATERIALS REQUIRED");
+  }
   for (int materialIndex = 0; materialIndex < m_SelectedRecipe.Materials.Count(); materialIndex++)
   {
    SPKZ_WorkbenchMaterialCost cost = m_SelectedRecipe.Materials.Get(materialIndex);
@@ -353,7 +369,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    bool enough = have >= cost.Quantity;
    if (!enough) { affordable = false; }
 
-   Widget materialRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_MaterialsGridSpacer);
+   Widget materialRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_DetailFlowSpacer);
    ItemPreviewWidget materialPreview = ItemPreviewWidget.Cast(materialRow.FindAnyWidget("RequiredItemPreview"));
    EntityAI materialPreviewItem = SPKZ_ApplyPreview(materialPreview, cost.ClassName, m_DetailPreviewItems);
 
@@ -374,7 +390,10 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    if (materialDot) { materialDot.SetColor(SPKZ_RequirementColor(enough)); }
   }
 
-  SPKZ_ClearChildren(m_ToolsGridSpacer);
+  if (m_SelectedRecipe.Tools.Count() > 0)
+  {
+   SPKZ_CreateSectionHeader(m_DetailFlowSpacer, "TOOLS REQUIRED");
+  }
   for (int toolIndex = 0; toolIndex < m_SelectedRecipe.Tools.Count(); toolIndex++)
   {
    SPKZ_WorkbenchToolRequirement toolReq = m_SelectedRecipe.Tools.Get(toolIndex);
@@ -384,7 +403,7 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
    string status = "MISSING";
    if (present) { status = "MOUNTED"; }
 
-   Widget toolRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_ToolsGridSpacer);
+   Widget toolRow = GetGame().GetWorkspace().CreateWidgets("SparkZBaseBuilding/gui/components/sparkz_workbench_required_item.layout", m_DetailFlowSpacer);
    ItemPreviewWidget toolPreview = ItemPreviewWidget.Cast(toolRow.FindAnyWidget("RequiredItemPreview"));
    EntityAI toolPreviewItem = SPKZ_ApplyPreview(toolPreview, toolReq.ClassName, m_DetailPreviewItems);
 

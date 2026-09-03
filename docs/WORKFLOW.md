@@ -177,20 +177,37 @@ Material/tool requirement rows show each item's real, already-translated
 name (`EntityAI.GetDisplayName()` on the same local preview instance the row
 renders - no manual classname-to-label table to maintain) rather than the
 raw classname, plus a quantity or MOUNTED/MISSING line and a colored status
-dot.
+dot. Materials and tools both flow into one scrollable column
+(`DetailFlowSpacer`, a single `Columns 1` grid spacer with dynamically
+inserted section-header widgets) instead of two separately fixed-position
+sections - the old layout overlapped once a recipe had enough rows to
+overflow its statically-allocated slice of the panel.
 
 Categories: "Wood" covers all six wall/door/window/floor/garage kits
 (including the garage, which uses some metal plate but is still fundamentally
-a wood structure - it was miscategorized as "Metal" originally). "Misc" is
-for real vanilla deployables that aren't SparkZ kit/placed pairs - currently
-just the vanilla `GardenPlotGreenhouse`. Sandbags and tank traps were
-requested too, but neither exists as a player-craftable vanilla item in the
-installed game version - the only "tank trap"-like class found anywhere in
+a wood structure - it was miscategorized as "Metal" originally). "Metal" is
+shown as an always-present tab even with zero recipes in it yet, a preview of
+what's coming. A "Misc" category (vanilla `GardenPlotGreenhouse`) was tried
+and removed again per direction - its preview didn't render correctly and it
+needs more work before shipping. Sandbags and tank traps were requested too,
+but neither exists as a player-craftable vanilla item in the installed game
+version - the only "tank trap"-like class found anywhere in
 `structures_*`/`gear_*.pbo` is `StaticObj_Misc_Hedgehog_Concrete`/`_Iron`,
-non-spawnable map decoration, not a deployable kit. Adding either for real
-would mean building custom SparkZ models for them, the same kind of work as
-the workbench itself - a real "Metal" category (chain-link, corrugated
-sheet, etc.) is in the same position.
+non-spawnable map decoration, not a deployable kit. Adding either for real,
+or a genuine "Metal" category (chain-link, corrugated sheet, etc.), means
+building custom SparkZ models for them - the same kind of work as the
+workbench itself.
+
+`SPKZ_Workbench` extends `SPKZ_WorkbenchStorageBase` (a shared base for
+built pieces needing real Inventory/Cargo persistence while staying
+non-pickable - `Container_Base` config ancestor, `IsTakeable`/
+`CanPutIntoHands`/`CanPutInCargo` all false), adopted from the
+collaborator's own independently-converged fix for the exact same
+config/script mismatch bug this addon hit. The stock snapshot sent to the
+client now includes tool presence (1/0 from the named attachment slot, not
+a cargo scan) alongside material counts - it previously only collected
+material classnames, so every tool always showed MISSING in the UI
+regardless of whether it was actually mounted.
 
 Not yet done: squad Base Access permission gating on the access/build actions
 (this addon has no plot-pole/squad-permission system to check against yet -

@@ -27,7 +27,6 @@ class CfgMods
 class CfgVehicles
 {
  class Container_Base;
- class WorldContainer_Base;
  class HouseNoDestruct;
  class SPKZ_WoodWallDoorKit: Container_Base
  {
