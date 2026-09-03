@@ -9,7 +9,7 @@ FrameWidgetClass Root {
  {
   PanelWidgetClass Background {
    ignorepointer 1
-   color 0 0 0 0.72
+   color 0 0 0 0.88
    position 0 0
    size 1 1
    hexactpos 0
@@ -22,8 +22,8 @@ FrameWidgetClass Root {
   PanelWidgetClass HeaderBar {
    ignorepointer 1
    color 0.08 0.08 0.09 0.97
-   position 0.12 0.08
-   size 0.76 0.06
+   position 0.02 0.025
+   size 0.96 0.06
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -104,8 +104,8 @@ FrameWidgetClass Root {
   PanelWidgetClass TabBar {
    ignorepointer 1
    color 0.08 0.08 0.09 0.94
-   position 0.12 0.145
-   size 0.76 0.045
+   position 0.02 0.095
+   size 0.96 0.045
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -130,8 +130,8 @@ FrameWidgetClass Root {
   PanelWidgetClass GridPanel {
    ignorepointer 1
    color 0.08 0.08 0.09 0.9
-   position 0.12 0.20
-   size 0.50 0.72
+   position 0.02 0.15
+   size 0.64 0.80
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -169,8 +169,8 @@ FrameWidgetClass Root {
   PanelWidgetClass InfoPanel {
    ignorepointer 1
    color 0.08 0.08 0.09 0.94
-   position 0.635 0.20
-   size 0.245 0.72
+   position 0.68 0.15
+   size 0.30 0.80
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -370,8 +370,8 @@ FrameWidgetClass Root {
   PanelWidgetClass StatusBar {
    ignorepointer 1
    color 0.08 0.08 0.09 0.9
-   position 0.12 0.925
-   size 0.76 0.04
+   position 0.02 0.96
+   size 0.96 0.03
    hexactpos 0
    vexactpos 0
    hexactsize 0

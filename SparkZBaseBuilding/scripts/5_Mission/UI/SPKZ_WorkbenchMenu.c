@@ -48,6 +48,24 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   m_Categories = new array<string>();
   m_GridPreviewItems = new array<EntityAI>();
   m_DetailPreviewItems = new array<EntityAI>();
+
+  // Hide the vanilla hotbar/quickbar so it doesn't show through the menu -
+  // same technique vanilla's own full-screen menus use (see e.g.
+  // scripts/5_mission/gui/invitemenu.c's constructor/destructor pair).
+  if (GetGame() && GetGame().GetMission() && GetGame().GetMission().GetHud())
+  {
+   GetGame().GetMission().GetHud().ShowHudUI(false);
+   GetGame().GetMission().GetHud().ShowQuickbarUI(false);
+  }
+ }
+
+ void ~SPKZ_WorkbenchMenu()
+ {
+  if (GetGame() && GetGame().GetMission() && GetGame().GetMission().GetHud())
+  {
+   GetGame().GetMission().GetHud().ShowHudUI(true);
+   GetGame().GetMission().GetHud().ShowQuickbarUI(true);
+  }
  }
 
  override Widget Init()
@@ -194,17 +212,12 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
   return item;
  }
 
- // A wall/door/window piece's raw model orientation is whatever the
- // in-world part needs, not a flattering angle to look at in a preview
- // widget - give every preview a fixed three-quarter presentation angle
- // instead of whatever the model's default rotation happens to be.
  protected void SPKZ_ApplyPreview(ItemPreviewWidget preview, string className, array<EntityAI> tracker)
  {
   if (!preview) return;
   EntityAI item = SPKZ_CreatePreviewItem(className, tracker);
   if (!item) return;
   preview.SetItem(item);
-  preview.SetModelOrientation(Vector(-15, 35, 0));
  }
 
  protected void SPKZ_StyleTab(Widget tabWidget, bool selected)
@@ -392,6 +405,16 @@ class SPKZ_WorkbenchMenu extends UIScriptedMenu
  {
   if (met) return ARGB(255, 140, 220, 140);
   return ARGB(255, 220, 90, 90);
+ }
+
+ override bool OnKeyPress(Widget w, int x, int y, int key)
+ {
+  if (key == KeyCode.KC_ESCAPE)
+  {
+   Close();
+   return true;
+  }
+  return super.OnKeyPress(w, x, y, key);
  }
 
  override bool OnClick(Widget w, int x, int y, int button)
