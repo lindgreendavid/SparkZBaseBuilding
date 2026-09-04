@@ -1,5 +1,53 @@
 # Standalone building workflow and handover
 
+## Raiding: charge placement (SPKZ_PlacedCharge)
+
+Two portable, plantable items, both extending the installed game's own
+`ExplosivesBase` (the real vanilla base `Plastic_Explosive`/
+`ImprovisedExplosive` also use - see `scripts/4_World/Entities/
+SPKZ_PlacedCharge.c` for why config and script ancestors have to match here):
+
+- `SPKZ_HomemadeBreachingCharge` - 3:30 fuse. 1 breaches a wood wall/window
+  outright; wood-tier pieces currently need only 1 (see
+  `SPKZ_RequiredChargeCount()` on `SPKZ_WoodWallDoor` - a future metal-tier
+  SPKZ piece overrides this to 2, no other changes needed).
+- `SPKZ_FabricatedChargeBlock` (the fictional "C4") - 5:00 fuse. Always
+  breaches in a single plant regardless of `SPKZ_RequiredChargeCount()` (per
+  direction: it "immediately goes through metal and reinforced things").
+
+Both are placed via a new action, `SPKZ_ActionPlaceCharge` (registered on
+`SPKZ_WoodWallDoor`, not on the charge item itself - same pattern as
+`SPKZ_ActionDismantleWorkbench`): hold the charge, look at a wall/window
+where `SPKZ_CanAcceptCharge()` is true, hold to plant. This is NOT vanilla's
+generic ground-deploy ghost (`ActionDeployObject`) - that has no concept of
+"must be next to a specific wall" - so neither charge class registers those
+actions.
+
+Scope, per direction: **SparkZBaseBuilding wall/window pieces only** for
+now, not BaseBuildingPlus or any other mod's structures. Floors/roofs/ramps
+(`SPKZ_WoodFloor`) and the garage door (`SPKZ_WoodGarage`) are explicitly
+excluded (`SPKZ_CanAcceptCharge()` overridden to false / no action
+registered) - only walls, door walls, windows, and glass windows accept a
+charge, matching "wooden walls and wooden windows."
+
+When a charge's fuse ends, it calls the real vanilla `ExplosivesBase`
+explosion pipeline (`Plastic_Explosive_Ammo`, real particle/light/sound - no
+custom explosion system invented) and separately calls
+`SPKZ_ApplyChargeHit()` on its target wall, which tracks a persisted hit
+counter (`m_SPKZChargeHits`) and deletes the wall outright (no kit returned -
+unlike a screwdriver dismantle, this is meant to be a one-way loss) once the
+required count is reached. The native area-of-effect explosion damage does
+NOT touch the wall directly - walls call `SetAllowDamage(false)` by design
+(only our own scripted dismantle/breach paths can remove one), so the hit-
+counter approach is deliberate, not a workaround.
+
+**Placeholder models**: both items currently use the SparkZKit cardboard box
+model - the friend's `dayz_custom_items_v4.zip` package (delivered
+separately) covers the real textures/geometry for both ("Improvised
+Breaching Charge" and "Fabricated Charge Block" in that package's naming),
+pending their Blender pass and a P3D export. Swapping `model=` in
+`explosives_vehicles.hpp` is the only change needed once that's ready.
+
 ## Current source of truth
 
 `SparkZBaseBuilding/` is the current standalone addon to pack. Its `Source/`

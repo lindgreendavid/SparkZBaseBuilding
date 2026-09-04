@@ -3,6 +3,11 @@ class SPKZ_WoodWallDoor extends BuildingSuper
  protected ref OpenableBehaviour m_Openable;
  protected string m_SPKZOwnerId;
  protected int m_SPKZOwnerHash;
+ // How many SPKZ_PlacedCharge detonations this specific wall instance has
+ // taken so far - compared against SPKZ_RequiredChargeCount() each time one
+ // lands (see SPKZ_ApplyChargeHit). Persisted so a raid can span a charge's
+ // fuse time surviving a server restart mid-siege.
+ protected int m_SPKZChargeHits;
  void SPKZ_WoodWallDoor()
  {
   m_Openable=new OpenableBehaviour(false);
@@ -64,11 +69,39 @@ class SPKZ_WoodWallDoor extends BuildingSuper
   tool.AddHealth("","Health",-5);
   GetGame().ObjectDelete(this);
  }
+ // Whether an SPKZ_PlacedCharge (see SPKZ_PlacedCharge.c) can be planted on
+ // this piece at all - true for walls/doors/windows by default, false for
+ // pieces that aren't a wall the player is trying to breach through (floors,
+ // the garage door - see the overrides in SPKZ_WoodFloor.c/SPKZ_WoodGarage.c).
+ bool SPKZ_CanAcceptCharge(){return true;}
+ // How many charge detonations this piece needs before it breaches. Wood
+ // tier is 1; a future metal-tier piece overrides this to 2 (per direction:
+ // "2 homemade charges to get through metal"). SPKZ_FabricatedChargeBlock
+ // (the "C4" tier) always counts as a full breach in a single hit regardless
+ // of this value - see SPKZ_PlacedCharge.c's SPKZ_AlwaysBreaches().
+ int SPKZ_RequiredChargeCount(){return 1;}
+ // Called by SPKZ_PlacedCharge when its fuse ends. Server-only. Deletes the
+ // wall outright - no kit is returned, unlike a screwdriver dismantle -
+ // breaching is meant to be a one-way loss for whoever owns the base.
+ void SPKZ_ApplyChargeHit(bool alwaysBreaches)
+ {
+  if(!GetGame().IsServer()){return;}
+  m_SPKZChargeHits=m_SPKZChargeHits+1;
+  if(alwaysBreaches || m_SPKZChargeHits>=SPKZ_RequiredChargeCount())
+  {
+   GetGame().ObjectDelete(this);
+  }
+  else
+  {
+   SetSynchDirty();
+  }
+ }
  override void OnStoreSave(ParamsWriteContext ctx)
  {
   super.OnStoreSave(ctx);
   ctx.Write(IsOpen());
   ctx.Write(m_SPKZOwnerId);
+  ctx.Write(m_SPKZChargeHits);
  }
  override bool OnStoreLoad(ParamsReadContext ctx, int version)
  {
@@ -95,6 +128,9 @@ class SPKZ_WoodWallDoor extends BuildingSuper
   // Older test walls had no stored owner. Do not assign them to a stranger.
   if(!ctx.Read(m_SPKZOwnerId)){m_SPKZOwnerId="";}
   if(m_SPKZOwnerId!=""){m_SPKZOwnerHash=m_SPKZOwnerId.Hash();}
+  // Older walls saved before charge tracking existed have no stored hit
+  // count - default to undamaged, not partially-breached.
+  if(!ctx.Read(m_SPKZChargeHits)){m_SPKZChargeHits=0;}
   SPKZ_RefreshLifetime();
   if(SPKZ_HasDoor())
   {
@@ -103,7 +139,7 @@ class SPKZ_WoodWallDoor extends BuildingSuper
   }
   return true;
  }
- override void SetActions(){super.SetActions();AddAction(SPKZ_ActionOpenWoodDoor);AddAction(SPKZ_ActionCloseWoodDoor);}
+ override void SetActions(){super.SetActions();AddAction(SPKZ_ActionOpenWoodDoor);AddAction(SPKZ_ActionCloseWoodDoor);AddAction(SPKZ_ActionPlaceCharge);}
 }
 
 class SPKZ_WoodWallDoorKit extends ItemBase

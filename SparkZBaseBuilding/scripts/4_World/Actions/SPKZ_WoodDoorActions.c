@@ -70,5 +70,6 @@ modded class ActionConstructor
   actions.Insert(SPKZ_ActionCloseWoodGarage);
   actions.Insert(SPKZ_ActionAccessWorkbench);
   actions.Insert(SPKZ_ActionDismantleWorkbench);
+  actions.Insert(SPKZ_ActionPlaceCharge);
  }
 }

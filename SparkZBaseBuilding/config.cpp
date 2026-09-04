@@ -2,7 +2,7 @@ class CfgPatches
 {
  class SPKZ_BaseBuilding_Standalone
  {
-  units[]={"SPKZ_WoodWallDoorKit","SPKZ_WoodWallDoor","SPKZ_WoodWallDoor_Hologram","SPKZ_WoodWallKit","SPKZ_WoodWall","SPKZ_WoodWall_Hologram","SPKZ_WoodFloorKit","SPKZ_WoodFloor","SPKZ_WoodFloor_Hologram","SPKZ_WoodWindowKit","SPKZ_WoodWindow","SPKZ_WoodWindow_Hologram","SPKZ_WoodGlassWindowKit","SPKZ_WoodGlassWindow","SPKZ_WoodGlassWindow_Hologram","SPKZ_WoodGarageKit","SPKZ_WoodGarage","SPKZ_WoodGarage_Hologram","SPKZ_WorkbenchKit","SPKZ_Workbench","SPKZ_Workbench_Hologram"};
+  units[]={"SPKZ_WoodWallDoorKit","SPKZ_WoodWallDoor","SPKZ_WoodWallDoor_Hologram","SPKZ_WoodWallKit","SPKZ_WoodWall","SPKZ_WoodWall_Hologram","SPKZ_WoodFloorKit","SPKZ_WoodFloor","SPKZ_WoodFloor_Hologram","SPKZ_WoodWindowKit","SPKZ_WoodWindow","SPKZ_WoodWindow_Hologram","SPKZ_WoodGlassWindowKit","SPKZ_WoodGlassWindow","SPKZ_WoodGlassWindow_Hologram","SPKZ_WoodGarageKit","SPKZ_WoodGarage","SPKZ_WoodGarage_Hologram","SPKZ_WorkbenchKit","SPKZ_Workbench","SPKZ_Workbench_Hologram","SPKZ_HomemadeBreachingCharge","SPKZ_FabricatedChargeBlock"};
   weapons[]={}; requiredVersion=0.1;
   requiredAddons[]={"DZ_Data","DZ_Gear_Containers","DZ_Gear_Tools"};
  };
@@ -28,6 +28,7 @@ class CfgVehicles
 {
  class Container_Base;
  class HouseNoDestruct;
+ class ExplosivesBase;
  class SPKZ_WoodWallDoorKit: Container_Base
  {
   scope=2; displayName="Wood Wall Door Kit";
@@ -162,4 +163,5 @@ class CfgVehicles
   class AnimationSources {class Door {source="user"; initPhase=0; animPeriod=1;};};
  };
  #include "workbench_vehicles.hpp"
+ #include "explosives_vehicles.hpp"
 };

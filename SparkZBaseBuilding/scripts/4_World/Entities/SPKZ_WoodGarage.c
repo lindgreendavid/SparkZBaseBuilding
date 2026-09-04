@@ -2,6 +2,11 @@ class SPKZ_WoodGarage extends SPKZ_WoodWallDoor
 {
  override bool SPKZ_HasDoor(){return false;}
  override string SPKZ_ReturnKitType(){return "SPKZ_WoodGarageKit";}
+ // Not in scope for charges yet (per direction: walls and windows only) -
+ // SetActions() below doesn't call super so SPKZ_ActionPlaceCharge was never
+ // registered on it anyway, but this makes the exclusion explicit rather
+ // than incidental.
+ override bool SPKZ_CanAcceptCharge(){return false;}
  void SPKZ_UpdateGarage()
  {
   float phase=0;
