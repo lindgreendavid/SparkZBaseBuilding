@@ -35,6 +35,15 @@ class SPKZ_PlacedCharge extends ExplosivesBase
   SetParticleExplosion(ParticleList.PLASTIC_EXPLOSION);
  }
 
+ // ExplosivesBase.InitItemSounds() already wires GetArmSoundset() up to the
+ // named ITEM_EXPLOSIVE_ARM sound slot (see StartItemSoundServer below) -
+ // reusing that same real, MP-replicated, server-callable mechanism vanilla
+ // uses for its own arm-click sound, just fired repeatedly as a countdown
+ // beep instead of once. RemoteDetonator_Trigger_SoundSet is a real vanilla
+ // SoundSet (an electronic detonator click) - closer to a "beeping bomb"
+ // than the mechanical KitchenTimer_Ticking_Loop alternative.
+ override string GetArmSoundset(){return "RemoteDetonator_Trigger_SoundSet";}
+
  // Seconds from planting to detonation. Overridden per charge tier.
  float SPKZ_FuseSeconds(){return 210;} // 3:30 - Homemade Breaching Charge default
 
@@ -53,12 +62,22 @@ class SPKZ_PlacedCharge extends ExplosivesBase
   m_SPKZTargetWall = targetWall;
   m_SPKZFuseStarted = true;
   Arm();
+  SPKZ_PlayBeep(); // immediate first beep, then every 4s for the rest of the fuse
+  GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SPKZ_PlayBeep, 4000, true);
   GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SPKZ_Detonate, SPKZ_FuseSeconds() * 1000, false);
+ }
+
+ void SPKZ_PlayBeep()
+ {
+  if (!GetGame() || !GetGame().IsServer()) return;
+  if (GetHealthLevel("") == GameConstants.STATE_RUINED) return;
+  StartItemSoundServer(SoundConstants.ITEM_EXPLOSIVE_ARM);
  }
 
  void SPKZ_Detonate()
  {
   if (!GetGame().IsServer()) return;
+  GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SPKZ_PlayBeep);
   if (GetHealthLevel("") == GameConstants.STATE_RUINED) return; // already gone
 
   // The wall may have been dismantled or already breached by an earlier
@@ -67,7 +86,13 @@ class SPKZ_PlacedCharge extends ExplosivesBase
   if (m_SPKZTargetWall) { m_SPKZTargetWall.SPKZ_ApplyChargeHit(SPKZ_AlwaysBreaches()); }
 
   SetHealth("", "", 0.0);
-  InitiateExplosion(); // real vanilla explosion: damage/particle/light/sound, then deletes itself
+  InitiateExplosion(); // real vanilla explosion: damage/particle/light/sound (Plastic_Explosive_Ammo's soundSetExplosion), then deletes itself
+ }
+
+ override void EEDelete(EntityAI parent)
+ {
+  if (GetGame()) { GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SPKZ_PlayBeep); }
+  super.EEDelete(parent);
  }
 
  // Explosion damage from this charge should never re-trigger another

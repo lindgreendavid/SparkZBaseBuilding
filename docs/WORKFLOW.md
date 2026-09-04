@@ -30,9 +30,18 @@ excluded (`SPKZ_CanAcceptCharge()` overridden to false / no action
 registered) - only walls, door walls, windows, and glass windows accept a
 charge, matching "wooden walls and wooden windows."
 
+While armed, a charge beeps every 4 seconds for the whole fuse duration
+(`SPKZ_PlayBeep`, a repeating `CallLater`) via the real
+`RemoteDetonator_Trigger_SoundSet` vanilla sound, played through
+`ExplosivesBase`'s own `GetArmSoundset()`/`StartItemSoundServer(
+SoundConstants.ITEM_EXPLOSIVE_ARM)` mechanism - the same real,
+MP-replicated, server-callable sound slot vanilla's own `ActionArmExplosive`
+uses for its one-shot arm click, just fired repeatedly here instead.
+
 When a charge's fuse ends, it calls the real vanilla `ExplosivesBase`
-explosion pipeline (`Plastic_Explosive_Ammo`, real particle/light/sound - no
-custom explosion system invented) and separately calls
+explosion pipeline (`Plastic_Explosive_Ammo`, real particle/light/**explosion**
+sound via that ammo's own `soundSetExplosion[]` - no custom explosion system
+invented) and separately calls
 `SPKZ_ApplyChargeHit()` on its target wall, which tracks a persisted hit
 counter (`m_SPKZChargeHits`) and deletes the wall outright (no kit returned -
 unlike a screwdriver dismantle, this is meant to be a one-way loss) once the
